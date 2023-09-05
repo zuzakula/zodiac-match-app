@@ -1,7 +1,12 @@
-import {View, Text} from "react-native";
+import { View, Text, Button } from "react-native";
 
-const LoginScreen = () => {
-    return( <View><Text>login screen</Text></View>)
-}
+const LoginScreen = ({ promptAsync }) => {
+  return (
+    <View>
+      <Text>login screen </Text>
+      <Button title="login" onPress={() => promptAsync()} />
+    </View>
+  );
+};
 
 export default LoginScreen;
