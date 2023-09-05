@@ -20,7 +20,6 @@ const LoginScreen = () => {
         email,
         password
       );
-      console.log(res);
     } catch (err) {
       alert("Sign in failed: " + err.message);
     } finally {
@@ -36,7 +35,6 @@ const LoginScreen = () => {
         email,
         password
       );
-      console.log(res);
     } catch (err) {
       alert("Registration failed: " + err.message);
     } finally {
