@@ -11,16 +11,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 const Stack = createNativeStackNavigator();
 
-const InsideStack = createNativeStackNavigator();
-
-const InsideLayout = () => {
-  return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="Home screen" component={HomeScreen} />
-    </InsideStack.Navigator>
-  );
-};
-
 export default function App() {
   const [user, setUser] = useState<any>(null);
 
@@ -35,15 +25,15 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         {user ? (
           <Stack.Screen
-            name="Inside"
-            component={InsideLayout}
+            name="Home"
+            component={HomeScreen}
             options={{ headerShown: false }}
           ></Stack.Screen>
         ) : (
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            // options={{ headerShown: false }}
+            options={{ headerShown: false }}
           />
         )}
       </Stack.Navigator>

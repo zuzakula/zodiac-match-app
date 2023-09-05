@@ -1,4 +1,11 @@
-import { View, Text, Button, TextInput, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import {
@@ -43,34 +50,55 @@ const LoginScreen = () => {
   };
 
   return (
-    <View>
-      <Text>L O G I N </Text>
-      <TextInput
-        placeholder="E-Mail"
-        autoCapitalize="none"
-        onChangeText={(v) => {
-          setEmail(v);
-        }}
-        value={email}
-      ></TextInput>
-      <TextInput
-        placeholder="Password"
-        autoCapitalize="none"
-        onChangeText={(v) => {
-          setPassword(v);
-        }}
-        value={password}
-        secureTextEntry={true}
-      ></TextInput>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <>
-          <Button title="Sign in" onPress={signIn} />
-          <Button title="Create account" onPress={signUp} />
-        </>
-      )}
-      {/*<Button title="login with google" onPress={() => promptAsync()} />*/}
+    <View className="min-h-screen bg-purple-300 flex justify-center items-center">
+      <View className="py-12 px-12 bg-white rounded-2xl z-20 space-y-4">
+        <Text className="text-3xl font-bold text-center mb-4 cursor-pointer tracking-wide">
+          Login to the app
+        </Text>
+        <TextInput
+          className="block text-sm py-3 px-4 rounded-lg border outline-none"
+          placeholder="E-Mail"
+          autoCapitalize="none"
+          onChangeText={(v) => {
+            setEmail(v);
+          }}
+          value={email}
+        ></TextInput>
+
+        <TextInput
+          className="block text-sm py-3 px-4 rounded-lg border outline-none"
+          placeholder="Password"
+          autoCapitalize="none"
+          onChangeText={(v) => {
+            setPassword(v);
+          }}
+          value={password}
+          secureTextEntry={true}
+        ></TextInput>
+
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            <Pressable
+              className="bg-purple-400 h-10 px-4 items-center justify-center rounded-lg mt-4 mb-4"
+              onPress={signIn}
+            >
+              <Text className="text-white text-bold">Sign in</Text>
+            </Pressable>
+            <Text className="text-center mb-4 cursor-pointer">
+              Don't have an account yet?
+            </Text>
+            <Pressable
+              className="bg-purple-400 h-10 px-4 items-center justify-center rounded-lg"
+              onPress={signUp}
+            >
+              <Text className="text-white text-bold">Create it here</Text>
+            </Pressable>
+          </>
+        )}
+        {/*<Button title="login with google" onPress={() => promptAsync()} />*/}
+      </View>
     </View>
   );
 };
