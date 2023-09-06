@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
+import ChatScreen from "./screens/ChatScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -24,11 +25,14 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          ></Stack.Screen>
+          <>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+          </>
         ) : (
           <Stack.Screen
             name="Login"
