@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import ChatScreen from "./screens/ChatScreen";
+import CreateAccountScreen from "./screens/CreateAccountScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -34,11 +35,18 @@ export default function App() {
             <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
           </>
         ) : (
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CreateNewAcc"
+              component={CreateAccountScreen}
+              options={{ headerShown: false }}
+            />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
