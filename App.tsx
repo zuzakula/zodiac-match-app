@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import ChatScreen from "./screens/ChatScreen";
 import CreateAccountScreen from "./screens/CreateAccountScreen";
+import AddPicturesScreen from "./screens/newUser/AddPicturesScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,12 +16,15 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
+  const [newUser, setNewUser] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user: any) => {
       setUser(user);
     });
   }, []);
+
+  useEffect(() => {});
 
   return (
     <NavigationContainer>
@@ -33,6 +37,11 @@ export default function App() {
               options={{ headerShown: false }}
             ></Stack.Screen>
             <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+            <Stack.Screen
+              name="AddPictures"
+              component={AddPicturesScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
           </>
         ) : (
           <>

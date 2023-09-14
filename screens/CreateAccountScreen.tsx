@@ -9,6 +9,7 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
+import { useNavigation } from "@react-navigation/native";
 
 const CreateAccountScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,6 +17,7 @@ const CreateAccountScreen = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const firebaseAuth = auth;
+  const navigation = useNavigation();
 
   const signUp = async () => {
     setLoading(true);
@@ -24,7 +26,7 @@ const CreateAccountScreen = () => {
         firebaseAuth,
         email,
         password
-      );
+      ).then(() => navigation.navigate("AddPictures"));
     } catch (err) {
       alert("Registration failed: " + err.message);
     } finally {

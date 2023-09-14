@@ -3,6 +3,7 @@ import {
   Text,
   Button,
   TextInput,
+  Image,
   ActivityIndicator,
   Pressable,
 } from "react-native";
@@ -14,6 +15,7 @@ import {
 } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>("");

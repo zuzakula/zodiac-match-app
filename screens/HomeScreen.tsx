@@ -28,6 +28,16 @@ const HomeScreen = () => {
         <Text className="text-white text-bold">Go to Chat</Text>
       </Pressable>
       <Pressable
+        className="bg-purple-600 h-10 px-4 items-center justify-center rounded-lg"
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate("AddPictures");
+          }
+        }}
+      >
+        <Text className="text-white text-bold">Adding Pictures</Text>
+      </Pressable>
+      <Pressable
         className="bg-purple-400 h-10 px-4 items-center justify-center rounded-lg"
         onPress={() =>
           signOut(auth)
