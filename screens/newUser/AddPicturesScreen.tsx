@@ -1,14 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  FlatList,
-  Text,
-  TouchableOpacity,
-  Image,
-  View,
-  Pressable,
-} from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Uploading from "./components/Uploading";
+import { FlatList, Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import {
@@ -20,8 +11,7 @@ import {
 import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { auth, db, storage } from "../../firebaseConfig";
 import uuid from "react-native-uuid";
-import { useNavigation } from "@react-navigation/native";
-import ContinueButton from "./components/ContinueButton";
+import Button from "../components/Button";
 import { shared } from "../../styles/shared.styles";
 
 const AddPicturesScreen = () => {
@@ -129,7 +119,7 @@ const AddPicturesScreen = () => {
       {/*</TouchableOpacity>*/}
       {/*<Text>Upload photos for your account!</Text>*/}
 
-      <ContinueButton navigateTo={"AboutYou"} />
+      <Button navigateTo={"AboutYou"} />
     </SafeAreaView>
   );
 };

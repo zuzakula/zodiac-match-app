@@ -7,7 +7,7 @@ export const shared = {
     flex: 1,
     alignItems: "center",
   },
-  continueButton: {
+  button: {
     backgroundColor: "#444444",
     borderRadius: 20,
     height: 45,
@@ -15,7 +15,7 @@ export const shared = {
     alignItems: "center",
     margin: 10,
   },
-  continueButtonText: {
+  buttonText: {
     position: "relative",
     top: 10,
     alignItems: "center",
@@ -29,5 +29,11 @@ export const shared = {
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",
+  },
+  container: {
+    position: "relative",
+    top: 0,
+    flex: 1,
+    alignItems: "center",
   },
 };

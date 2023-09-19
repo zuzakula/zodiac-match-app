@@ -1,6 +1,6 @@
-import { SafeAreaView, View, Text } from "react-native";
+import { SafeAreaView, Text } from "react-native";
 import { shared } from "../../styles/shared.styles";
-import ContinueButton from "./components/ContinueButton";
+import Button from "../components/Button";
 
 const BigThreeInfoScreen = () => {
   return (
@@ -10,7 +10,7 @@ const BigThreeInfoScreen = () => {
         Here will be some info from external API based on the result from
         birthday date
       </Text>
-      <ContinueButton navigateTo={"Sun"} />
+      <Button navigateTo={"Sun"} />
     </SafeAreaView>
   );
 };

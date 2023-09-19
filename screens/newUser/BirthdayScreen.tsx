@@ -1,6 +1,6 @@
-import { SafeAreaView, View, Text } from "react-native";
+import { SafeAreaView, Text } from "react-native";
 import { shared } from "../../styles/shared.styles";
-import ContinueButton from "./components/ContinueButton";
+import Button from "../components/Button";
 
 const BirthdayScreen = () => {
   return (
@@ -9,7 +9,7 @@ const BirthdayScreen = () => {
         To be able to find out who you click with:
       </Text>
       <Text style={shared.text}> Input your birthday date!</Text>
-      <ContinueButton navigateTo={"BigThree"} />
+      <Button navigateTo={"BigThree"} />
     </SafeAreaView>
   );
 };

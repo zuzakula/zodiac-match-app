@@ -38,7 +38,7 @@ const CreateAccountScreen = () => {
   return (
     <SafeAreaView style={shared.screen}>
       <View>
-        <Text style={styled.createAccountText}>Sign up to Zodiac Match!</Text>
+        <Text style={shared.text}>Sign up to Zodiac Match!</Text>
         <View style={styled.inputs}>
           <TextInput
             style={styled.input}
@@ -86,11 +86,9 @@ const CreateAccountScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <>
-            <View style={styled.container}>
-              <Pressable style={styled.createAccountButton} onPress={signUp}>
-                <Text style={styled.createAccountButtonText}>
-                  Create account
-                </Text>
+            <View style={shared.container}>
+              <Pressable style={shared.button} onPress={signUp}>
+                <Text style={shared.buttonText}>Create account</Text>
               </Pressable>
               <Pressable
                 onPress={() => {
@@ -113,23 +111,6 @@ const CreateAccountScreen = () => {
 };
 
 const styled = {
-  newAccountScreen: {
-    position: "absolute",
-    backgroundColor: "#6F78C7",
-    height: "100%",
-    width: "100%",
-    flex: 1,
-    alignItems: "center",
-  },
-  createAccountText: {
-    color: "white",
-    // position: "relative",
-    // top: 80,
-    margin: 20,
-    fontWeight: "bold",
-    fontSize: 33,
-    textAlign: "center",
-  },
   input: {
     height: 40,
     backgroundColor: "white",
@@ -140,29 +121,9 @@ const styled = {
     marginTop: 50,
     marginBottom: 0,
   },
-  createAccountButton: {
-    backgroundColor: "#444444",
-    borderRadius: 20,
-    height: 45,
-    width: 240,
-    alignItems: "center",
-    margin: 10,
-  },
   loginText: {
     color: "#444444",
     fontWeight: "bold",
-  },
-  container: {
-    position: "relative",
-    alignItems: "center",
-  },
-  createAccountButtonText: {
-    position: "relative",
-    top: 10,
-    alignItems: "center",
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 };
 
