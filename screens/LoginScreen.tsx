@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  Button,
   TextInput,
-  Image,
   ActivityIndicator,
   Pressable,
 } from "react-native";
@@ -15,7 +13,6 @@ import {
 } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>("");
@@ -55,61 +52,107 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView className="min-h-screen bg-purple-300 flex justify-center items-center">
-      <View className="py-12 px-12 bg-white rounded-2xl z-20 space-y-4">
-        <Text className="text-3xl font-bold text-center mb-4 cursor-pointer tracking-wide">
-          Login to the app
-        </Text>
-        <TextInput
-          className="block text-sm py-3 px-4 rounded-lg border outline-none"
-          placeholder="E-Mail"
-          autoCapitalize="none"
-          onChangeText={(v) => {
-            setEmail(v);
-          }}
-          value={email}
-        ></TextInput>
+    <SafeAreaView style={styled.loginScreen}>
+      <Text style={styled.loginText}>Login to Zodiac Match!</Text>
 
-        <TextInput
-          className="block text-sm py-3 px-4 rounded-lg border outline-none"
-          placeholder="Password"
-          autoCapitalize="none"
-          onChangeText={(v) => {
-            setPassword(v);
-          }}
-          value={password}
-          secureTextEntry={true}
-        ></TextInput>
+      <TextInput
+        style={styled.input}
+        placeholder=" Enter your e-mail"
+        autoCapitalize="none"
+        onChangeText={(v) => {
+          setEmail(v);
+        }}
+        value={email}
+      ></TextInput>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            <Pressable
-              className="bg-purple-400 h-10 px-4 items-center justify-center rounded-lg mt-4 mb-4"
-              onPress={signIn}
-            >
-              <Text className="text-white text-bold">Sign in</Text>
+      <TextInput
+        style={styled.input}
+        placeholder=" Enter your password"
+        autoCapitalize="none"
+        onChangeText={(v) => {
+          setPassword(v);
+        }}
+        value={password}
+        secureTextEntry={true}
+      ></TextInput>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          <View style={styled.signIn}>
+            <Pressable style={styled.loginButton} onPress={signIn}>
+              <Text style={styled.loginButtonText}>Login</Text>
             </Pressable>
-            <Text className="text-center mb-4 cursor-pointer">
-              Don't have an account yet?
-            </Text>
             <Pressable
-              className="bg-purple-400 h-10 px-4 items-center justify-center rounded-lg"
               onPress={() => {
                 if (navigation) {
                   navigation.navigate("CreateNewAcc");
                 }
               }}
             >
-              <Text className="text-white text-bold">Create it here</Text>
+              <Text style={{ color: "white" }}>
+                Don't have an account yet?
+                <Text style={styled.createNewAccText}>Sign up</Text>
+              </Text>
             </Pressable>
-          </>
-        )}
-        {/*<Button title="login with google" onPress={() => promptAsync()} />*/}
-      </View>
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
+};
+
+const styled = {
+  loginScreen: {
+    position: "absolute",
+    backgroundColor: "#6F78C7",
+    height: "100%",
+    width: "100%",
+    flex: 1,
+    alignItems: "center",
+  },
+  loginButtonText: {
+    position: "relative",
+    top: 10,
+    alignItems: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  loginButton: {
+    backgroundColor: "#444444",
+    borderRadius: 20,
+    height: 45,
+    width: 240,
+    alignItems: "center",
+    margin: 10,
+  },
+  loginText: {
+    color: "white",
+    margin: 20,
+    marginBottom: 250,
+    fontWeight: "bold",
+    fontSize: 33,
+    textAlign: "center",
+  },
+  input: {
+    width: "70%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 17,
+    margin: 10,
+  },
+  createNewAccText: {
+    color: "#444444",
+    fontWeight: "bold",
+  },
+  signIn: {
+    position: "relative",
+    top: 0,
+    flex: 1,
+    alignItems: "center",
+  },
 };
 
 export default LoginScreen;

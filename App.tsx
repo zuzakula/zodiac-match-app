@@ -9,6 +9,13 @@ import HomeScreen from "./screens/HomeScreen";
 import ChatScreen from "./screens/ChatScreen";
 import CreateAccountScreen from "./screens/CreateAccountScreen";
 import AddPicturesScreen from "./screens/newUser/AddPicturesScreen";
+import WelcomeScreen from "./screens/WelcomeScreen.";
+import AboutYouScreen from "./screens/newUser/AboutYouScreen";
+import BirthdayScreen from "./screens/newUser/BirthdayScreen";
+import BigThreeInfoScreen from "./screens/newUser/BIgThreeInfoScreen";
+import SunSignScreen from "./screens/newUser/SunSignScreen";
+import MoonSignScreen from "./screens/newUser/MoonSignScreen";
+import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -28,7 +35,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Welcome">
         {user ? (
           <>
             <Stack.Screen
@@ -42,9 +49,44 @@ export default function App() {
               component={AddPicturesScreen}
               options={{ headerShown: false }}
             ></Stack.Screen>
+            <Stack.Screen
+              name="AboutYou"
+              component={AboutYouScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Birthday"
+              component={BirthdayScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="BigThree"
+              component={BigThreeInfoScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Sun"
+              component={SunSignScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Moon"
+              component={MoonSignScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Rising"
+              component={RisingSignScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
           </>
         ) : (
           <>
+            <Stack.Screen
+              name="Welcome"
+              component={WelcomeScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Login"
               component={LoginScreen}
