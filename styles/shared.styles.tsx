@@ -1,4 +1,4 @@
-export const shared = {
+const shared = {
   screen: {
     position: "absolute",
     backgroundColor: "#6F78C7",
@@ -37,3 +37,5 @@ export const shared = {
     alignItems: "center",
   },
 };
+
+export default shared;

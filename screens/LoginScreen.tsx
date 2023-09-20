@@ -13,7 +13,7 @@ import {
 } from "firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { shared } from "../styles/shared.styles";
+import shared from "../styles/shared.styles";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>("");

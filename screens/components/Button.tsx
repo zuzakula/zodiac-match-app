@@ -1,5 +1,5 @@
 import { Pressable, Text } from "react-native";
-import { shared } from "../../styles/shared.styles";
+import shared from "../../styles/shared.styles";
 import { useNavigation } from "@react-navigation/native";
 
 const Button = ({ navigateTo }) => {

@@ -1,7 +1,8 @@
 import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { shared } from "../styles/shared.styles";
+import shared from "../styles/shared.styles";
+import React from "react";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();

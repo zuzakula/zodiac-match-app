@@ -10,7 +10,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
-import { shared } from "../styles/shared.styles";
+import shared from "../styles/shared.styles";
 
 const CreateAccountScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);

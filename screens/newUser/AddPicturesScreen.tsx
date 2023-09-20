@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import {
@@ -12,17 +12,18 @@ import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { auth, db, storage } from "../../firebaseConfig";
 import uuid from "react-native-uuid";
 import Button from "../components/Button";
-import { shared } from "../../styles/shared.styles";
+import shared from "../../styles/shared.styles";
+import Icon from "react-native-vector-icons";
 
 const AddPicturesScreen = () => {
   const [image, setImage] = useState<any>("");
   const [progress, setProgress] = useState<any>(0);
   const [photos, setPhotos] = useState([]);
   const [data, setData] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
+    { id: 1, url: "" },
+    { id: 2, url: "" },
+    { id: 3, url: "" },
+    { id: 4, url: "" },
   ]);
 
   useEffect(() => {
@@ -108,16 +109,27 @@ const AddPicturesScreen = () => {
 
       <FlatList
         data={data}
-        renderItem={() => <View style={styled.pic}></View>}
+        renderItem={() => (
+          <View style={styled.pic}>
+            <Image
+              source="https://picsum.photos/id/237/200/300"
+              width={120}
+              height={150}
+            />
+            <TouchableOpacity onPress={pickImage}>
+              <Text style={styled.addButton}>+</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         numColumns={2}
         keyExtractor={(item) => item.id}
       />
 
-      {/*<Text>To continue you have to pick at least 1 photo</Text>*/}
-      {/*<TouchableOpacity onPress={pickImage} className="m-5">*/}
-      {/*  <Ionicons name="cloud-upload-outline" size={32}></Ionicons>*/}
-      {/*</TouchableOpacity>*/}
-      {/*<Text>Upload photos for your account!</Text>*/}
+      <Text>To continue you have to pick at least 1 photo</Text>
+      <TouchableOpacity onPress={pickImage} className="m-5">
+        <Text>ADD</Text>
+      </TouchableOpacity>
+      <Text>Upload photos for your account!</Text>
 
       <Button navigateTo={"AboutYou"} />
     </SafeAreaView>
@@ -134,6 +146,21 @@ const styled = {
     borderStyle: "dashed",
     borderColor: "#7E00FC",
     borderWidth: 2,
+  },
+  addButton: {
+    position: "relative",
+    top: -10,
+    left: 90,
+    backgroundColor: "#7E00FC",
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+    color: "white",
+    textAlign: "center",
+    textAlignVertical: "center",
+    justifyContent: "center",
+    fontSize: 30,
+    // display: "none",
   },
 };
 

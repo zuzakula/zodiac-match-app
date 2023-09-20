@@ -1,5 +1,5 @@
 import { SafeAreaView, Text } from "react-native";
-import { shared } from "../../styles/shared.styles";
+import shared from "../../styles/shared.styles";
 import Button from "../components/Button";
 
 const SunSignScreen = () => {
