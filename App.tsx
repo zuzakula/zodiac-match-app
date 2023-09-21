@@ -3,7 +3,7 @@ import LoginScreen from "./screens/LoginScreen";
 import * as WebBrowser from "expo-web-browser";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import ChatScreen from "./screens/ChatScreen";
@@ -29,8 +29,6 @@ export default function App() {
       setUser(user);
     });
   }, []);
-
-  useEffect(() => {});
 
   return (
     <NavigationContainer>

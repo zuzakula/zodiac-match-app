@@ -1,8 +1,9 @@
 import { SafeAreaView, TextInput } from "react-native";
 import { useState } from "react";
 import { Text } from "react-native";
-import Button from "../components/Button";
-import { shared } from "../../styles/shared.styles";
+import ContinueButton from "../components/ContinueButton";
+import shared from "../../styles/shared.styles";
+import GoBackButton from "../components/GoBackButton";
 
 const AboutYouScreen = () => {
   const [bio, setBio] = useState<string>("");
@@ -22,7 +23,8 @@ const AboutYouScreen = () => {
         value={bio}
       ></TextInput>
 
-      <Button navigateTo={"Birthday"} />
+      <ContinueButton navigateTo={"Birthday"} />
+      <GoBackButton goBackTo={"AddPictures"} />
     </SafeAreaView>
   );
 };

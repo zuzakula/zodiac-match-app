@@ -2,7 +2,7 @@ import { Pressable, Text } from "react-native";
 import shared from "../../styles/shared.styles";
 import { useNavigation } from "@react-navigation/native";
 
-const Button = ({ navigateTo }) => {
+const ContinueButton = ({ navigateTo }) => {
   const navigation = useNavigation();
 
   return (
@@ -19,4 +19,4 @@ const Button = ({ navigateTo }) => {
   );
 };
 
-export default Button;
+export default ContinueButton;
