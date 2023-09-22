@@ -1,8 +1,10 @@
 import { Pressable, Text } from "react-native";
 import shared from "../../styles/shared.styles";
 import { useNavigation } from "@react-navigation/native";
+import { updateUser } from "../../services/usersService";
+import { auth } from "../../firebaseConfig";
 
-const ContinueButton = ({ navigateTo }) => {
+const ContinueButton = ({ navigateTo, updateBody }) => {
   const navigation = useNavigation();
 
   return (
@@ -11,6 +13,9 @@ const ContinueButton = ({ navigateTo }) => {
       onPress={() => {
         if (navigation) {
           navigation.navigate(navigateTo);
+        }
+        if (updateBody) {
+          updateUser(auth.currentUser?.email, updateBody).then((r) => r);
         }
       }}
     >

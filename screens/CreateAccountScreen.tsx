@@ -7,10 +7,12 @@ import {
   View,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
+import { createUser } from "../services/usersService";
+import uuid from "react-native-uuid";
 
 const CreateAccountScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,6 +31,10 @@ const CreateAccountScreen = () => {
         email,
         password
       ).then(() => navigation.navigate("AddPictures"));
+
+      createUser({ id: uuid.v4() as string, email: email, name: name }).then(
+        (r) => console.log(r, "newUser")
+      );
     } catch (err) {
       alert("Registration failed: " + err.message);
     } finally {

@@ -23,7 +23,7 @@ const AboutYouScreen = () => {
         value={bio}
       ></TextInput>
 
-      <ContinueButton navigateTo={"Birthday"} />
+      <ContinueButton navigateTo={"Birthday"} updateBody={{ bio: bio }} />
       <GoBackButton goBackTo={"AddPictures"} />
     </SafeAreaView>
   );

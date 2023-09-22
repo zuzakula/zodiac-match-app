@@ -1,36 +1,19 @@
 import { View, Text, Pressable, TouchableOpacity, Image } from "react-native";
-import { auth, database, db, storage } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
 import { useEffect, useState } from "react";
-import { ref, onValue, get, child } from "firebase/database";
-import { getDocs, collection, getDoc, doc } from "firebase/firestore";
+import { findAllPictures, findAllUsers } from "../services/usersService";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    const findAll = async () => {
-      const doc_refs = await getDocs(collection(db, "ProfilePictures"));
-
-      const res = [];
-
-      doc_refs.forEach((country) => {
-        res.push({
-          id: country.id,
-          ...country.data(),
-        });
-      });
-
-      setImage(res[0].url);
-
-      return res;
-    };
-
-    console.log(findAll());
+    findAllPictures().then((res) => setImage(res[1].url));
+    findAllUsers().then((r) => console.log(r));
   }, []);
 
   return (
