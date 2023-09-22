@@ -4,6 +4,7 @@ import {
   setDoc,
   doc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
@@ -21,18 +22,31 @@ export const findAllPictures = async () => {
   return res;
 };
 
+export const findPicture = async (email) => {
+  const docRef = doc(db, "ProfilePictures", email);
+  const docSnap = await getDoc(docRef);
+
+  return docSnap.data();
+};
+
 export const findAllUsers = async () => {
   const docRef = await getDocs(collection(db, "Users"));
-  const res = [];
+  const users = [];
 
   docRef.forEach((snapshot) => {
-    res.push({
+    users.push({
       id: snapshot.id,
       ...snapshot.data(),
     });
   });
 
-  return res;
+  return users;
+};
+
+export const findUser = async (email: string) => {
+  const docRef = await getDoc(collection(db, "Users", email) as any);
+
+  return docRef;
 };
 
 export const createUser = async (body) => {

@@ -3,7 +3,7 @@ import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../../firebaseConfig";
 import uuid from "react-native-uuid";
 import ContinueButton from "../components/ContinueButton";
@@ -51,7 +51,7 @@ const AddPicturesScreen = () => {
     const user = auth.currentUser?.email;
     const id = uuid.v4();
     try {
-      const ref = await addDoc(collection(db, `ProfilePictures`), {
+      const ref = await setDoc(doc(db, `ProfilePictures`, user as string), {
         id,
         url,
         createdAt,
@@ -76,10 +76,6 @@ const AddPicturesScreen = () => {
         <TouchableOpacity style={styled.addButton} onPress={pickImage}>
           <Text style={styled.addButtonText}>Choose photo</Text>
         </TouchableOpacity>
-
-        {/*<TouchableOpacity onPress={pickImage}>*/}
-        {/*  <Text style={styled.addButton}>D</Text>*/}
-        {/*</TouchableOpacity>*/}
       </View>
 
       <View style={styled.continue}>

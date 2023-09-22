@@ -1,79 +1,37 @@
 import { View, Text, Pressable, TouchableOpacity, Image } from "react-native";
 import { auth } from "../firebaseConfig";
-import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
 import { useEffect, useState } from "react";
-import { findAllPictures, findAllUsers } from "../services/usersService";
+import { findPicture } from "../services/usersService";
+import Header from "./components/Header";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    findAllPictures().then((res) => setImage(res[1].url));
-    findAllUsers().then((r) => console.log(r));
+    findPicture(auth.currentUser?.email).then((res) => setImage(res.url));
   }, []);
 
   return (
     <SafeAreaView style={shared.screen}>
+      <Header />
       <View style={styled.card}>
         <TouchableOpacity>
           {image && (
             <>
-              <Image
-                source={{ uri: image }}
-                width={200}
-                height={230}
-                style={styled.image}
-              />
-              <Text style={styled.name}> Wiktoria 21 </Text>
-              <Text style={styled.bigThree}>
-                ☀️Saggitarius {"\n"} 🌜Saggitarius {"\n"} ⬆️Saggitarius {"\n"}
-              </Text>
-              <Pressable style={[styled.button, styled.dislike]}>
-                <Text style={styled.buttonText}>NO</Text>
-              </Pressable>
-              <Pressable style={[styled.button, styled.like]}>
-                <Text style={styled.buttonText}>YES</Text>
-              </Pressable>
+              <Image source={{ uri: image }} style={styled.image} />
+              <View style={styled.userInfo}>
+                <Text style={styled.name}> Wiktoria 21 </Text>
+                <Text style={styled.bigThree}>
+                  ☀️Saggitarius {"\n"} 🌜Leo {"\n"} ⬆️Saggitarius {"\n"}
+                </Text>
+              </View>
             </>
           )}
         </TouchableOpacity>
-      </View>
-
-      <View style={{ position: "relative", top: 600 }}>
-        <Pressable
-          style={shared.button}
-          onPress={() => {
-            if (navigation) {
-              navigation.navigate("Chat");
-            }
-          }}
-        >
-          <Text style={shared.buttonText}>Go to Chat</Text>
-        </Pressable>
-        <Pressable
-          style={shared.button}
-          onPress={() => {
-            if (navigation) {
-              navigation.navigate("AddPictures");
-            }
-          }}
-        >
-          <Text style={shared.buttonText}>Adding Pictures</Text>
-        </Pressable>
-        <Pressable
-          style={shared.button}
-          onPress={() =>
-            signOut(auth)
-              .then(() => {})
-              .catch((err) => alert(err))
-          }
-        >
-          <Text style={shared.buttonText}>Sign Out</Text>
-        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -82,15 +40,18 @@ const HomeScreen = () => {
 const styled = {
   card: {
     position: "absolute",
-    margin: 70,
-    height: "70%",
-    width: 300,
+    margin: 110,
+    height: "80%",
+    width: "90%",
     backgroundColor: "white",
     borderRadius: 20,
   },
+  userInfo: {
+    marginTop: 10,
+  },
   image: {
-    width: "90%",
-    height: "65%",
+    width: "95%",
+    height: "75%",
     marginTop: 10,
     marginBottom: 0,
     marginLeft: "auto",
