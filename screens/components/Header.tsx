@@ -1,6 +1,6 @@
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import { useEffect, useState } from "react";
-import { findPicture } from "../../services/usersService";
+import { findUser } from "../../services/usersService";
 import { auth } from "../../firebaseConfig";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
@@ -11,7 +11,7 @@ const Header = () => {
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    findPicture(auth.currentUser?.email).then((res) => setImage(res.url));
+    findUser(auth.currentUser?.email).then((res) => setImage(res.url));
   }, []);
 
   return (
@@ -27,8 +27,8 @@ const Header = () => {
           <Image
             style={styled.profilePic}
             source={{ uri: image }}
-            width={30}
-            height={30}
+            width={50}
+            height={50}
           />
         </TouchableOpacity>
 
@@ -40,7 +40,7 @@ const Header = () => {
           }}
         >
           <Image
-            source={require("../../assets/star.png")}
+            source={require("../../assets/logo.jpg")}
             style={styled.logo}
           />
         </TouchableOpacity>
@@ -54,7 +54,7 @@ const Header = () => {
         >
           <Ionicons
             name="chatbubbles-sharp"
-            size={30}
+            size={40}
             style={styled.chatIcon}
           />
         </TouchableOpacity>
@@ -74,8 +74,8 @@ const styled = {
   },
   logo: {
     borderRadius: 20,
-    height: 40,
-    width: 40,
+    height: 60,
+    width: 60,
     marginRight: 110,
     marginLeft: 110,
   },

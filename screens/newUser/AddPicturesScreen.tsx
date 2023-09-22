@@ -9,6 +9,7 @@ import uuid from "react-native-uuid";
 import ContinueButton from "../components/ContinueButton";
 import shared from "../../styles/shared.styles";
 import GoBackButton from "../components/GoBackButton";
+import { updateUser } from "../../services/usersService";
 
 const AddPicturesScreen = () => {
   const [image, setImage] = useState<any>("");
@@ -41,22 +42,16 @@ const AddPicturesScreen = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async () => {
-          await saveImage(uri, new Date().toISOString());
+          await saveImage(uri);
         });
       }
     );
   };
 
-  const saveImage = async (url, createdAt) => {
+  const saveImage = async (url) => {
     const user = auth.currentUser?.email;
-    const id = uuid.v4();
     try {
-      const ref = await setDoc(doc(db, `ProfilePictures`, user as string), {
-        id,
-        url,
-        createdAt,
-        user,
-      } as any);
+      await updateUser(user, { url: url });
     } catch (err) {
       console.log(err);
     }

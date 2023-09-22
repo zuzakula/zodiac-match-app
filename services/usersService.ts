@@ -43,10 +43,11 @@ export const findAllUsers = async () => {
   return users;
 };
 
-export const findUser = async (email: string) => {
-  const docRef = await getDoc(collection(db, "Users", email) as any);
+export const findUser = async (email) => {
+  const docRef = doc(db, "Users", email);
+  const docSnap = await getDoc(docRef);
 
-  return docRef;
+  return docSnap.data();
 };
 
 export const createUser = async (body) => {

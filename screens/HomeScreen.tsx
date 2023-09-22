@@ -4,34 +4,57 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
 import { useEffect, useState } from "react";
-import { findPicture } from "../services/usersService";
+import { findAllUsers, findPicture, findUser } from "../services/usersService";
 import Header from "./components/Header";
+import Card from "./components/Card";
+import Swiper from "react-native-deck-swiper";
+
+const xd = [{ name: "Zuza" }, { name: "Wika" }];
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [sun, setSun] = useState("");
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     findPicture(auth.currentUser?.email).then((res) => setImage(res.url));
+    findUser(auth.currentUser?.email).then((res) => setName(res.name));
+    findAllUsers().then((res) => {
+      setUsers(res);
+    });
   }, []);
 
   return (
     <SafeAreaView style={shared.screen}>
       <Header />
-      <View style={styled.card}>
-        <TouchableOpacity>
-          {image && (
-            <>
-              <Image source={{ uri: image }} style={styled.image} />
-              <View style={styled.userInfo}>
-                <Text style={styled.name}> Wiktoria 21 </Text>
-                <Text style={styled.bigThree}>
-                  ☀️Saggitarius {"\n"} 🌜Leo {"\n"} ⬆️Saggitarius {"\n"}
-                </Text>
-              </View>
-            </>
-          )}
-        </TouchableOpacity>
+
+      <View style={{ flex: 1, left: "-45%" }}>
+        <Swiper
+          cards={users}
+          containerStyle={styled.containerCard}
+          renderCard={(card) => {
+            if (card) {
+              return (
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: 20,
+                    height: "80%",
+                    width: "90%",
+                  }}
+                >
+                  <Image source={{ uri: card.url }} style={styled.image} />
+                  <Text style={styled.name}>{card.name}</Text>
+                  <Text style={styled.bigThree}>
+                    ☀️Saggitarius {"\n"} 🌜Leo {"\n"} ⬆️Saggitarius {"\n"}
+                  </Text>
+                </View>
+              );
+            }
+          }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -39,16 +62,9 @@ const HomeScreen = () => {
 
 const styled = {
   card: {
-    position: "absolute",
-    margin: 110,
-    height: "80%",
-    width: "90%",
-    backgroundColor: "white",
-    borderRadius: 20,
-  },
-  userInfo: {
     marginTop: 10,
   },
+  containerCard: {},
   image: {
     width: "95%",
     height: "75%",
@@ -66,33 +82,6 @@ const styled = {
   bigThree: {
     fontSize: 16,
     textAlign: "center",
-  },
-  button: {
-    height: 60,
-    width: 60,
-    backgroundColor: "#A6ABDE",
-    borderRadius: 50,
-    position: "relative",
-    textAlign: "center",
-    borderWidth: 3,
-    borderColor: "white",
-  },
-  buttonText: {
-    fontSize: 25,
-    textAlign: "center",
-    verticalAlign: "middle",
-    height: 60,
-    width: 60,
-    fontWeight: "bold",
-    color: "white",
-  },
-  dislike: {
-    left: 0,
-    top: -10,
-  },
-  like: {
-    left: 260,
-    top: -65,
   },
 };
 
