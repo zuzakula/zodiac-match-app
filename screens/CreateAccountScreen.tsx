@@ -23,6 +23,8 @@ const CreateAccountScreen = () => {
   const firebaseAuth = auth;
   const navigation = useNavigation();
 
+  const incompleteForm = false; // to do form validation !name || !confirmPassword
+
   const signUp = async () => {
     setLoading(true);
     try {

@@ -17,6 +17,11 @@ import SunSignScreen from "./screens/newUser/SunSignScreen";
 import MoonSignScreen from "./screens/newUser/MoonSignScreen";
 import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 
+import { LogBox } from "react-native";
+import ModalScreen from "./screens/ModalScreen";
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
+
 WebBrowser.maybeCompleteAuthSession();
 
 const Stack = createNativeStackNavigator();
@@ -35,47 +40,56 @@ export default function App() {
       <Stack.Navigator initialRouteName="Welcome">
         {user ? (
           <>
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
-            <Stack.Screen
-              name="AddPictures"
-              component={AddPicturesScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="AboutYou"
-              component={AboutYouScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Birthday"
-              component={BirthdayScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="BigThree"
-              component={BigThreeInfoScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Sun"
-              component={SunSignScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Moon"
-              component={MoonSignScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
-            <Stack.Screen
-              name="Rising"
-              component={RisingSignScreen}
-              options={{ headerShown: false }}
-            ></Stack.Screen>
+            <Stack.Group>
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+              <Stack.Screen
+                name="AddPictures"
+                component={AddPicturesScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="AboutYou"
+                component={AboutYouScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Birthday"
+                component={BirthdayScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="BigThree"
+                component={BigThreeInfoScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Sun"
+                component={SunSignScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Moon"
+                component={MoonSignScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Rising"
+                component={RisingSignScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+            </Stack.Group>
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+              <Stack.Screen
+                name={"Modal"}
+                component={ModalScreen}
+                // options={{ headerShown: false }}
+              ></Stack.Screen>
+            </Stack.Group>
           </>
         ) : (
           <>

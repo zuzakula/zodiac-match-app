@@ -35,7 +35,8 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("AddPictures");
+              // navigation.navigate("AddPictures");
+              navigation.navigate("Modal");
             }
           }}
         >

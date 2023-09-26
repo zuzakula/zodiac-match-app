@@ -5,8 +5,10 @@ import {
   doc,
   updateDoc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 
 export const findAllPictures = async () => {
   const docRef = await getDocs(collection(db, "ProfilePictures"));
@@ -29,16 +31,44 @@ export const findPicture = async (email) => {
   return docSnap.data();
 };
 
-export const findAllUsers = async () => {
-  const docRef = await getDocs(collection(db, "Users"));
+export const findUsers = async () => {
   const users = [];
+  let docRef;
+  let q;
+
+  const passes = await getDocs(
+    collection(db, "Users", auth.currentUser?.email as string, "passes")
+  );
+  const likes = await getDocs(
+    collection(db, "Users", auth.currentUser?.email as string, "likes")
+  );
+  const swipes = [];
+
+  passes.forEach((snapshot) => {
+    swipes.push(snapshot.data().email);
+  });
+
+  likes.forEach((snapshot) => {
+    swipes.push(snapshot.data().email);
+  });
+
+  if (swipes.length !== 0) {
+    q = query(collection(db, "Users"), where("email", "not-in", [...swipes]));
+    docRef = await getDocs(q);
+  } else {
+    docRef = await getDocs(collection(db, "Users")).then((r) => r);
+  }
 
   docRef.forEach((snapshot) => {
-    users.push({
-      id: snapshot.id,
-      ...snapshot.data(),
-    });
+    if (snapshot.data().email !== auth.currentUser?.email) {
+      users.push({
+        id: snapshot.id,
+        ...snapshot.data(),
+      });
+    }
   });
+
+  // console.log(users);
 
   return users;
 };
