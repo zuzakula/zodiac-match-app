@@ -8,7 +8,8 @@ import { findUsers, findPicture, findUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import generateId from "../lib/generateId";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -19,8 +20,8 @@ const HomeScreen = () => {
   const swipeRef = useRef(null);
 
   useEffect(() => {
-    findPicture(auth.currentUser?.email).then((res) => setImage(res.url));
-    findUser(auth.currentUser?.email).then((res) => setName(res.name));
+    findPicture(auth.currentUser?.uid).then((res) => setImage(res.url));
+    findUser(auth.currentUser?.uid).then((res) => setName(res.name));
     findUsers().then((res) => {
       setUsers(res);
     });
@@ -35,7 +36,7 @@ const HomeScreen = () => {
       doc(
         db,
         "Users",
-        auth.currentUser?.email as string,
+        auth.currentUser?.uid as string,
         "passes",
         userSwiped.email
       ),
@@ -47,15 +48,37 @@ const HomeScreen = () => {
     if (!users[cardIndex]) return;
 
     const userSwiped = users[cardIndex];
+    const loggedInUser = await (
+      await getDoc(doc(db, "Users", auth.currentUser?.uid as string))
+    ).data();
+
+    // could be a cloud function???
+    getDoc(
+      doc(db, "Users", userSwiped.id, "likes", auth.currentUser?.uid as string)
+    ).then((snapshot) => {
+      if (snapshot) {
+        setDoc(
+          doc(
+            db,
+            "Matches",
+            generateId(userSwiped.id, auth.currentUser?.uid)
+          ) as any,
+          {
+            users: {
+              [auth.currentUser?.uid]: loggedInUser,
+              [userSwiped.id]: userSwiped,
+            },
+            usersMatched: [auth.currentUser?.uid, userSwiped.id],
+          }
+        );
+
+        navigation.navigate("Match", { loggedInUser, userSwiped } as any);
+      } else {
+      }
+    });
 
     await setDoc(
-      doc(
-        db,
-        "Users",
-        auth.currentUser?.email as string,
-        "likes",
-        userSwiped.email
-      ),
+      doc(db, "Users", auth.currentUser?.uid as string, "likes", userSwiped.id),
       userSwiped
     );
   };
@@ -90,7 +113,7 @@ const HomeScreen = () => {
               },
             },
             right: {
-              title: "YASS",
+              title: "YESS",
               style: {
                 label: {
                   textAlign: "left",

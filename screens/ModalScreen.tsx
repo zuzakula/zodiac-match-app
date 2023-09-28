@@ -7,7 +7,7 @@ const ModalScreen = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    findUser(auth.currentUser?.email).then((res) => setUsername(res.name));
+    findUser(auth.currentUser?.uid).then((res) => setUsername(res.name));
   });
 
   return (

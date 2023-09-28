@@ -3,9 +3,7 @@ import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../../firebaseConfig";
-import uuid from "react-native-uuid";
 import ContinueButton from "../components/ContinueButton";
 import shared from "../../styles/shared.styles";
 import GoBackButton from "../components/GoBackButton";
@@ -31,7 +29,7 @@ const AddPicturesScreen = () => {
   const uploadImage = async (uri) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    const storageRef = ref(storage, `ProfilePictures/` + new Date().getTime());
+    const storageRef = ref(storage, `ProfilePictures/` + auth.currentUser?.uid);
     const uploadTask = uploadBytesResumable(storageRef, blob);
 
     uploadTask.on(
@@ -49,7 +47,7 @@ const AddPicturesScreen = () => {
   };
 
   const saveImage = async (url) => {
-    const user = auth.currentUser?.email;
+    const user = auth.currentUser?.uid;
     try {
       await updateUser(user, { url: url });
     } catch (err) {

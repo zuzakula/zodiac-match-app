@@ -15,7 +15,7 @@ const ContinueButton = ({ navigateTo, updateBody }) => {
           navigation.navigate(navigateTo);
         }
         if (updateBody) {
-          updateUser(auth.currentUser?.email, updateBody).then((r) => r);
+          updateUser(auth.currentUser?.uid, updateBody).then((r) => r);
         }
       }}
     >

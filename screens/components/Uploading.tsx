@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 import ProgressBar from "./ProgressBar";
 
 const Uploading = ({ image, progress }) => {
-  console.log(image);
   return (
     <View style={StyleSheet.absoluteFill} className="items-center mt-40">
       {image && <Image source={{ uri: image }} />}

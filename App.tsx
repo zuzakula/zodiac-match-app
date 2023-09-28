@@ -3,7 +3,7 @@ import LoginScreen from "./screens/LoginScreen";
 import * as WebBrowser from "expo-web-browser";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import ChatScreen from "./screens/ChatScreen";
@@ -19,6 +19,7 @@ import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 
 import { LogBox } from "react-native";
 import ModalScreen from "./screens/ModalScreen";
+import MatchScreen from "./screens/MatchScreen";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -82,14 +83,21 @@ export default function App() {
                 component={RisingSignScreen}
                 options={{ headerShown: false }}
               ></Stack.Screen>
+              <Stack.Group>
+                <Stack.Screen
+                  name="Match"
+                  component={MatchScreen}
+                  options={{ headerShown: false }}
+                ></Stack.Screen>
+              </Stack.Group>
             </Stack.Group>
-            <Stack.Group screenOptions={{ presentation: "modal" }}>
-              <Stack.Screen
-                name={"Modal"}
-                component={ModalScreen}
-                // options={{ headerShown: false }}
-              ></Stack.Screen>
-            </Stack.Group>
+            {/*<Stack.Group screenOptions={{ presentation: "modal" }}>*/}
+            {/*  /!*<Stack.Screen*!/*/}
+            {/*  /!*  name={"Modal"}*!/*/}
+            {/*  /!*  component={ModalScreen}*!/*/}
+            {/*  /!*  // options={{ headerShown: false }}*!/*/}
+            {/*  /!*></Stack.Screen>*!/*/}
+            {/*</Stack.Group>*/}
           </>
         ) : (
           <>

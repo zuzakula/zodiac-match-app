@@ -11,7 +11,7 @@ const Header = () => {
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    findUser(auth.currentUser?.email).then((res) => setImage(res.url));
+    findUser(auth.currentUser?.uid).then((res) => setImage(res.url));
   }, []);
 
   return (
@@ -35,8 +35,8 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              // navigation.navigate("AddPictures");
-              navigation.navigate("Modal");
+              navigation.navigate("AddPictures");
+              // navigation.navigate("Modal");
             }
           }}
         >
