@@ -35,7 +35,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Home");
+              navigation.navigate("Birthday");
               // navigation.navigate("Modal");
             }
           }}

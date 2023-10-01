@@ -1,6 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ActivityIndicator,
+  ImageBackground,
   Pressable,
   Text,
   TextInput,
@@ -43,12 +44,20 @@ const CreateAccountScreen = () => {
     }
   };
   return (
-    <SafeAreaView style={shared.screen}>
-      <View>
+    <View style={shared.screen}>
+      <ImageBackground
+        source={require("../assets/background-1.png")}
+        resizeMethod="cover"
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+        }}
+      >
         <Text style={shared.text}>Sign up to Zodiac Match!</Text>
-        <View style={styled.inputs}>
+        <View style={[shared.container, { marginTop: 60 }]}>
           <TextInput
-            style={styled.input}
+            style={shared.input}
             placeholder=" Enter your name"
             autoCapitalize="none"
             onChangeText={(v) => {
@@ -58,7 +67,7 @@ const CreateAccountScreen = () => {
           ></TextInput>
 
           <TextInput
-            style={styled.input}
+            style={shared.input}
             placeholder=" Enter your E-Mail"
             autoCapitalize="none"
             onChangeText={(v) => {
@@ -68,7 +77,7 @@ const CreateAccountScreen = () => {
           ></TextInput>
 
           <TextInput
-            style={styled.input}
+            style={shared.input}
             placeholder=" Enter Password"
             autoCapitalize="none"
             onChangeText={(v) => {
@@ -78,7 +87,7 @@ const CreateAccountScreen = () => {
             secureTextEntry={true}
           ></TextInput>
           <TextInput
-            style={styled.input}
+            style={shared.input}
             placeholder=" Confirm Password"
             autoCapitalize="none"
             onChangeText={(v) => {
@@ -112,22 +121,12 @@ const CreateAccountScreen = () => {
             </View>
           </>
         )}
-      </View>
-    </SafeAreaView>
+      </ImageBackground>
+    </View>
   );
 };
 
 const styled = {
-  input: {
-    height: 40,
-    backgroundColor: "white",
-    borderRadius: 17,
-    margin: 10,
-  },
-  inputs: {
-    marginTop: 50,
-    marginBottom: 0,
-  },
   loginText: {
     color: "#444444",
     fontWeight: "bold",

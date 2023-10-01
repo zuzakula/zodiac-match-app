@@ -1,13 +1,22 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 
 const SenderMessage = ({ message }) => {
-  // flex start for styling ???
-  console.log(message);
-  return (
-    <View style={{ backgroundColor: "light-grey", alignSelf: "flex-start" }}>
-      <Text style={{ color: "black" }}>{message.messages}</Text>
-    </View>
-  );
+  return <Text style={styled.message}>{message.messages}</Text>;
+};
+
+const styled = {
+  message: {
+    color: "black",
+    textAlign: "right",
+    alignSelf: "flex-end",
+    backgroundColor: "#ced3de",
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 20,
+    verticalAlign: "middle",
+    marginRight: 5,
+    transform: [{ scaleY: -1 }],
+  },
 };
 
 export default SenderMessage;

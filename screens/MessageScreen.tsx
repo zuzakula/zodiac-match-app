@@ -10,6 +10,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import Header from "./components/Header";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -72,15 +74,20 @@ const MessageScreen = (props) => {
 
   return (
     <SafeAreaView style={shared.screen}>
-      <Header style={{ position: "absoulte" }} />
       {matchUserInfo && (
         <>
-          <Image
-            style={styled.matchPic}
-            source={{ uri: matchUserInfo.url }}
-            width={50}
-            height={50}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Image
+              style={styled.matchPic}
+              source={{ uri: matchUserInfo.url }}
+              width={50}
+              height={50}
+            />
+          </TouchableOpacity>
           <Text style={[shared.text, { marginTop: 0 }]}>
             {matchUserInfo.name}
           </Text>
@@ -92,10 +99,18 @@ const MessageScreen = (props) => {
         keyboardVerticalOffset={10}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ height: 200 }}>
+          <ScrollView
+            style={{
+              height: 500,
+              backgroundColor: "white",
+              borderRadius: 20,
+              marginLeft: 5,
+              marginRight: 5,
+            }}
+          >
             <FlatList
               data={messages}
-              // style={{ display: "none" }}
+              style={{ transform: [{ scaleY: -1 }] }}
               renderItem={({ item: message }) =>
                 message.userId === user?.uid ? (
                   <SenderMessage key={message.id} message={message} />
@@ -105,22 +120,29 @@ const MessageScreen = (props) => {
               }
               keyExtractor={(item) => item.id}
             />
-          </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
-        <TextInput
-          placeholder="Send Message..."
-          style={[
-            shared.input,
-            {
-              width: 300,
-              paddingLeft: 15,
-            },
-          ]}
-          onSubmitEditing={sendMessage}
-          onChangeText={setInput}
-          value={input}
-        ></TextInput>
-        <Button onPress={sendMessage} title="Send" style={shared.button} />
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <TextInput
+            placeholder="Send Message..."
+            style={[
+              shared.input,
+              {
+                width: 280,
+                paddingLeft: 15,
+              },
+            ]}
+            onSubmitEditing={sendMessage}
+            onChangeText={setInput}
+            value={input}
+          ></TextInput>
+          <TouchableOpacity
+            onPress={sendMessage}
+            style={[shared.button, { height: 40, width: 70 }]}
+          >
+            <Text style={shared.buttonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

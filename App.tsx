@@ -16,9 +16,7 @@ import BigThreeInfoScreen from "./screens/newUser/BIgThreeInfoScreen";
 import SunSignScreen from "./screens/newUser/SunSignScreen";
 import MoonSignScreen from "./screens/newUser/MoonSignScreen";
 import RisingSignScreen from "./screens/newUser/RisingSignScreen";
-
 import { LogBox } from "react-native";
-import ModalScreen from "./screens/ModalScreen";
 import MatchScreen from "./screens/MatchScreen";
 import MessageScreen from "./screens/MessageScreen";
 LogBox.ignoreLogs(["Warning: ..."]);

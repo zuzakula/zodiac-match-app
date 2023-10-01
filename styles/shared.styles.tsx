@@ -25,18 +25,19 @@ const shared = {
   },
   text: {
     color: "white",
-    marginTop: 20,
+    marginTop: 50,
+    margin: 30,
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",
   },
   container: {
-    position: "relative",
-    top: 0,
     flex: 1,
     alignItems: "center",
   },
   input: {
+    width: 250,
+    padding: 10,
     height: 40,
     backgroundColor: "white",
     borderRadius: 17,
