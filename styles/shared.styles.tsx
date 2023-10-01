@@ -36,6 +36,12 @@ const shared = {
     flex: 1,
     alignItems: "center",
   },
+  input: {
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 17,
+    margin: 10,
+  },
 };
 
 export default shared;

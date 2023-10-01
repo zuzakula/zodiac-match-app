@@ -35,13 +35,13 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("AddPictures");
+              navigation.navigate("Home");
               // navigation.navigate("Modal");
             }
           }}
         >
           <Image
-            source={require("../../assets/logo.jpg")}
+            source={require("../../assets/logo.png")}
             style={styled.logo}
           />
         </TouchableOpacity>

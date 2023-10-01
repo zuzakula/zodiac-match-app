@@ -20,6 +20,7 @@ import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 import { LogBox } from "react-native";
 import ModalScreen from "./screens/ModalScreen";
 import MatchScreen from "./screens/MatchScreen";
+import MessageScreen from "./screens/MessageScreen";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -47,7 +48,11 @@ export default function App() {
                 component={HomeScreen}
                 options={{ headerShown: false }}
               ></Stack.Screen>
-              <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+              <Stack.Screen
+                name="Chat"
+                component={ChatScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
               <Stack.Screen
                 name="AddPictures"
                 component={AddPicturesScreen}
@@ -87,6 +92,11 @@ export default function App() {
                 <Stack.Screen
                   name="Match"
                   component={MatchScreen}
+                  options={{ headerShown: false }}
+                ></Stack.Screen>
+                <Stack.Screen
+                  name="Message"
+                  component={MessageScreen}
                   options={{ headerShown: false }}
                 ></Stack.Screen>
               </Stack.Group>

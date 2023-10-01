@@ -17,6 +17,7 @@ const HomeScreen = () => {
   const [name, setName] = useState<string>("");
   const [sun, setSun] = useState("");
   const [users, setUsers] = useState([]);
+  const [numOfUsers, setNumOfUsers] = useState(0);
   const swipeRef = useRef(null);
 
   useEffect(() => {
@@ -86,12 +87,11 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={shared.screen}>
       <Header />
-
       <View style={{ flex: 1, left: "-45%" }}>
         <Swiper
           ref={swipeRef}
           cards={users}
-          stackSize={20} // to do
+          stackSize={3}
           cardIndex={0}
           verticalSwipe={false}
           animateCardOpacity
