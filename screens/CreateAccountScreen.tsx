@@ -47,7 +47,7 @@ const CreateAccountScreen = () => {
     <View style={shared.screen}>
       <ImageBackground
         source={require("../assets/background-1.png")}
-        resizeMethod="cover"
+        resizeMethod="auto"
         style={{
           width: "100%",
           height: "100%",

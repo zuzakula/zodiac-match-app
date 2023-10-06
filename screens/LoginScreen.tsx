@@ -39,7 +39,7 @@ const LoginScreen = () => {
     <View style={shared.screen}>
       <ImageBackground
         source={require("../assets/background-3.png")}
-        resizeMethod="cover"
+        resizeMethod="auto"
         style={{
           width: "100%",
           height: "100%",
