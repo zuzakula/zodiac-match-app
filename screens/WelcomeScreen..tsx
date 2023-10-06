@@ -10,7 +10,7 @@ const WelcomeScreen = () => {
   return (
     <View style={shared.screen}>
       <ImageBackground
-        source={require("../assets/background-3.png")}
+        source={require("../assets/background-4.png")}
         resizeMethod="cover"
         style={{
           width: "100%",
