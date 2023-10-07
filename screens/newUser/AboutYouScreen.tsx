@@ -1,9 +1,10 @@
-import { SafeAreaView, TextInput } from "react-native";
+import { SafeAreaView, StyleProp, TextInput } from "react-native";
 import { useState } from "react";
 import { Text } from "react-native";
 import ContinueButton from "../components/ContinueButton";
 import shared from "../../styles/shared.styles";
 import GoBackButton from "../components/GoBackButton";
+import React from "react";
 
 const AboutYouScreen = () => {
   const [bio, setBio] = useState<string>("");
@@ -29,7 +30,7 @@ const AboutYouScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   input: {
     height: 150,
     width: "80%",

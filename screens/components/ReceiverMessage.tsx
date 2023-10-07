@@ -1,10 +1,10 @@
-import { Text } from "react-native";
+import { StyleProp, Text } from "react-native";
 
-const ReceiverMessage = ({ message }) => {
+const ReceiverMessage = ({ message }: { message: any }) => {
   return <Text style={styled.message}>{message.messages}</Text>;
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   message: {
     backgroundColor: "#6c82c4",
     alignSelf: "flex-start",

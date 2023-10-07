@@ -1,13 +1,16 @@
 import { View, Text, TextInput } from "react-native";
 import { useEffect, useState } from "react";
 import { findUser } from "../services/usersService";
+// @ts-ignore
 import { auth } from "../firebaseConfig";
 
 const ModalScreen = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    findUser(auth.currentUser?.uid).then((res) => setUsername(res.name));
+    findUser(auth.currentUser?.uid as string).then((res) =>
+      setUsername(res?.name)
+    );
   });
 
   return (

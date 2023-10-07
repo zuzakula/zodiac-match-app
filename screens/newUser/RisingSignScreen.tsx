@@ -7,7 +7,7 @@ const RisingSignScreen = () => {
   return (
     <SafeAreaView style={shared.screen}>
       <Text style={shared.text}>RISING SIGN</Text>
-      <ContinueButton navigateTo={"Home"} />
+      <ContinueButton navigateTo={"Home"} updateBody={null} />
       <GoBackButton goBackTo={"Moon"} />
     </SafeAreaView>
   );

@@ -1,7 +1,7 @@
 import Svg, { Rect } from "react-native-svg";
 import { View } from "react-native";
 
-const ProgressBar = ({ progress }) => {
+const ProgressBar = ({ progress }: { progress: number }) => {
   const barWidth = 230;
   const progressWidth = (progress / 100) * barWidth;
 

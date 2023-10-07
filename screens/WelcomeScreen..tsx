@@ -1,5 +1,11 @@
-import { View, Text, Pressable, Image, ImageBackground } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  ImageBackground,
+  StyleProp,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 import React from "react";
@@ -26,7 +32,7 @@ const WelcomeScreen = () => {
           <Pressable
             onPress={() => {
               if (navigation) {
-                navigation.navigate("CreateNewAcc");
+                navigation.navigate("CreateNewAcc" as never);
               }
             }}
             style={shared.button}
@@ -36,7 +42,7 @@ const WelcomeScreen = () => {
           <Pressable
             onPress={() => {
               if (navigation) {
-                navigation.navigate("Login");
+                navigation.navigate("Login" as never);
               }
             }}
           >
@@ -51,7 +57,7 @@ const WelcomeScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   loginText: {
     color: "#444444",
     fontWeight: "bold",

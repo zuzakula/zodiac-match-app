@@ -79,7 +79,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
     ndkVersion rootProject.ext.ndkVersion
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 33
 
     namespace 'com.zuzakula.zodiacmatchapp'
     compileSdk 33

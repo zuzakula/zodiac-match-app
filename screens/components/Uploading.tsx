@@ -2,13 +2,19 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import { StyleSheet } from "react-native";
 import ProgressBar from "./ProgressBar";
 
-const Uploading = ({ image, progress }) => {
+const Uploading = ({
+  image,
+  progress,
+}: {
+  image: string;
+  progress: number;
+}) => {
   return (
-    <View style={StyleSheet.absoluteFill} className="items-center mt-40">
+    <View style={StyleSheet.absoluteFill}>
       {image && <Image source={{ uri: image }} />}
-      <Text className="mb-3">Uploading...</Text>
+      <Text>Uploading...</Text>
       <ProgressBar progress={progress} />
-      <TouchableOpacity className="mt-3">
+      <TouchableOpacity>
         <Text>Cancel</Text>
       </TouchableOpacity>
     </View>

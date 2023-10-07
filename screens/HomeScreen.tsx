@@ -1,4 +1,11 @@
-import { View, Text, Pressable, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  Image,
+  StyleProp,
+} from "react-native";
 import { auth, db } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,6 +13,7 @@ import shared from "../styles/shared.styles";
 import { useEffect, useRef, useState } from "react";
 import { findUsers, findPicture, findUser } from "../services/usersService";
 import Header from "./components/Header";
+// @ts-ignore
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -21,17 +29,19 @@ const HomeScreen = () => {
   const swipeRef = useRef(null);
 
   useEffect(() => {
-    findPicture(auth.currentUser?.uid).then((res) => setImage(res.url));
-    findUser(auth.currentUser?.uid).then((res) => setName(res.name));
-    findUsers().then((res) => {
+    findPicture(auth.currentUser?.uid as string).then((res) =>
+      setImage(res?.url)
+    );
+    findUser(auth.currentUser?.uid as string).then((res) => setName(res?.name));
+    findUsers().then((res: any) => {
       setUsers(res);
     });
   }, []);
 
-  const swipeLeft = async (cardIndex) => {
-    if (!users[cardIndex]) return;
+  const swipeLeft = async (cardIndex: string | number) => {
+    if (!users[cardIndex as number]) return;
 
-    const userSwiped = users[cardIndex];
+    const userSwiped: any = users[cardIndex as number];
 
     await setDoc(
       doc(
@@ -45,10 +55,10 @@ const HomeScreen = () => {
     );
   };
 
-  const swipeRight = async (cardIndex) => {
-    if (!users[cardIndex]) return;
+  const swipeRight = async (cardIndex: string | number) => {
+    if (!users[cardIndex as number]) return;
 
-    const userSwiped = users[cardIndex];
+    const userSwiped: any = users[cardIndex as number];
     const loggedInUser = await (
       await getDoc(doc(db, "Users", auth.currentUser?.uid as string))
     ).data();
@@ -66,14 +76,17 @@ const HomeScreen = () => {
           ) as any,
           {
             users: {
-              [auth.currentUser?.uid]: loggedInUser,
+              [auth.currentUser?.uid as string]: loggedInUser,
               [userSwiped.id]: userSwiped,
             },
             usersMatched: [auth.currentUser?.uid, userSwiped.id],
           }
         );
 
-        navigation.navigate("Match", { loggedInUser, userSwiped } as any);
+        navigation.navigate(
+          "Match" as never,
+          { loggedInUser, userSwiped } as never
+        );
       } else {
       }
     });
@@ -96,10 +109,10 @@ const HomeScreen = () => {
           verticalSwipe={false}
           animateCardOpacity
           containerStyle={styled.containerCard}
-          onSwipedLeft={(cardIndex) => {
+          onSwipedLeft={(cardIndex: string | number) => {
             swipeLeft(cardIndex).then((r) => r);
           }}
-          onSwipedRight={(cardIndex) => {
+          onSwipedRight={(cardIndex: string | number) => {
             swipeRight(cardIndex).then((r) => r);
           }}
           overlayLabels={{
@@ -122,7 +135,7 @@ const HomeScreen = () => {
               },
             },
           }}
-          renderCard={(card) => {
+          renderCard={(card: any) => {
             if (card) {
               return (
                 <View style={styled.card}>
@@ -165,7 +178,8 @@ const HomeScreen = () => {
             borderRadius: 50,
           }}
           onPress={() => {
-            swipeRef.current.swipeLeft();
+            const ref: any = swipeRef.current;
+            ref.swipeLeft();
           }}
         >
           <Entypo
@@ -185,7 +199,8 @@ const HomeScreen = () => {
             borderRadius: 50,
           }}
           onPress={() => {
-            swipeRef.current.swipeRight();
+            const ref: any = swipeRef.current;
+            ref.swipeRight();
           }}
         >
           <AntDesign
@@ -199,7 +214,7 @@ const HomeScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   card: {
     backgroundColor: "white",
     borderRadius: 20,

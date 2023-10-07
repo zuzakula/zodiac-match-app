@@ -1,13 +1,13 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleProp, Text, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { auth, db, storage } from "../../firebaseConfig";
+import { auth, storage } from "../../firebaseConfig";
 import ContinueButton from "../components/ContinueButton";
 import shared from "../../styles/shared.styles";
 import GoBackButton from "../components/GoBackButton";
-import { updateUser } from "../../services/usersService";
+import { updateUser, User } from "../../services/usersService";
 
 const AddPicturesScreen = () => {
   const [image, setImage] = useState<any>("");
@@ -26,7 +26,7 @@ const AddPicturesScreen = () => {
     }
   };
 
-  const uploadImage = async (uri) => {
+  const uploadImage = async (uri: string) => {
     const response = await fetch(uri);
     const blob = await response.blob();
     const storageRef = ref(storage, `ProfilePictures/` + auth.currentUser?.uid);
@@ -46,10 +46,10 @@ const AddPicturesScreen = () => {
     );
   };
 
-  const saveImage = async (url) => {
-    const user = auth.currentUser?.uid;
+  const saveImage = async (url: string) => {
+    const user: string | undefined = auth.currentUser?.uid;
     try {
-      await updateUser(user, { url: url });
+      await updateUser(user as string, { url: url } as User);
     } catch (err) {
       console.log(err);
     }
@@ -72,14 +72,14 @@ const AddPicturesScreen = () => {
       </View>
 
       <View style={styled.continue}>
-        <ContinueButton navigateTo={"AboutYou"} />
+        <ContinueButton navigateTo={"AboutYou"} updateBody={null} />
       </View>
       <GoBackButton goBackTo={"Home"} />
     </SafeAreaView>
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   pic: {
     borderRadius: 20,
   },

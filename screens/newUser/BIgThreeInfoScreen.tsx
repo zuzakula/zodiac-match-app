@@ -11,7 +11,7 @@ const BigThreeInfoScreen = () => {
         Here will be some info from external API based on the result from
         birthday date
       </Text>
-      <ContinueButton navigateTo={"Sun"} />
+      <ContinueButton navigateTo={"Sun"} updateBody={null} />
       <GoBackButton goBackTo={"Birthday"} />
     </SafeAreaView>
   );

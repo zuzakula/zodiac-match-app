@@ -1,14 +1,14 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ActivityIndicator,
   ImageBackground,
   Pressable,
+  StyleProp,
   Text,
   TextInput,
   View,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
@@ -32,12 +32,14 @@ const CreateAccountScreen = () => {
         firebaseAuth,
         email,
         password
-      ).then(() => navigation.navigate("AddPictures"));
+      ).then(() => navigation.navigate("AddPictures" as never));
 
-      createUser({ id: auth.currentUser?.uid, email: email, name: name }).then(
-        (res) => res
-      );
-    } catch (err) {
+      createUser({
+        id: auth.currentUser?.uid as string,
+        email: email,
+        name: name,
+      }).then((res) => res);
+    } catch (err: any) {
       alert("Registration failed: " + err.message);
     } finally {
       setLoading(false);
@@ -109,7 +111,7 @@ const CreateAccountScreen = () => {
               <Pressable
                 onPress={() => {
                   if (navigation) {
-                    navigation.navigate("Login");
+                    navigation.navigate("Login" as never);
                   }
                 }}
               >
@@ -126,7 +128,7 @@ const CreateAccountScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   loginText: {
     color: "#444444",
     fontWeight: "bold",

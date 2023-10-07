@@ -4,13 +4,15 @@ import {
   TouchableOpacity,
   Image,
   View,
+  StyleProp,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
+import React from "react";
 
 const MatchScreen = () => {
   const navigation = useNavigation();
-  const { params } = useRoute();
+  const { params }: any = useRoute();
   const { loggedInUser, userSwiped } = params;
 
   return (
@@ -41,7 +43,7 @@ const MatchScreen = () => {
         style={shared.button}
         onPress={() => {
           navigation.goBack();
-          navigation.navigate("Chat");
+          navigation.navigate("Chat" as never);
         }}
       >
         <Text style={shared.buttonText}>Send Message</Text>
@@ -50,7 +52,7 @@ const MatchScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   matchScreen: {
     backgroundColor: "red",
     height: "100%",

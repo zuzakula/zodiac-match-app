@@ -1,4 +1,6 @@
-const shared = {
+import { StyleProp } from "react-native";
+
+const shared: StyleProp<any> = {
   screen: {
     position: "absolute",
     backgroundColor: "#6F78C7",

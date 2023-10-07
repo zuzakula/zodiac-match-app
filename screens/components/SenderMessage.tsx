@@ -1,10 +1,10 @@
-import { Text } from "react-native";
+import { StyleProp, Text } from "react-native";
 
-const SenderMessage = ({ message }) => {
+const SenderMessage = ({ message }: { message: any }) => {
   return <Text style={styled.message}>{message.messages}</Text>;
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   message: {
     color: "black",
     textAlign: "right",

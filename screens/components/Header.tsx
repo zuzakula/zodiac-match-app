@@ -1,8 +1,8 @@
-import { TouchableOpacity, View, Text, Image } from "react-native";
+import { TouchableOpacity, View, Image, StyleProp } from "react-native";
 import { useEffect, useState } from "react";
 import { findUser } from "../../services/usersService";
 import { auth } from "../../firebaseConfig";
-import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
@@ -11,7 +11,7 @@ const Header = () => {
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    findUser(auth.currentUser?.uid).then((res) => setImage(res.url));
+    findUser(auth.currentUser?.uid as string).then((res) => setImage(res?.url));
   }, []);
 
   return (
@@ -35,7 +35,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Birthday");
+              navigation.navigate("Birthday" as never);
               // navigation.navigate("Modal");
             }
           }}
@@ -49,7 +49,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Chat");
+              navigation.navigate("Chat" as never);
             }
           }}
         >
@@ -64,7 +64,7 @@ const Header = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   header: {
     alignItems: "center",
     justifyContent: "center",

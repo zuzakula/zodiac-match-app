@@ -4,7 +4,6 @@ import {
   Image,
   View,
   TextInput,
-  Button,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -13,7 +12,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import Header from "./components/Header";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { auth, db } from "../firebaseConfig";
 import { useEffect, useState } from "react";
@@ -29,13 +27,13 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-const MessageScreen = (props) => {
+const MessageScreen = (props: any) => {
   const navigation = useNavigation();
   const user = auth.currentUser;
-  const [matchUserInfo, setMatchUserInfo] = useState(null);
-  const { params } = useRoute();
+  const [matchUserInfo, setMatchUserInfo] = useState<any>(null);
+  const { params }: any = useRoute();
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
 
   const { matchDetails } = params;
 
@@ -61,9 +59,9 @@ const MessageScreen = (props) => {
         collection(db, "Matches", matchDetails.id, "Messages"),
         orderBy("timestamp", "desc")
       ),
-      (snapshot) => {
+      (snapshot: any) => {
         setMessages(
-          snapshot.docs.map((doc) => ({
+          snapshot.docs.map((doc: any) => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -99,28 +97,23 @@ const MessageScreen = (props) => {
         keyboardVerticalOffset={10}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
+          <FlatList
+            data={messages}
             style={{
-              height: 500,
+              transform: [{ scaleY: -1 }],
+              height: "70%",
               backgroundColor: "white",
               borderRadius: 20,
-              marginLeft: 5,
-              marginRight: 5,
             }}
-          >
-            <FlatList
-              data={messages}
-              style={{ transform: [{ scaleY: -1 }] }}
-              renderItem={({ item: message }) =>
-                message.userId === user?.uid ? (
-                  <SenderMessage key={message.id} message={message} />
-                ) : (
-                  <ReceiverMessage key={message.id} message={message} />
-                )
-              }
-              keyExtractor={(item) => item.id}
-            />
-          </ScrollView>
+            renderItem={({ item: message }) =>
+              message.userId === user?.uid ? (
+                <SenderMessage key={message.id} message={message} />
+              ) : (
+                <ReceiverMessage key={message.id} message={message} />
+              )
+            }
+            keyExtractor={(item) => item.id}
+          />
         </TouchableWithoutFeedback>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <TextInput

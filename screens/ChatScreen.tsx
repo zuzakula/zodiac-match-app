@@ -2,7 +2,6 @@ import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./components/Header";
 import shared from "../styles/shared.styles";
-import ChatList from "./components/ChatList";
 import ChatRow from "./components/ChatRow";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
@@ -18,8 +17,10 @@ const ChatScreen = () => {
         collection(db, "Matches") as any,
         where("usersMatched", "array-contains", auth.currentUser?.uid) as any
       ),
-      (snapshot) =>
-        setMatches(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+      (snapshot: any) =>
+        setMatches(
+          snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }))
+        )
     );
   }, [user]);
 

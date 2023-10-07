@@ -5,11 +5,11 @@ import {
   ActivityIndicator,
   Pressable,
   ImageBackground,
+  StyleProp,
 } from "react-native";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 
@@ -28,7 +28,7 @@ const LoginScreen = () => {
         email,
         password
       );
-    } catch (err) {
+    } catch (err: any) {
       alert("Sign in failed: " + err.message);
     } finally {
       setLoading(false);
@@ -57,6 +57,7 @@ const LoginScreen = () => {
               setEmail(v);
             }}
             value={email}
+            autoFocus={true}
           ></TextInput>
 
           <TextInput
@@ -81,7 +82,7 @@ const LoginScreen = () => {
                 <Pressable
                   onPress={() => {
                     if (navigation) {
-                      navigation.navigate("CreateNewAcc");
+                      navigation.navigate("CreateNewAcc" as never);
                     }
                   }}
                 >
@@ -99,7 +100,7 @@ const LoginScreen = () => {
   );
 };
 
-const styled = {
+const styled: StyleProp<any> = {
   createNewAccText: {
     color: "#444444",
     fontWeight: "bold",

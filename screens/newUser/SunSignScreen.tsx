@@ -7,7 +7,7 @@ const SunSignScreen = () => {
   return (
     <SafeAreaView style={shared.screen}>
       <Text style={shared.text}>SUN SIGN</Text>
-      <ContinueButton navigateTo={"Moon"} />
+      <ContinueButton navigateTo={"Moon"} updateBody={null} />
       <GoBackButton goBackTo={"BigThree"} />
     </SafeAreaView>
   );

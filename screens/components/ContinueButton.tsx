@@ -4,7 +4,13 @@ import { useNavigation } from "@react-navigation/native";
 import { updateUser } from "../../services/usersService";
 import { auth } from "../../firebaseConfig";
 
-const ContinueButton = ({ navigateTo, updateBody }) => {
+const ContinueButton = ({
+  navigateTo,
+  updateBody,
+}: {
+  navigateTo: string;
+  updateBody: any;
+}) => {
   const navigation = useNavigation();
 
   return (
@@ -12,10 +18,12 @@ const ContinueButton = ({ navigateTo, updateBody }) => {
       style={shared.button}
       onPress={() => {
         if (navigation) {
-          navigation.navigate(navigateTo);
+          navigation.navigate(navigateTo as never);
         }
         if (updateBody) {
-          updateUser(auth.currentUser?.uid, updateBody).then((r) => r);
+          updateUser(auth.currentUser?.uid as string, updateBody).then(
+            (r) => r
+          );
         }
       }}
     >

@@ -10,9 +10,17 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 
+export type User = {
+  id: string;
+  name?: string;
+  email?: string;
+  bio?: string;
+  url?: string;
+};
+
 export const findAllPictures = async () => {
   const docRef = await getDocs(collection(db, "ProfilePictures"));
-  const res = [];
+  const res: { id: string }[] = [];
 
   docRef.forEach((snapshot) => {
     res.push({
@@ -24,7 +32,7 @@ export const findAllPictures = async () => {
   return res;
 };
 
-export const findPicture = async (id) => {
+export const findPicture = async (id: string) => {
   const docRef = doc(db, "ProfilePictures", id);
   const docSnap = await getDoc(docRef);
 
@@ -32,7 +40,7 @@ export const findPicture = async (id) => {
 };
 
 export const findUsers = async () => {
-  const users = [];
+  const users: { id: string }[] = [];
   let docRef;
   let q;
 
@@ -42,7 +50,7 @@ export const findUsers = async () => {
   const likes = await getDocs(
     collection(db, "Users", auth.currentUser?.uid as string, "likes")
   );
-  const swipes = [];
+  const swipes: any[] = [];
 
   passes.forEach((snapshot) => {
     swipes.push(snapshot.data().id);
@@ -71,18 +79,18 @@ export const findUsers = async () => {
   return users;
 };
 
-export const findUser = async (id) => {
+export const findUser = async (id: string) => {
   const docRef = doc(db, "Users", id);
   const docSnap = await getDoc(docRef);
 
   return docSnap.data();
 };
 
-export const createUser = async (body) => {
+export const createUser = async (body: User) => {
   await setDoc(doc(db, "Users", body.id) as any, body);
 };
 
-export const updateUser = async (currUser, body) => {
+export const updateUser = async (currUser: string, body: User) => {
   const docRef = doc(db, "Users", currUser);
   await updateDoc(docRef as any, body);
 };
