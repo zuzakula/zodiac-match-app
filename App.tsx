@@ -12,7 +12,7 @@ import AddPicturesScreen from "./screens/newUser/AddPicturesScreen";
 import WelcomeScreen from "./screens/WelcomeScreen.";
 import AboutYouScreen from "./screens/newUser/AboutYouScreen";
 import BirthdayScreen from "./screens/newUser/BirthdayScreen";
-import BigThreeInfoScreen from "./screens/newUser/BIgThreeInfoScreen";
+import ZodiacInfoScreen from "./screens/newUser/ZodiacInfoScreen";
 import SunSignScreen from "./screens/newUser/SunSignScreen";
 import MoonSignScreen from "./screens/newUser/MoonSignScreen";
 import RisingSignScreen from "./screens/newUser/RisingSignScreen";
@@ -67,23 +67,8 @@ export default function App() {
                 options={{ headerShown: false }}
               ></Stack.Screen>
               <Stack.Screen
-                name="BigThree"
-                component={BigThreeInfoScreen}
-                options={{ headerShown: false }}
-              ></Stack.Screen>
-              <Stack.Screen
-                name="Sun"
-                component={SunSignScreen}
-                options={{ headerShown: false }}
-              ></Stack.Screen>
-              <Stack.Screen
-                name="Moon"
-                component={MoonSignScreen}
-                options={{ headerShown: false }}
-              ></Stack.Screen>
-              <Stack.Screen
-                name="Rising"
-                component={RisingSignScreen}
+                name="ZodiacInfo"
+                component={ZodiacInfoScreen}
                 options={{ headerShown: false }}
               ></Stack.Screen>
               <Stack.Group>

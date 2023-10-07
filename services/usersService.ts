@@ -14,8 +14,11 @@ export type User = {
   id: string;
   name?: string;
   email?: string;
+  birthdayDate?: string;
+  birthdayTime?: string;
   bio?: string;
   url?: string;
+  zodiacSign?: string;
 };
 
 export const findAllPictures = async () => {

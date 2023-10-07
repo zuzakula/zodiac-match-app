@@ -1,40 +1,64 @@
-import { Button, SafeAreaView, Text } from "react-native";
+import {
+  Button,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import shared from "../../styles/shared.styles";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
 import { SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-native-date-picker";
+import { getZodiacSign } from "../../lib/getZodiacSign";
 
 const BirthdayScreen = () => {
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date>(new Date());
+  const [dateString, setDateString] = useState<string>("");
+  const [openDate, setOpenDate] = useState<boolean>(false);
+  const [sign, setSign] = useState<string>("");
 
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
+  useEffect(() => {}, []);
 
   return (
     <SafeAreaView style={shared.screen}>
-      <Text style={shared.text}>
-        To be able to find out who you click with:
-      </Text>
-      <Text style={shared.text}> Input your birthday date!</Text>
-      <Button title="Open" onPress={() => setOpen(true)} />
+      <Text style={shared.text}> Input your birthday date</Text>
+      <TouchableOpacity
+        style={[shared.button, { width: "30%" }]}
+        onPress={() => setOpenDate(true)}
+      >
+        <Text style={shared.buttonText}>Set Date</Text>
+      </TouchableOpacity>
+
+      {dateString && (
+        <Text style={{ color: "white" }}>{dateString.toString()}</Text>
+      )}
 
       <DatePicker
         modal
-        open={open}
+        mode="date"
+        open={openDate}
         date={date}
         onConfirm={(date: SetStateAction<Date>) => {
-          setOpen(false);
+          setOpenDate(false);
           setDate(date);
+          if ("toLocaleDateString" in date) {
+            setDateString(date.toLocaleDateString() as string);
+            setSign(getZodiacSign(date.getMonth() + 1, date.getDate()));
+          }
         }}
         onCancel={() => {
-          setOpen(false);
+          setOpenDate(false);
         }}
       />
 
-      <ContinueButton navigateTo={"BigThree"} updateBody={null} />
+      <ContinueButton
+        navigateTo={"ZodiacInfo"}
+        updateBody={{
+          birthdayDate: dateString,
+          zodiacSign: sign,
+        }}
+      />
       <GoBackButton goBackTo={"AboutYou"} />
     </SafeAreaView>
   );
