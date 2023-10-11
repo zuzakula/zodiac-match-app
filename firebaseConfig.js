@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, getReactNativePersistence } from "firebase/auth";
+import {
+  getAuth,
+  getReactNativePersistence,
+  initializeAuth,
+} from "firebase/auth";
 import {
   API_KEY,
   AUTH_DOMAIN,

@@ -4,6 +4,9 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+    }
   }
 }

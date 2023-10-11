@@ -1,17 +1,19 @@
 import { TouchableOpacity, View, Image, StyleProp } from "react-native";
 import { useEffect, useState } from "react";
-import { findUser } from "../../services/usersService";
-import { auth } from "../../firebaseConfig";
+import { auth, storage } from "../../firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const Header = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
 
   useEffect(() => {
-    findUser(auth.currentUser?.uid as string).then((res) => setImage(res?.url));
+    getDownloadURL(
+      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
+    ).then((url) => setImage(url));
   }, []);
 
   return (
@@ -35,7 +37,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Birthday" as never);
+              navigation.navigate("AddPictures" as never);
               // navigation.navigate("Modal");
             }
           }}

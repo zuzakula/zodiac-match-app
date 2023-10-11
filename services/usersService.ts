@@ -9,6 +9,8 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
+import storage from "@react-native-firebase/storage";
+import { getStorage, ref } from "firebase/storage";
 
 export type User = {
   id: string;
@@ -38,6 +40,9 @@ export const findAllPictures = async () => {
 export const findPicture = async (id: string) => {
   const docRef = doc(db, "ProfilePictures", id);
   const docSnap = await getDoc(docRef);
+
+  const storage = getStorage();
+  const pathReference = ref(storage, `ProfilePictures/${id}`);
 
   return docSnap.data();
 };

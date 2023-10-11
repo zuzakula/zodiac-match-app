@@ -1,8 +1,9 @@
 import { Image, TouchableOpacity, View, Text, StyleProp } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../../firebaseConfig";
+import { auth, storage } from "../../firebaseConfig";
 import { useEffect, useState } from "react";
 import { getMatchedUserInfo } from "../../lib/getMatchedUserInfo";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
   const navigation = useNavigation();
@@ -11,6 +12,10 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
 
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
+
+    getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}`)).then(
+      (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
+    );
   }, []);
 
   return (
@@ -24,7 +29,7 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
           <Image
             style={styled.matchPic}
             source={{
-              uri: "https://picsum.photos/id/237/200/300",
+              uri: matchUserInfo.url,
             }}
             width={60}
             height={60}

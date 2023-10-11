@@ -2,12 +2,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Image, StyleProp, Text, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { auth, storage } from "../../firebaseConfig";
 import ContinueButton from "../components/ContinueButton";
 import shared from "../../styles/shared.styles";
 import GoBackButton from "../components/GoBackButton";
-import { updateUser, User } from "../../services/usersService";
+import { uploadImage } from "../../services/imagesService";
 
 const AddPicturesScreen = () => {
   const [image, setImage] = useState<any>("");
@@ -23,35 +21,6 @@ const AddPicturesScreen = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       await uploadImage(result.assets[0].uri);
-    }
-  };
-
-  const uploadImage = async (uri: string) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const storageRef = ref(storage, `ProfilePictures/` + auth.currentUser?.uid);
-    const uploadTask = uploadBytesResumable(storageRef, blob);
-
-    uploadTask.on(
-      "state_changed",
-      () => {},
-      (err) => {
-        console.log(err);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async () => {
-          await saveImage(uri);
-        });
-      }
-    );
-  };
-
-  const saveImage = async (url: string) => {
-    const user: string | undefined = auth.currentUser?.uid;
-    try {
-      await updateUser(user as string, { url: url } as User);
-    } catch (err) {
-      console.log(err);
     }
   };
 

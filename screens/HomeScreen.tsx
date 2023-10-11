@@ -6,26 +6,25 @@ import {
   Image,
   StyleProp,
 } from "react-native";
-import { auth, db } from "../firebaseConfig";
+import { auth, db, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
 import { useEffect, useRef, useState } from "react";
 import { findUsers, findPicture, findUser } from "../services/usersService";
 import Header from "./components/Header";
-// @ts-ignore
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
+import { getImage } from "../services/imagesService";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [sun, setSun] = useState("");
   const [users, setUsers] = useState([]);
-  const [numOfUsers, setNumOfUsers] = useState(0);
   const swipeRef = useRef(null);
 
   useEffect(() => {
@@ -34,8 +33,15 @@ const HomeScreen = () => {
     );
     findUser(auth.currentUser?.uid as string).then((res) => setName(res?.name));
     findUsers().then((res: any) => {
-      setUsers(res);
+      res.forEach((user) => {
+        getDownloadURL(ref(storage, `ProfilePictures/${user.id}`)).then(
+          (url) => (user.url = url)
+        );
+      });
     });
+    getDownloadURL(
+      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
+    ).then((url) => setImage(url));
   }, []);
 
   const swipeLeft = async (cardIndex: string | number) => {
@@ -141,9 +147,7 @@ const HomeScreen = () => {
                 <View style={styled.card}>
                   <Image source={{ uri: card.url }} style={styled.image} />
                   <Text style={styled.name}>{card.name}</Text>
-                  <Text style={styled.bigThree}>
-                    ☀️Saggitarius {"\n"} 🌜Leo {"\n"} ⬆️Saggitarius {"\n"}
-                  </Text>
+                  <Text>{card.zodiacSign}</Text>
                 </View>
               );
             } else {
@@ -218,7 +222,7 @@ const styled: StyleProp<any> = {
   card: {
     backgroundColor: "white",
     borderRadius: 20,
-    height: "80%",
+    height: "75%",
     width: "90%",
     shadowColor: "#000",
     shadowOffset: {
@@ -243,10 +247,6 @@ const styled: StyleProp<any> = {
     fontSize: 30,
     textAlign: "center",
     fontWeight: "bold",
-  },
-  bigThree: {
-    fontSize: 16,
-    textAlign: "center",
   },
   noProfilesText: {
     fontSize: 20,
