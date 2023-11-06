@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   ImageBackground,
+  KeyboardAvoidingView,
   Pressable,
   StyleProp,
   Text,
@@ -22,25 +23,78 @@ const CreateAccountScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const firebaseAuth = auth;
   const navigation = useNavigation();
+  const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
+  const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
   const incompleteForm = false; // to do form validation !name || !confirmPassword
 
   const signUp = async () => {
     setLoading(true);
     try {
-      const res = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      ).then(() => navigation.navigate("AddPictures" as never));
+      if (!name) {
+        setNameError("Name is required.");
+      } else if (!password) {
+        setPasswordError("Password is required.");
+      } else if (!confirmPassword) {
+        setConfirmPasswordError("Password must be confirmed.");
+      } else if (password.length <= 8) {
+        setPasswordError("Password must be at least 8 characters long.");
+      } else if (!specialChars.test(password)) {
+        setPasswordError(
+          "Password must contain at least one special character."
+        );
+      } else if (!/[A-Z]/.test(password)) {
+        console.log(/^[A-Z]+$/.test(password));
+        setPasswordError(
+          "Password must contain at least one uppercase letter."
+        );
+      } else if (!/[a-z]/.test(password)) {
+        setPasswordError(
+          "Password must contain at least one lowercase letter."
+        );
+      } else if (!/[0-9]/.test(password)) {
+        setPasswordError("Password must contain at least one number.");
+      } else if (password !== confirmPassword) {
+        if (confirmPassword) {
+          setConfirmPasswordError("Passwords don't match");
+        } else {
+          setConfirmPasswordError("Password must be confirmed.");
+        }
+      } else {
+        const res = await createUserWithEmailAndPassword(
+          firebaseAuth,
+          email,
+          password
+        ).then(() => navigation.navigate("AddPictures" as never));
 
-      createUser({
-        id: auth.currentUser?.uid as string,
-        email: email,
-        name: name,
-      }).then((res) => res);
+        createUser({
+          id: auth.currentUser?.uid as string,
+          email: email,
+          name: name,
+        }).then((res) => res);
+      }
     } catch (err: any) {
-      alert("Registration failed: " + err.message);
+      console.log(err.message);
+      switch (err.message) {
+        case "Firebase: Error (auth/invalid-email).":
+          if (!email) {
+            setEmailError("E-Mail is required.");
+          } else {
+            setEmailError("E-Mail is not valid.");
+          }
+          break;
+        case "Firebase: Error (auth/email-already-in-use).":
+          setEmailError(
+            "There already exists an account linked to this E-Mail."
+          );
+          break;
+        default:
+          alert("Registration failed: " + err.message);
+          break;
+      }
     } finally {
       setLoading(false);
     }
@@ -67,6 +121,7 @@ const CreateAccountScreen = () => {
             }}
             value={name}
           ></TextInput>
+          {nameError && <Text style={styled.error}>{nameError}</Text>}
 
           <TextInput
             style={shared.input}
@@ -77,6 +132,7 @@ const CreateAccountScreen = () => {
             }}
             value={email}
           ></TextInput>
+          {emailError && <Text style={styled.error}>{emailError}</Text>}
 
           <TextInput
             style={shared.input}
@@ -88,6 +144,8 @@ const CreateAccountScreen = () => {
             value={password}
             secureTextEntry={true}
           ></TextInput>
+          {passwordError && <Text style={styled.error}>{passwordError}</Text>}
+
           <TextInput
             style={shared.input}
             placeholder=" Confirm Password"
@@ -98,31 +156,26 @@ const CreateAccountScreen = () => {
             value={confirmPassword}
             secureTextEntry={true}
           ></TextInput>
-        </View>
+          {confirmPasswordError && (
+            <Text style={styled.error}>{confirmPasswordError}</Text>
+          )}
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            <View style={shared.container}>
-              <Pressable style={shared.button} onPress={signUp}>
-                <Text style={shared.buttonText}>Create account</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => {
-                  if (navigation) {
-                    navigation.navigate("Login" as never);
-                  }
-                }}
-              >
-                <Text style={{ color: "white" }}>
-                  Already have an account?{" "}
-                  <Text style={styled.loginText}>Login</Text>
-                </Text>
-              </Pressable>
-            </View>
-          </>
-        )}
+          <Pressable style={shared.button} onPress={signUp}>
+            <Text style={shared.buttonText}>Create account</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              if (navigation) {
+                navigation.navigate("Login" as never);
+              }
+            }}
+          >
+            <Text style={{ color: "white" }}>
+              Already have an account?{" "}
+              <Text style={styled.loginText}>Login</Text>
+            </Text>
+          </Pressable>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -132,6 +185,10 @@ const styled: StyleProp<any> = {
   loginText: {
     color: "#444444",
     fontWeight: "bold",
+  },
+  error: {
+    fontSize: 10,
+    color: "#A70D2A",
   },
 };
 

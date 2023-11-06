@@ -7,6 +7,7 @@ import { auth } from "../../firebaseConfig";
 const ContinueButton = ({
   navigateTo,
   updateBody,
+  isDisabled,
 }: {
   navigateTo: string;
   updateBody: any;
@@ -15,6 +16,7 @@ const ContinueButton = ({
 
   return (
     <Pressable
+      disabled={isDisabled}
       style={shared.button}
       onPress={() => {
         if (navigation) {

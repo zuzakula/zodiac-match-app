@@ -31,7 +31,9 @@ const BirthdayScreen = () => {
       </TouchableOpacity>
 
       {dateString && (
-        <Text style={{ color: "white" }}>{dateString.toString()}</Text>
+        <Text style={{ color: "white", fontSize: 30, margin: 20 }}>
+          {dateString.toString()}
+        </Text>
       )}
 
       <DatePicker
@@ -58,6 +60,7 @@ const BirthdayScreen = () => {
           birthdayDate: dateString,
           zodiacSign: sign,
         }}
+        isDisabled={!dateString}
       />
       <GoBackButton goBackTo={"AboutYou"} />
     </SafeAreaView>

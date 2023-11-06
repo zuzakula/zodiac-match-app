@@ -41,7 +41,11 @@ const AddPicturesScreen = () => {
       </View>
 
       <View style={styled.continue}>
-        <ContinueButton navigateTo={"AboutYou"} updateBody={null} />
+        <ContinueButton
+          navigateTo={"AboutYou"}
+          updateBody={null}
+          isDisabled={!image}
+        />
       </View>
       <GoBackButton goBackTo={"Home"} />
     </SafeAreaView>

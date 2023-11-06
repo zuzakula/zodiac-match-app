@@ -12,7 +12,7 @@ const AboutYouScreen = () => {
   return (
     <SafeAreaView style={shared.screen}>
       <Text style={shared.text}>Share something more about yourself!</Text>
-      <Text style={shared.text}>
+      <Text style={[shared.text, { fontSize: 15 }]}>
         Tell people what your hobbies are and what you are interested in
       </Text>
       <TextInput
@@ -24,7 +24,11 @@ const AboutYouScreen = () => {
         value={bio}
       ></TextInput>
 
-      <ContinueButton navigateTo={"Birthday"} updateBody={{ bio: bio }} />
+      <ContinueButton
+        navigateTo={"Birthday"}
+        updateBody={{ bio: bio }}
+        isDisabled={!bio}
+      />
       <GoBackButton goBackTo={"AddPictures"} />
     </SafeAreaView>
   );
