@@ -74,25 +74,51 @@ const MessageScreen = (props: any) => {
 
   return (
     <SafeAreaView style={shared.screen}>
-      {matchUserInfo && (
-        <>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
+      <View style={{ flexDirection: "row", width: 400 }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Text
+            style={{
+              alignItems: "flex-start",
+              marginTop: 30,
+              color: "white",
+              marginLeft: 10,
             }}
           >
-            <Image
-              style={styled.matchPic}
-              source={{ uri: matchUserInfo.url }}
-              width={50}
-              height={50}
-            />
-          </TouchableOpacity>
-          <Text style={[shared.text, { marginTop: 0 }]}>
-            {matchUserInfo.name}
+            &larr; Go back
           </Text>
-        </>
-      )}
+        </TouchableOpacity>
+        {matchUserInfo && (
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginLeft: "15%",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("UserDetails", {
+                  matchDetails: matchUserInfo,
+                } as any);
+              }}
+            >
+              <Image
+                style={styled.matchPic}
+                source={{ uri: matchUserInfo.url }}
+                width={50}
+                height={50}
+              />
+            </TouchableOpacity>
+            <Text style={[shared.text, { marginTop: 0 }]}>
+              {matchUserInfo.name}
+            </Text>
+          </View>
+        )}
+      </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
