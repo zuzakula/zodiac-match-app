@@ -33,6 +33,7 @@ const HomeScreen = () => {
     );
     findUser(auth.currentUser?.uid as string).then((res) => setName(res?.name));
     findUsers().then((res: any) => {
+      setUsers(res);
       res.forEach((user) => {
         getDownloadURL(ref(storage, `ProfilePictures/${user.id}`)).then(
           (url) => (user.url = url)
@@ -55,7 +56,7 @@ const HomeScreen = () => {
         "Users",
         auth.currentUser?.uid as string,
         "passes",
-        userSwiped.email
+        userSwiped.id
       ),
       userSwiped
     );
@@ -69,11 +70,11 @@ const HomeScreen = () => {
       await getDoc(doc(db, "Users", auth.currentUser?.uid as string))
     ).data();
 
-    // could be a cloud function???
+    // check if a person already swiped on user
     getDoc(
       doc(db, "Users", userSwiped.id, "likes", auth.currentUser?.uid as string)
     ).then((snapshot) => {
-      if (snapshot) {
+      if (snapshot.exists()) {
         setDoc(
           doc(
             db,
@@ -143,11 +144,12 @@ const HomeScreen = () => {
           }}
           renderCard={(card: any) => {
             if (card) {
+              console.log(card);
               return (
                 <View style={styled.card}>
                   <Image source={{ uri: card.url }} style={styled.image} />
                   <Text style={styled.name}>{card.name}</Text>
-                  <Text>{card.zodiacSign}</Text>
+                  <Text style={styled.zodiac}>{card.zodiacSign}</Text>
                 </View>
               );
             } else {
@@ -247,6 +249,7 @@ const styled: StyleProp<any> = {
     fontSize: 30,
     textAlign: "center",
     fontWeight: "bold",
+    paddingTop: 10,
   },
   noProfilesText: {
     fontSize: 20,
@@ -256,6 +259,10 @@ const styled: StyleProp<any> = {
   emoji: {
     paddingTop: 100,
     fontSize: 60,
+    textAlign: "center",
+  },
+  zodiac: {
+    fontSize: 20,
     textAlign: "center",
   },
 };

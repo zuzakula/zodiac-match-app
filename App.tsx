@@ -19,6 +19,7 @@ import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 import { LogBox } from "react-native";
 import MatchScreen from "./screens/MatchScreen";
 import MessageScreen from "./screens/MessageScreen";
+import UserDetails from "./screens/UserDetails";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -69,6 +70,11 @@ export default function App() {
               <Stack.Screen
                 name="ZodiacInfo"
                 component={ZodiacInfoScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="UserDetails"
+                component={UserDetails}
                 options={{ headerShown: false }}
               ></Stack.Screen>
               <Stack.Group>

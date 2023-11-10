@@ -42,13 +42,15 @@ const MessageScreen = (props: any) => {
   }, []);
 
   const sendMessage = () => {
-    addDoc(collection(db, "Matches", matchDetails.id, "Messages"), {
-      timestamp: new Date(),
-      userId: user?.uid,
-      name: user?.displayName,
-      // photoUrl: matchDetails.users[user?.uid].photoUrl,
-      messages: input,
-    }).then((r) => console.log(r));
+    if (input) {
+      addDoc(collection(db, "Matches", matchDetails.id, "Messages"), {
+        timestamp: new Date(),
+        userId: user?.uid,
+        name: user?.displayName,
+        // photoUrl: matchDetails.users[user?.uid].photoUrl,
+        messages: input,
+      }).then((r) => console.log(r));
+    }
 
     setInput("");
   };
@@ -101,12 +103,15 @@ const MessageScreen = (props: any) => {
             data={messages}
             style={{
               transform: [{ scaleY: -1 }],
-              height: "70%",
+              height: 400,
+              marginRight: 5,
+              marginLeft: 5,
               backgroundColor: "white",
               borderRadius: 20,
+              padding: 5,
             }}
             renderItem={({ item: message }) =>
-              message.userId === user?.uid ? (
+              message.userId === user?.uid && message ? (
                 <SenderMessage key={message.id} message={message} />
               ) : (
                 <ReceiverMessage key={message.id} message={message} />

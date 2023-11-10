@@ -42,7 +42,7 @@ const MatchScreen = () => {
       <TouchableOpacity
         style={shared.button}
         onPress={() => {
-          navigation.goBack();
+          // navigation.goBack();
           navigation.navigate("Chat" as never);
         }}
       >

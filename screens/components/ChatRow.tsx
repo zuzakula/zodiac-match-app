@@ -12,10 +12,11 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
 
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
-
-    getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}`)).then(
-      (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
-    );
+    if (matchUserInfo) {
+      getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}`)).then(
+        (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
+      );
+    }
   }, []);
 
   return (

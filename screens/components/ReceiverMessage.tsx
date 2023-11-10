@@ -15,6 +15,7 @@ const styled: StyleProp<any> = {
     verticalAlign: "middle",
     marginLeft: 5,
     transform: [{ scaleY: -1 }],
+    maxWidth: "60%",
   },
 };
 

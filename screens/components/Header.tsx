@@ -9,11 +9,13 @@ import { getDownloadURL, ref } from "firebase/storage";
 const Header = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getDownloadURL(
-      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
-    ).then((url) => setImage(url));
+    setLoading(true);
+    getDownloadURL(ref(storage, `ProfilePictures/${auth.currentUser?.uid}`))
+      .then((url) => setImage(url))
+      .then(() => setLoading(false));
   }, []);
 
   return (
@@ -26,18 +28,20 @@ const Header = () => {
               .catch((err) => alert(err))
           }
         >
-          <Image
-            style={styled.profilePic}
-            source={{ uri: image }}
-            width={50}
-            height={50}
-          />
+          {!loading && (
+            <Image
+              style={styled.profilePic}
+              source={{ uri: image }}
+              width={50}
+              height={50}
+            />
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("AddPictures" as never);
+              navigation.navigate("Home" as never);
               // navigation.navigate("Modal");
             }
           }}
