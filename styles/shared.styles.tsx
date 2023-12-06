@@ -27,8 +27,6 @@ const shared: StyleProp<any> = {
   },
   text: {
     color: "white",
-    marginTop: 50,
-    margin: 30,
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",

@@ -9,13 +9,13 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
-import storage from "@react-native-firebase/storage";
 import { getStorage, ref } from "firebase/storage";
 
 export type User = {
   id: string;
   name?: string;
   email?: string;
+  age?: number;
   birthdayDate?: string;
   birthdayTime?: string;
   bio?: string;
@@ -49,40 +49,51 @@ export const findPicture = async (id: string) => {
 
 export const findUsers = async () => {
   const users: { id: string }[] = [];
-  let docRef;
-  let q;
+  const swipes: Set<string> = new Set();
+  const currentUserId = auth.currentUser?.uid;
 
-  const passes = await getDocs(
-    collection(db, "Users", auth.currentUser?.uid as string, "passes")
-  );
-  const likes = await getDocs(
-    collection(db, "Users", auth.currentUser?.uid as string, "likes")
-  );
-  const swipes: any[] = [];
+  try {
+    if (currentUserId) {
+      const passesSnapshot = await getDocs(
+        collection(db, "Users", currentUserId as string, "passes")
+      );
+      const likesSnapshot = await getDocs(
+        collection(db, "Users", currentUserId as string, "likes")
+      );
 
-  passes.forEach((snapshot) => {
-    swipes.push(snapshot.data().id);
-  });
+      passesSnapshot.forEach((snapshot) => {
+        swipes.add(snapshot.data().id);
+      });
 
-  likes.forEach((snapshot) => {
-    swipes.push(snapshot.data().id);
-  });
-
-  if (swipes.length !== 0) {
-    q = query(collection(db, "Users"), where("id", "not-in", [...swipes]));
-    docRef = await getDocs(q);
-  } else {
-    docRef = await getDocs(collection(db, "Users")).then((r) => r);
-  }
-
-  docRef.forEach((snapshot) => {
-    if (snapshot.data().id !== auth.currentUser?.uid) {
-      users.push({
-        id: snapshot.id,
-        ...snapshot.data(),
+      likesSnapshot.forEach((snapshot) => {
+        swipes.add(snapshot.data().id);
       });
     }
-  });
+
+    let docRef;
+
+    if (swipes.size !== 0) {
+      const q = query(
+        collection(db, "Users"),
+        where("id", "not-in", Array.from(swipes))
+      );
+      docRef = await getDocs(q);
+    } else {
+      docRef = await getDocs(collection(db, "Users"));
+    }
+
+    docRef.forEach((snapshot) => {
+      const userId = snapshot.data().id;
+      if (userId !== auth.currentUser?.uid && !swipes.has(userId)) {
+        users.push({
+          id: userId,
+          ...snapshot.data(),
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
 
   return users;
 };

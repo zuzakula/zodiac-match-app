@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleProp, TextInput } from "react-native";
+import { ImageBackground, StyleProp, TextInput, View } from "react-native";
 import { useState } from "react";
 import { Text } from "react-native";
 import ContinueButton from "../components/ContinueButton";
@@ -8,29 +8,45 @@ import React from "react";
 
 const AboutYouScreen = () => {
   const [bio, setBio] = useState<string>("");
+  const maxCharacters = 250;
 
   return (
-    <SafeAreaView style={shared.screen}>
-      <Text style={shared.text}>Share something more about yourself!</Text>
-      <Text style={[shared.text, { fontSize: 15 }]}>
-        Tell people what your hobbies are and what you are interested in
-      </Text>
-      <TextInput
-        style={styled.input}
-        autoCapitalize="none"
-        onChangeText={(v) => {
-          setBio(v);
+    <View style={shared.screen}>
+      <ImageBackground
+        source={require("../../assets/background-2.png")}
+        resizeMethod="auto"
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
         }}
-        value={bio}
-      ></TextInput>
+      >
+        <Text style={shared.text}>Share something more about yourself!</Text>
+        <Text style={[shared.text, { fontSize: 15 }]}>
+          Tell people what your hobbies are and what you are interested in
+        </Text>
+        <TextInput
+          style={styled.input}
+          autoCapitalize="none"
+          onChangeText={(v) => {
+            setBio(v);
+          }}
+          multiline
+          numberOfLines={5}
+          value={bio}
+        ></TextInput>
+        <Text style={styled.characterCount}>
+          {bio.length}/{maxCharacters}
+        </Text>
 
-      <ContinueButton
-        navigateTo={"Birthday"}
-        updateBody={{ bio: bio }}
-        isDisabled={!bio}
-      />
-      <GoBackButton goBackTo={"AddPictures"} />
-    </SafeAreaView>
+        <ContinueButton
+          navigateTo={"Birthday"}
+          updateBody={{ bio: bio }}
+          isDisabled={!bio || bio.length >= 250}
+        />
+        <GoBackButton goBackTo={"AddPictures"} />
+      </ImageBackground>
+    </View>
   );
 };
 
@@ -41,6 +57,12 @@ const styled: StyleProp<any> = {
     backgroundColor: "white",
     borderRadius: 17,
     marginTop: 80,
+    textAlignVertical: "top",
+    paddingHorizontal: 10,
+  },
+  characterCount: {
+    textAlign: "right",
+    color: "black",
   },
 };
 

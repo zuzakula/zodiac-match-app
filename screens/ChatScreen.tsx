@@ -1,4 +1,4 @@
-import { FlatList, Text, View } from "react-native";
+import { FlatList, ImageBackground, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "./components/Header";
 import shared from "../styles/shared.styles";
@@ -26,21 +26,31 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={shared.screen}>
-      <Header />
-      <View style={{ marginTop: 30 }}>
-        {matches.length > 0 ? (
-          <FlatList
-            data={matches}
-            renderItem={({ item }) => {
-              return <ChatRow matchDetails={item} />;
-            }}
-          />
-        ) : (
-          <View>
-            <Text>No matches yet :(</Text>
-          </View>
-        )}
-      </View>
+      <ImageBackground
+        source={require("../assets/background-4.png")}
+        resizeMethod="auto"
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+        }}
+      >
+        <Header />
+        <View style={{ marginTop: 30 }}>
+          {matches.length > 0 ? (
+            <FlatList
+              data={matches}
+              renderItem={({ item }) => {
+                return <ChatRow matchDetails={item} />;
+              }}
+            />
+          ) : (
+            <View>
+              <Text style={shared.text}>No matches yet :(</Text>
+            </View>
+          )}
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

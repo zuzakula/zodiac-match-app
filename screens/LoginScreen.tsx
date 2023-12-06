@@ -6,6 +6,7 @@ import {
   Pressable,
   ImageBackground,
   StyleProp,
+  SafeAreaView,
 } from "react-native";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";

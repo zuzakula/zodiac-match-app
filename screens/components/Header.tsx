@@ -23,9 +23,10 @@ const Header = () => {
       <View style={styled.header}>
         <TouchableOpacity
           onPress={() =>
-            signOut(auth)
-              .then(() => {})
-              .catch((err) => alert(err))
+            // signOut(auth)
+            //   .then(() => {})
+            //   .catch((err) => alert(err))
+            navigation.navigate("Settings")
           }
         >
           {!loading && (
@@ -41,7 +42,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Home" as never);
+              navigation.navigate("AboutYou" as never);
               // navigation.navigate("Modal");
             }
           }}

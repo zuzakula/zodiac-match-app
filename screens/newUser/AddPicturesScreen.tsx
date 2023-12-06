@@ -1,5 +1,11 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, StyleProp, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import ContinueButton from "../components/ContinueButton";
@@ -25,30 +31,40 @@ const AddPicturesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={shared.screen}>
-      <Text style={shared.text}>Add some pictures to your profile</Text>
+    <View style={shared.screen}>
+      <ImageBackground
+        source={require("../../assets/background-1.png")}
+        resizeMethod="auto"
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+        }}
+      >
+        <Text style={shared.text}>Add a picture to your profile</Text>
 
-      <View style={styled.block}>
-        <Image
-          source={{ uri: image }}
-          width={120}
-          height={150}
-          style={styled.pic}
-        />
-        <TouchableOpacity style={styled.addButton} onPress={pickImage}>
-          <Text style={styled.addButtonText}>Choose photo</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styled.block}>
+          <Image
+            source={{ uri: image }}
+            width={120}
+            height={150}
+            style={styled.pic}
+          />
+          <TouchableOpacity style={styled.addButton} onPress={pickImage}>
+            <Text style={styled.addButtonText}>Choose photo</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styled.continue}>
-        <ContinueButton
-          navigateTo={"AboutYou"}
-          updateBody={null}
-          isDisabled={!image}
-        />
-      </View>
-      <GoBackButton goBackTo={"Home"} />
-    </SafeAreaView>
+        <View style={styled.continue}>
+          <ContinueButton
+            navigateTo={"AboutYou"}
+            updateBody={null}
+            isDisabled={!image}
+          />
+        </View>
+        <GoBackButton goBackTo={"Home"} />
+      </ImageBackground>
+    </View>
   );
 };
 
