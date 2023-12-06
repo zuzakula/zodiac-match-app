@@ -58,6 +58,16 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   @Override
+    protected List<ReactPackage> getPackages() {
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // …
+      packages.add(new RNPermissionsPackage());
+      return packages;
+    }
+
+
+  @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);

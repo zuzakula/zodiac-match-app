@@ -150,6 +150,13 @@ const SettingsScreen = () => {
               style={{ marginLeft: 20 }}
             />
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={shared.button}
+            onPress={() => navigation.navigate("Location")}
+          >
+            <Text style={shared.buttonText}>Location</Text>
+          </TouchableOpacity>
         </ScrollView>
       </ImageBackground>
     </SafeAreaView>
