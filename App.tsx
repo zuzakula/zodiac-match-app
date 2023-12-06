@@ -21,7 +21,6 @@ import MatchScreen from "./screens/MatchScreen";
 import MessageScreen from "./screens/MessageScreen";
 import UserDetails from "./screens/UserDetails";
 import SettingsScreen from "./screens/SettingsScreen";
-import LocationScreen from "./screens/LocationScreen";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -93,11 +92,6 @@ export default function App() {
                 <Stack.Screen
                   name="Settings"
                   component={SettingsScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Location"
-                  component={LocationScreen}
                   options={{ headerShown: false }}
                 ></Stack.Screen>
               </Stack.Group>
