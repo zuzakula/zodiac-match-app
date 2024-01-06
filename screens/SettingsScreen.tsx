@@ -118,7 +118,7 @@ const SettingsScreen = () => {
             <ActivityIndicator size="large" color="#7E00FC" />
           ) : (
             compatibility && (
-              <Text style={[shared.text, { marginTop: 0 }]}>
+              <Text style={[shared.text, { marginTop: 0, fontSize: 18 }]}>
                 {compatibility}
               </Text>
             )

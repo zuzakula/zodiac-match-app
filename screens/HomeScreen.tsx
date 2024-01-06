@@ -28,6 +28,7 @@ const HomeScreen = () => {
   const swipeRef = useRef(null);
 
   useEffect(() => {
+    console.log(auth.currentUser);
     findPicture(auth.currentUser?.uid as string).then((res) =>
       setImage(res?.url)
     );
@@ -331,7 +332,7 @@ const styled: StyleProp<any> = {
   containerCard: {},
   image: {
     width: "95%",
-    height: "85%",
+    height: 400,
     marginTop: 10,
     marginBottom: 0,
     marginLeft: "auto",

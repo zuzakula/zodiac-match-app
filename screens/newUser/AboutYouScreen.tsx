@@ -21,7 +21,9 @@ const AboutYouScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}>Share something more about yourself!</Text>
+        <Text style={[shared.text, { marginTop: 70 }]}>
+          Share something more about yourself!
+        </Text>
         <Text style={[shared.text, { fontSize: 15 }]}>
           Tell people what your hobbies are and what you are interested in
         </Text>

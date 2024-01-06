@@ -8,12 +8,15 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
-import { createUser } from "../services/usersService";
+import { createUser, updateUser } from "../services/usersService";
 
 const CreateAccountScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,17 +67,27 @@ const CreateAccountScreen = () => {
           setConfirmPasswordError("Password must be confirmed.");
         }
       } else {
-        const res = await createUserWithEmailAndPassword(
+        const { user } = await createUserWithEmailAndPassword(
           firebaseAuth,
           email,
           password
-        ).then(() => navigation.navigate("AddPictures" as never));
+        ); //.then(() => navigation.navigate("AddPictures" as never));
 
-        createUser({
-          id: auth.currentUser?.uid as string,
-          email: email,
-          name: name,
-        }).then((res) => res);
+        console.log(user);
+
+        sendEmailVerification(user).then(() => {
+          createUser({
+            id: auth.currentUser?.uid as string,
+            email: email,
+            name: name,
+            initialSetupDone: false,
+            emailVerified: false,
+          }).then((res) => res);
+
+          alert("Verify your account with the link sent to your email.");
+
+          navigation.navigate("Login" as never);
+        });
       }
     } catch (err: any) {
       console.log(err.message);

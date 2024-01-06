@@ -21,6 +21,8 @@ export type User = {
   bio?: string;
   url?: string;
   zodiacSign?: string;
+  initialSetupDone?: boolean;
+  emailVerified?: boolean;
 };
 
 export const findAllPictures = async () => {

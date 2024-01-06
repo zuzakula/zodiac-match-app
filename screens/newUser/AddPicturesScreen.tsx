@@ -41,7 +41,9 @@ const AddPicturesScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}>Add a picture to your profile</Text>
+        <Text style={[shared.text, { margin: 50 }]}>
+          Add a picture to your profile
+        </Text>
 
         <View style={styled.block}>
           <Image

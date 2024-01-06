@@ -36,24 +36,25 @@ const ZodiacInfoScreen = () => {
         style={{
           alignItems: "center",
           width: "100%",
-          height: "100%",
         }}
       >
         <ScrollView>
-          <Text style={[shared.text, { color: "#7E00FC" }]}>
+          <Text style={[shared.text, { color: "#7E00FC", marginTop: 50 }]}>
             Your Zodiac Sign is:
           </Text>
           <Text style={[shared.text, { marginTop: 0 }]}>{zodiac}</Text>
           <Text
             style={[
               shared.text,
-              { marginTop: 0, fontSize: 23, color: "#7E00FC" },
+              { marginTop: 30, fontSize: 23, color: "#7E00FC" },
             ]}
           >
             You are most compatible with:{" "}
           </Text>
           {compatibility ? (
-            <Text style={[shared.text, { marginTop: 0 }]}>{compatibility}</Text>
+            <Text style={[shared.text, { marginTop: 0, fontSize: 18 }]}>
+              {compatibility}
+            </Text>
           ) : (
             <ActivityIndicator />
           )}

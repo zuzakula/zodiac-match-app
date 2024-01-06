@@ -25,7 +25,9 @@ const WelcomeScreen = () => {
         }}
       >
         <View>
-          <Text style={shared.text}>Welcome to Zodiac Match!</Text>
+          <Text style={[shared.text, { marginTop: 70 }]}>
+            Welcome to Zodiac Match!
+          </Text>
         </View>
         <Image source={require("../assets/logo.png")} style={styled.logo} />
         <View style={[shared.container, { top: 100 }]}>

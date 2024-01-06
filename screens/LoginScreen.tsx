@@ -8,27 +8,50 @@ import {
   StyleProp,
   SafeAreaView,
 } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
+import { findUser } from "../services/usersService";
 
-const LoginScreen = () => {
+interface LoginScreenProps {
+  isEmailVerified: boolean | null;
+}
+
+const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState(null);
   const navigation = useNavigation();
   const firebaseAuth = auth;
 
-  const signIn = async () => {
+  // @ts-ignore
+  const signIn = async ({ isEmailVerified }) => {
     setLoading(true);
     try {
+      console.log(auth.currentUser?.emailVerified, "?");
       const res = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
         password
       );
+
+      if (!auth.currentUser?.emailVerified) {
+        alert("Sign in failed");
+
+        setEmail("");
+        setPassword("");
+      } else {
+        setUser((await findUser(auth.currentUser?.uid)) as any);
+        console.log(user, auth.currentUser?.emailVerified);
+        if (user?.initialSetupDone) {
+          navigation.navigate("HomeScreen");
+        } else {
+          navigation.navigate("AddPictures");
+        }
+      }
     } catch (err: any) {
       alert("Sign in failed: " + err.message);
     } finally {
@@ -47,7 +70,9 @@ const LoginScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}>Login to Zodiac Match!</Text>
+        <Text style={[shared.text, { marginTop: 70 }]}>
+          Login to Zodiac Match!
+        </Text>
 
         <View style={{ marginTop: 100 }}>
           <TextInput

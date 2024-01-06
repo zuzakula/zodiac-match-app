@@ -32,7 +32,10 @@ const BirthdayScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}> Input your birthday date</Text>
+        <Text style={[shared.text, { marginTop: 100 }]}>
+          {" "}
+          Input your birthday date
+        </Text>
         <TouchableOpacity
           style={[shared.button, { width: "30%" }]}
           onPress={() => setOpenDate(true)}

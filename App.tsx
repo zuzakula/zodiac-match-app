@@ -13,9 +13,6 @@ import WelcomeScreen from "./screens/WelcomeScreen.";
 import AboutYouScreen from "./screens/newUser/AboutYouScreen";
 import BirthdayScreen from "./screens/newUser/BirthdayScreen";
 import ZodiacInfoScreen from "./screens/newUser/ZodiacInfoScreen";
-import SunSignScreen from "./screens/newUser/SunSignScreen";
-import MoonSignScreen from "./screens/newUser/MoonSignScreen";
-import RisingSignScreen from "./screens/newUser/RisingSignScreen";
 import { LogBox } from "react-native";
 import MatchScreen from "./screens/MatchScreen";
 import MessageScreen from "./screens/MessageScreen";
@@ -32,6 +29,7 @@ export default function App() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    // console.log(user, user.emailVerified);
     onAuthStateChanged(auth, (user: any) => {
       setUser(user);
     });
@@ -40,19 +38,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        {user ? (
+        {user && user.emailVerified ? (
           <>
             <Stack.Group>
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{ headerShown: false }}
-              ></Stack.Screen>
-              <Stack.Screen
-                name="Chat"
-                component={ChatScreen}
-                options={{ headerShown: false }}
-              ></Stack.Screen>
               <Stack.Screen
                 name="AddPictures"
                 component={AddPicturesScreen}
@@ -76,6 +64,16 @@ export default function App() {
               <Stack.Screen
                 name="UserDetails"
                 component={UserDetails}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{ headerShown: false }}
+              ></Stack.Screen>
+              <Stack.Screen
+                name="Chat"
+                component={ChatScreen}
                 options={{ headerShown: false }}
               ></Stack.Screen>
               <Stack.Group>
@@ -111,11 +109,9 @@ export default function App() {
               component={WelcomeScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="Login" options={{ headerShown: false }}>
+              {() => <LoginScreen isEmailVerified={user?.emailVerified} />}
+            </Stack.Screen>
             <Stack.Screen
               name="CreateNewAcc"
               component={CreateAccountScreen}
