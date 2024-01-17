@@ -64,7 +64,6 @@ const AddPicturesScreen = () => {
             isDisabled={!image}
           />
         </View>
-        <GoBackButton goBackTo={"Home"} />
       </ImageBackground>
     </View>
   );

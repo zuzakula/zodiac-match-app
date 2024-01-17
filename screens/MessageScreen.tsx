@@ -49,7 +49,7 @@ const MessageScreen = (props: any) => {
         name: user?.displayName,
         // photoUrl: matchDetails.users[user?.uid].photoUrl,
         messages: input,
-      }).then((r) => console.log(r));
+      }).then((r) => r);
     }
 
     setInput("");

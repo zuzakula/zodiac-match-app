@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   Text,
+  View,
 } from "react-native";
 import shared from "../../styles/shared.styles";
 import ContinueButton from "../components/ContinueButton";
@@ -36,6 +37,7 @@ const ZodiacInfoScreen = () => {
         style={{
           alignItems: "center",
           width: "100%",
+          height: "100%",
         }}
       >
         <ScrollView>
@@ -72,8 +74,10 @@ const ZodiacInfoScreen = () => {
           ) : (
             <ActivityIndicator />
           )}
-          <ContinueButton navigateTo={"Home"} updateBody={null} />
-          <GoBackButton goBackTo={"Birthday"} />
+          <View style={{ alignItems: "center", marginBottom: 20 }}>
+            <ContinueButton navigateTo={"Location"} updateBody={null} />
+            <GoBackButton goBackTo={"Birthday"} />
+          </View>
         </ScrollView>
       </ImageBackground>
     </SafeAreaView>

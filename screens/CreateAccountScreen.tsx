@@ -50,7 +50,6 @@ const CreateAccountScreen = () => {
           "Password must contain at least one special character."
         );
       } else if (!/[A-Z]/.test(password)) {
-        console.log(/^[A-Z]+$/.test(password));
         setPasswordError(
           "Password must contain at least one uppercase letter."
         );
@@ -72,8 +71,6 @@ const CreateAccountScreen = () => {
           email,
           password
         ); //.then(() => navigation.navigate("AddPictures" as never));
-
-        console.log(user);
 
         sendEmailVerification(user).then(() => {
           createUser({

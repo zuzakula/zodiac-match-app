@@ -1,8 +1,13 @@
 import {
+  API_KEY_2,
+  USER_ID,
   X_RAPID_KEY,
   X_RAPID_KEY_MATCH,
   X_RAPID_KEY_MATCH_DETAILS,
 } from "@env";
+import { encode } from "base-64";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export const getZodiacInfo = async (zodiac) => {
   const response = await fetch(
@@ -71,4 +76,11 @@ export const matchInfoDetails = async (loggedUser, user) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getCompatibility = async (zodiac: string) => {
+  const docRef = doc(db, "ZodiacSigns", zodiac.toLowerCase());
+  const docSnap = await getDoc(docRef);
+
+  return docSnap.data();
 };

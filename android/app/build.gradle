@@ -115,6 +115,15 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    tasks.named('checkDebugAarMetadata') {
+      doLast {
+                dependsOn ':@react-native-community_geolocation:writeDebugAarMetadata'
+                inputs.files(project(':@react-native-community_geolocation:writeDebugAarMetadata'))
+            }
+    }
+
+
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`

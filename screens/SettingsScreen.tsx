@@ -24,7 +24,8 @@ const SettingsScreen = () => {
   const [zodiac, setZodiac] = useState<string>("");
   const [aboutZodiac, setAboutZodiac] = useState<string>("");
   const [compatibility, setCompatibility] = useState<string>("");
-  const [age, setAge] = useState<number>(null);
+  const [age, setAge] = useState<number>(0);
+  const [bio, setBio] = useState<string>("");
   const navigation = useNavigation();
   const [loadingCompatibility, setLoadingCompatibility] =
     useState<boolean>(true);
@@ -35,9 +36,10 @@ const SettingsScreen = () => {
     ).then((url) => setImage(url));
 
     findUser(auth.currentUser?.uid as string).then((res) => {
-      setName(res.name);
-      setZodiac(res.zodiacSign);
-      setAge(res.age);
+      setName(res?.name);
+      setZodiac(res?.zodiacSign);
+      setAge(res?.age);
+      setBio(res?.bio);
     });
 
     getZodiacInfo(zodiac.toLowerCase())
@@ -79,14 +81,37 @@ const SettingsScreen = () => {
             >
               <AntDesign name="back" size={40} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign
-                name="edit"
-                size={40}
-                color="white"
-                style={{ marginLeft: 20 }}
-              />
-            </TouchableOpacity>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ZodiacList", { zodiac: zodiac })
+                }
+              >
+                <AntDesign
+                  name="star"
+                  size={40}
+                  color="white"
+                  style={{ marginLeft: 20 }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("EditProfile", {
+                    image: image,
+                    name: name,
+                    age: age,
+                    bio: bio,
+                  })
+                }
+              >
+                <AntDesign
+                  name="edit"
+                  size={40}
+                  color="white"
+                  style={{ marginLeft: 20 }}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={{ alignItems: "center" }}>
             <Image
@@ -147,7 +172,13 @@ const SettingsScreen = () => {
               name="logout"
               size={40}
               color="white"
-              style={{ marginLeft: 20 }}
+              style={{
+                backgroundColor: "#7E00FC",
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 10,
+                alignSelf: "center",
+              }}
             />
           </TouchableOpacity>
         </ScrollView>

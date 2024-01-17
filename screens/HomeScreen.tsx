@@ -19,6 +19,7 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
 import { getDownloadURL, ref } from "firebase/storage";
+import { getCompatibility } from "../services/zodiacInfo";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -26,20 +27,23 @@ const HomeScreen = () => {
   const [name, setName] = useState<string>("");
   const [users, setUsers] = useState([]);
   const swipeRef = useRef(null);
+  const [zodiac, setZodiac] = useState<string>("");
+  const [compatibilities, setCompatibilities] = useState<any>("");
 
   useEffect(() => {
-    console.log(auth.currentUser);
     findPicture(auth.currentUser?.uid as string).then((res) =>
       setImage(res?.url)
     );
-    findUser(auth.currentUser?.uid as string).then((res) => setName(res?.name));
+    findUser(auth.currentUser?.uid as string).then((res) => {
+      setName(res?.name);
+      setZodiac(res?.zodiacSign);
+    });
     const fetchData = async () => {
       try {
         const usersData = await findUsers();
 
         if (usersData.length !== 0) {
-          setUsers(usersData);
-          // console.log(usersData);
+          setUsers(usersData as any);
 
           await Promise.all(
             usersData.map(async (user) => {
@@ -57,6 +61,8 @@ const HomeScreen = () => {
       } catch (error) {
         console.error("Error fetching users:", error);
       }
+
+      getCompatibility(zodiac).then((res) => setCompatibilities(res));
     };
 
     fetchData().then((r) => r);
@@ -65,6 +71,16 @@ const HomeScreen = () => {
       ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
     ).then((url) => setImage(url));
   }, []);
+
+  const getBackgroundColor = (satisfaction: number) => {
+    if (satisfaction == 1) {
+      return "#ff80c8";
+    } else if (satisfaction == 2) {
+      return "#ffc2cb";
+    } else {
+      return "white";
+    }
+  };
 
   const swipeLeft = async (cardIndex: string | number) => {
     if (!users[cardIndex as number]) return;
@@ -87,7 +103,7 @@ const HomeScreen = () => {
     if (!users[cardIndex as number]) return;
 
     const userSwiped: any = users[cardIndex as number];
-    const loggedInUser = await (
+    const loggedInUser = (
       await getDoc(doc(db, "Users", auth.currentUser?.uid as string))
     ).data();
 
@@ -125,52 +141,26 @@ const HomeScreen = () => {
     );
   };
 
-  const usersFixed = [
-    {
-      age: 20,
-      bio: "hi",
-      birthdayDate: "1/13/2003",
-      email: "zuza@test.com",
-      id: "5KzneoHr4vMua6XB4DmPeyNnuQp2",
-      name: "Zuza",
-      url: "file:///data/user/0/com.zuzakula.zodiacmatchapp/cache/ImagePicker/1faec3d3-bcba-4ca6-8fc2-9f0ad2e6b1d3.jpeg",
-      zodiacSign: "Capricorn",
-    },
-    {
-      age: 23,
-      bio: ":)))))))))))))",
-      birthdayDate: "12/12/1999",
-      email: "spencer@test.com",
-      id: "EqNuE2JKo7TYiypZkUlPup5zA9a2",
-      name: "Spencer",
-      url: "file:///data/user/0/com.zuzakula.zodiacmatchapp/cache/ImagePicker/2d559e8d-6a95-42c0-a323-37c14496f701.jpeg",
-      zodiacSign: "Sagittarius",
-    },
-    {
-      age: "30",
-      bio: "bio",
-      birthdayDate: "9/2/1993",
-      email: "emily@test.com",
-      id: "fv94gMxqMgYYgG6hEbI9dziKL4u1",
-      name: "Emily",
-      url: "file:///data/user/0/com.zuzakula.zodiacmatchapp/cache/ImagePicker/969d9d02-4539-4aa4-a7ab-8144fac89568.jpeg",
-      zodiacSign: "Virgo",
-    },
-    {
-      bio: "my bio :)",
-      email: "jack@test.com",
-      id: "oaYXUvwlMjWThNKJleapis.com/v0/b/zodiac-match-app.appspot.com/o/ProfilePictures%2FoaYXUvwlMjWThNKJ9OxmofYfLZT2?alt=media&token=98bd879a-3e1b-4fa6-8e03-facefa0f76a9",
-    },
-    {
-      bio: "my hobbies",
-      birthdayDate: "5/10/1995",
-      email: "paul@test.com",
-      id: "ssgL2JzbADaJ1R7SxdnUDe3RyE03",
-      name: "Paul",
-      url: "https://firebasestorage.googleapis.com/v0/b/zodiac-match-app.appspot.com/o/ProfilePictures%2FssgL2JzbADaJ1R7SxdnUDe3RyE03?alt=media&token=4985d2d6-c6f0-478c-baec-c5eb414368b1",
-      zodiacSign: "Taurus",
-    },
-  ];
+  const getMatchSatisfaction = (sign: string) => {
+    const satisfactionLevel =
+      compatibilities[sign.toLowerCase()] &&
+      compatibilities[sign.toLowerCase()][1];
+
+    switch (satisfactionLevel) {
+      case 1:
+        return "Perfect! 😍";
+      case 2:
+        return "Good 😊";
+      case 3:
+        return "Fine 😐";
+      case 4:
+        return "Not great 😕";
+      case 5:
+        return "Pretty bad... 😞";
+      default:
+        return "???";
+    }
+  };
 
   return (
     <SafeAreaView style={shared.screen}>
@@ -189,7 +179,7 @@ const HomeScreen = () => {
             <Swiper
               ref={swipeRef}
               cards={users}
-              stackSize={usersFixed.length}
+              stackSize={50}
               cardIndex={0}
               verticalSwipe={false}
               animateCardOpacity
@@ -222,13 +212,23 @@ const HomeScreen = () => {
               }}
               renderCard={(card: any) => {
                 if (card) {
+                  const zodiac = card.zodiacSign.toLowerCase();
+                  const satisfaction = compatibilities[zodiac]
+                    ? compatibilities[zodiac][1]
+                    : 0;
+
                   return (
-                    <View style={styled.card}>
+                    <View
+                      style={[
+                        styled.card,
+                        { backgroundColor: getBackgroundColor(satisfaction) },
+                      ]}
+                    >
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate("UserDetails", {
                             user: card,
-                          } as any)
+                          })
                         }
                       >
                         <Image
@@ -240,6 +240,11 @@ const HomeScreen = () => {
                         {card.name}, {card.age}
                       </Text>
                       <Text style={styled.zodiac}>{card.zodiacSign}</Text>
+                      {compatibilities[zodiac] && (
+                        <Text style={styled.compatibility}>
+                          {getMatchSatisfaction(card.zodiacSign)}
+                        </Text>
+                      )}
                     </View>
                   );
                 } else {
@@ -353,6 +358,10 @@ const styled: StyleProp<any> = {
     paddingTop: 100,
     fontSize: 60,
     textAlign: "center",
+  },
+  compatibility: {
+    textAlign: "center",
+    marginTop: 10,
   },
   zodiac: {
     fontSize: 20,

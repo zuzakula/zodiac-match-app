@@ -31,7 +31,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const signIn = async ({ isEmailVerified }) => {
     setLoading(true);
     try {
-      console.log(auth.currentUser?.emailVerified, "?");
       const res = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
@@ -45,7 +44,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
         setPassword("");
       } else {
         setUser((await findUser(auth.currentUser?.uid)) as any);
-        console.log(user, auth.currentUser?.emailVerified);
         if (user?.initialSetupDone) {
           navigation.navigate("HomeScreen");
         } else {

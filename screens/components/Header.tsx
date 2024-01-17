@@ -2,7 +2,6 @@ import { TouchableOpacity, View, Image, StyleProp } from "react-native";
 import { useEffect, useState } from "react";
 import { auth, storage } from "../../firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
-import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { getDownloadURL, ref } from "firebase/storage";
 
@@ -42,8 +41,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("AboutYou" as never);
-              // navigation.navigate("Modal");
+              navigation.navigate("Home" as never);
             }
           }}
         >

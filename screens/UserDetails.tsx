@@ -13,6 +13,7 @@ import shared from "../styles/shared.styles";
 import { matchInfo, matchInfoDetails } from "../services/zodiacInfo";
 import { findUser } from "../services/usersService";
 import { auth } from "../firebaseConfig";
+import { AntDesign } from "@expo/vector-icons";
 
 const UserDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -28,9 +29,9 @@ const UserDetails = ({ route }) => {
 
     if (loggedUser) {
       matchInfo(loggedUser, user).then((r) => setOverallMatch(r[0].overall));
-      matchInfoDetails(loggedUser.zodiacSign, user.zodiacSign).then((r) =>
-        setDescription(r[3].text)
-      );
+      matchInfoDetails(loggedUser.zodiacSign, user.zodiacSign).then((r) => {
+        setDescription(r[3].text);
+      });
     }
   }, []);
 
@@ -45,34 +46,54 @@ const UserDetails = ({ route }) => {
           alignItems: "center",
         }}
       >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{ marginTop: 30 }}
+        >
+          <AntDesign name="back" size={40} color="white" />
+        </TouchableOpacity>
         <Image
           source={{ uri: user.url }}
           width={300}
           height={300}
-          style={{ marginTop: 80, borderRadius: 10 }}
+          style={{ marginTop: 40, borderRadius: 10 }}
         />
-        <Text style={[shared.text, { margin: 0 }]}>
+        <Text style={[shared.text, { margin: 15 }]}>
           {user.name}, {user.age}
         </Text>
-        <Text style={{ color: "white", fontSize: 20 }}>{user.zodiacSign}</Text>
-        <Text style={{ color: "white" }}>{user.bio}</Text>
-        <Text style={[shared.text, { fontSize: 24, marginTop: 10 }]}>
+        <Text style={{ color: "white", fontSize: 20, marginBottom: 10 }}>
+          {user.zodiacSign}
+        </Text>
+        <Text
+          style={{
+            color: "black",
+            backgroundColor: "white",
+            padding: 20,
+            borderRadius: 20,
+          }}
+        >
+          {user.bio}
+        </Text>
+        <Text style={[shared.text, { fontSize: 24, margin: 20 }]}>
           How well do you match?
         </Text>
         {description ? (
-          <Text style={{ color: "white", textAlign: "center" }}>
+          <Text
+            style={{
+              color: "black",
+              backgroundColor: "white",
+              padding: 20,
+              borderRadius: 20,
+              margin: 20,
+            }}
+          >
             {description}
           </Text>
         ) : (
           <ActivityIndicator />
         )}
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Text>Go back</Text>
-        </TouchableOpacity>
       </ImageBackground>
     </SafeAreaView>
   );
