@@ -11,6 +11,7 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { auth, db } from "../firebaseConfig";
@@ -74,100 +75,111 @@ const MessageScreen = (props: any) => {
 
   return (
     <SafeAreaView style={shared.screen}>
-      <View style={{ flexDirection: "row", width: 400 }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Text
-            style={{
-              alignItems: "flex-start",
-              marginTop: 30,
-              color: "white",
-              marginLeft: 10,
+      <ImageBackground
+        source={require("../assets/background-3.png")}
+        resizeMethod="auto"
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ flexDirection: "row", width: 400 }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
             }}
           >
-            &larr; Go back
-          </Text>
-        </TouchableOpacity>
-        {matchUserInfo && (
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginLeft: "15%",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("UserDetails", {
-                  matchDetails: matchUserInfo,
-                } as any);
+            <Text
+              style={{
+                alignItems: "flex-start",
+                marginTop: 30,
+                color: "white",
+                marginLeft: 10,
               }}
             >
-              <Image
-                style={styled.matchPic}
-                source={{ uri: matchUserInfo.url }}
-                width={50}
-                height={50}
-              />
-            </TouchableOpacity>
-            <Text style={[shared.text, { marginTop: 0 }]}>
-              {matchUserInfo.name}
+              &larr; Go back
             </Text>
-          </View>
-        )}
-      </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={10}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <FlatList
-            data={messages}
-            style={{
-              transform: [{ scaleY: -1 }],
-              height: 400,
-              marginRight: 5,
-              marginLeft: 5,
-              backgroundColor: "white",
-              borderRadius: 20,
-              padding: 5,
-            }}
-            renderItem={({ item: message }) =>
-              message.userId === user?.uid && message ? (
-                <SenderMessage key={message.id} message={message} />
-              ) : (
-                <ReceiverMessage key={message.id} message={message} />
-              )
-            }
-            keyExtractor={(item) => item.id}
-          />
-        </TouchableWithoutFeedback>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <TextInput
-            placeholder="Send Message..."
-            style={[
-              shared.input,
-              {
-                width: 280,
-                paddingLeft: 15,
-              },
-            ]}
-            onSubmitEditing={sendMessage}
-            onChangeText={setInput}
-            value={input}
-          ></TextInput>
-          <TouchableOpacity
-            onPress={sendMessage}
-            style={[shared.button, { height: 40, width: 70 }]}
-          >
-            <Text style={shared.buttonText}>Send</Text>
           </TouchableOpacity>
+          {matchUserInfo && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "center",
+                marginLeft: "15%",
+                marginTop: 30,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("UserDetails", {
+                    matchDetails: matchUserInfo,
+                  } as any);
+                }}
+              >
+                <Image
+                  style={styled.matchPic}
+                  source={{ uri: matchUserInfo.url }}
+                  width={50}
+                  height={50}
+                />
+              </TouchableOpacity>
+              <Text style={[shared.text, { marginTop: 0 }]}>
+                {matchUserInfo.name}
+              </Text>
+            </View>
+          )}
         </View>
-      </KeyboardAvoidingView>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={10}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <FlatList
+              data={messages}
+              style={{
+                transform: [{ scaleY: -1 }],
+                height: 400,
+                marginRight: 5,
+                marginLeft: 5,
+                backgroundColor: "white",
+                borderRadius: 20,
+                padding: 5,
+              }}
+              renderItem={({ item: message }) =>
+                message.userId === user?.uid && message ? (
+                  <SenderMessage key={message.id} message={message} />
+                ) : (
+                  <ReceiverMessage key={message.id} message={message} />
+                )
+              }
+              keyExtractor={(item) => item.id}
+            />
+          </TouchableWithoutFeedback>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <TextInput
+              placeholder="Send Message..."
+              style={[
+                shared.input,
+                {
+                  width: 280,
+                  paddingLeft: 15,
+                },
+              ]}
+              onSubmitEditing={sendMessage}
+              onChangeText={setInput}
+              value={input}
+            ></TextInput>
+            <TouchableOpacity
+              onPress={sendMessage}
+              style={[shared.button, { height: 40, width: 70 }]}
+            >
+              <Text style={shared.buttonText}>Send</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

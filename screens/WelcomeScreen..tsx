@@ -64,7 +64,7 @@ const styled: StyleProp<any> = {
     color: "#444444",
     fontWeight: "bold",
   },
-  logo: { width: "55%", height: "30%", marginTop: 20 },
+  logo: { width: 250, height: "30%", marginTop: 20 },
 };
 
 export default WelcomeScreen;

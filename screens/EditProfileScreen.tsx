@@ -17,6 +17,7 @@ import shared from "../styles/shared.styles";
 import React, { useState } from "react";
 import { updateUser } from "../services/usersService";
 import { auth } from "../firebaseConfig";
+import Slider from "@react-native-community/slider";
 
 const EditProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -81,7 +82,7 @@ const EditProfileScreen = ({ route }) => {
             ></TextInput>
 
             <Text style={styled.characterCount}>
-              {bio.length}/{maxCharacters}
+              {changedBio.length}/{maxCharacters}
             </Text>
             <TouchableOpacity
               style={shared.button}
@@ -97,12 +98,18 @@ const EditProfileScreen = ({ route }) => {
                 Edit bio
               </Text>
             </TouchableOpacity>
-            <View>
-              <Text>Preferred distance</Text>
-              <Slider minimumValue={18} maximumValue={60} progress={1} />
-              <Text>Preferred age gapm</Text>
-              <Slider minimumValue={18} maximumValue={60} progress={1} />
-            </View>
+            {/*<View>*/}
+            {/*  <Text>Preferred distance</Text>*/}
+
+            {/*  <Text>Preferred age gapm</Text>*/}
+            {/*  <Slider*/}
+            {/*    style={{ width: 200, height: 40 }}*/}
+            {/*    minimumValue={0}*/}
+            {/*    maximumValue={1}*/}
+            {/*    minimumTrackTintColor="#FFFFFF"*/}
+            {/*    maximumTrackTintColor="#000000"*/}
+            {/*  />*/}
+            {/*</View>*/}
           </View>
         </TouchableWithoutFeedback>
       </ImageBackground>

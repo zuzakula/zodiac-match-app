@@ -120,7 +120,9 @@ const CreateAccountScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}>Sign up to Zodiac Match!</Text>
+        <Text style={[shared.text, { marginTop: 100 }]}>
+          Sign up to Zodiac Match!
+        </Text>
         <View style={[shared.container, { marginTop: 60 }]}>
           <TextInput
             style={shared.input}

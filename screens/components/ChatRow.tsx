@@ -4,11 +4,14 @@ import { auth, storage } from "../../firebaseConfig";
 import { useEffect, useState } from "react";
 import { getMatchedUserInfo } from "../../lib/getMatchedUserInfo";
 import { getDownloadURL, ref } from "firebase/storage";
+import { getCompatibility } from "../../services/zodiacInfo";
 
 const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
   const navigation = useNavigation();
   const user = auth.currentUser;
   const [matchUserInfo, setMatchUserInfo] = useState<any>(null);
+  const [zodiac, setZodiac] = useState<string>("");
+  const [compatibilities, setCompatibilities] = useState<any>("");
 
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
@@ -16,8 +19,38 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
       getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}`)).then(
         (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
       );
+      setZodiac(matchUserInfo.zodiacSign);
     }
   }, []);
+
+  useEffect(() => {
+    if (zodiac) {
+      getCompatibility(zodiac.toLowerCase()).then((res) => {
+        setCompatibilities(res);
+      });
+    }
+  }, [zodiac]);
+
+  const getMatchSatisfaction = (sign: string) => {
+    const satisfactionLevel =
+      compatibilities[sign.toLowerCase()] &&
+      compatibilities[sign.toLowerCase()][1];
+
+    switch (satisfactionLevel) {
+      case 1:
+        return "Perfect! 😍";
+      case 2:
+        return "Good 😊";
+      case 3:
+        return "Fine 😐";
+      case 4:
+        return "Not great 😕";
+      case 5:
+        return "Pretty bad... 😞";
+      default:
+        return "???";
+    }
+  };
 
   return (
     matchUserInfo && (
@@ -35,8 +68,19 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
             width={60}
             height={60}
           />
-
-          <Text style={styled.name}> {matchUserInfo.name} </Text>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styled.name}> {matchUserInfo.name}</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Text>{matchUserInfo.zodiacSign}</Text>
+              {/*{compatibilities[zodiac.toLowerCase()] && (*/}
+              {/*  <>*/}
+              {/*    <Text style={styled.compatibility}>*/}
+              {/*      {getMatchSatisfaction(matchUserInfo.zodiacSign)}*/}
+              {/*    </Text>*/}
+              {/*  </>*/}
+              {/*)}*/}
+            </View>
+          </View>
         </View>
       </TouchableOpacity>
     )

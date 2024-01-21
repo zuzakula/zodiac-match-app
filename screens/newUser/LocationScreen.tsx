@@ -90,8 +90,8 @@ const LocationScreen = () => {
         )}
         <View style={{ alignItems: "center", marginBottom: 20 }}>
           <ContinueButton
-            navigateTo={"Home"}
             updateBody={{ initialSetup: true }}
+            navigateTo={"Home"}
           />
           <GoBackButton goBackTo={"ZodiacInfo"} />
         </View>

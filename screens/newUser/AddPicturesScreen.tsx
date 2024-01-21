@@ -14,7 +14,7 @@ import GoBackButton from "../components/GoBackButton";
 import { uploadImage } from "../../services/imagesService";
 
 const AddPicturesScreen = () => {
-  const [image, setImage] = useState<any>("");
+  const [images, setImages] = useState<any>([]);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -25,7 +25,8 @@ const AddPicturesScreen = () => {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const newImages = [...images, result.assets[0].uri];
+      setImages(newImages);
       await uploadImage(result.assets[0].uri);
     }
   };
@@ -42,26 +43,62 @@ const AddPicturesScreen = () => {
         }}
       >
         <Text style={[shared.text, { margin: 50 }]}>
-          Add a picture to your profile
+          Add pictures to your profile
         </Text>
 
-        <View style={styled.block}>
-          <Image
-            source={{ uri: image }}
-            width={120}
-            height={150}
-            style={styled.pic}
-          />
-          <TouchableOpacity style={styled.addButton} onPress={pickImage}>
-            <Text style={styled.addButtonText}>Choose photo</Text>
-          </TouchableOpacity>
+        <View style={styled.row}>
+          <View style={styled.block}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={{ uri: images[0] }}
+                width={183}
+                height={250}
+                style={styled.pic}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styled.block}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={{ uri: images[1] }}
+                width={183}
+                height={250}
+                style={styled.pic}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styled.row}>
+          <View style={styled.block}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={{ uri: images[2] }}
+                width={183}
+                height={250}
+                style={styled.pic}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styled.block}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={{ uri: images[3] }}
+                width={183}
+                height={250}
+                style={styled.pic}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styled.continue}>
           <ContinueButton
             navigateTo={"AboutYou"}
             updateBody={null}
-            isDisabled={!image}
+            isDisabled={!images.length}
           />
         </View>
       </ImageBackground>
@@ -75,13 +112,14 @@ const styled: StyleProp<any> = {
   },
   block: {
     backgroundColor: "white",
-    height: 150,
+    height: 250,
     width: 120,
     margin: 10,
     borderRadius: 20,
     borderStyle: "dashed",
     borderColor: "#7E00FC",
     borderWidth: 2,
+    flex: 1,
   },
   addButton: {
     height: 35,
@@ -102,6 +140,11 @@ const styled: StyleProp<any> = {
   },
   continue: {
     marginTop: 100,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
 };
 

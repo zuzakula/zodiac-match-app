@@ -37,9 +37,9 @@ export default function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user: any) => {
       setUser(user);
-      findUser(auth.currentUser?.uid as any).then((user) =>
-        setInitialSetup(user?.initialSetup)
-      );
+      findUser(auth.currentUser?.uid as any).then((user) => {
+        setInitialSetup(user?.initialSetup);
+      });
     });
   }, []);
 

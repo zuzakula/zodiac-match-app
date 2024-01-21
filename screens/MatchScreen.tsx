@@ -19,8 +19,18 @@ const MatchScreen = () => {
     <SafeAreaView
       style={[shared.screen, { backgroundColor: "rgb(111, 120, 199, .8)" }]}
     >
-      <Text style={shared.text}>It's a match!</Text>
-      <Text style={shared.text}>
+      <TouchableOpacity
+        style={styled.closeButton}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={shared.buttonText}>Close</Text>
+      </TouchableOpacity>
+      <Text style={[shared.text, { marginTop: 100, color: "black" }]}>
+        It's a match!
+      </Text>
+      <Text style={[shared.text, { color: "black" }]}>
         You and {userSwiped.name} liked each other
       </Text>
       {loggedInUser && userSwiped && (
@@ -46,7 +56,7 @@ const MatchScreen = () => {
           navigation.navigate("Chat" as never);
         }}
       >
-        <Text style={shared.buttonText}>Send Message</Text>
+        <Text style={shared.buttonText}>Send a Message</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -70,6 +80,16 @@ const styled: StyleProp<any> = {
   message: {
     backgroundColor: "white",
     borderRadius: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 30,
+    right: 20,
+    backgroundColor: "#ff6347",
+    borderRadius: 15,
+    padding: 20,
+    paddingTop: 0,
+    zIndex: 1,
   },
 };
 
