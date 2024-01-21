@@ -15,14 +15,32 @@ const MatchScreen = () => {
   const { params }: any = useRoute();
   const { loggedInUser, userSwiped } = params;
 
+  console.log(loggedInUser);
+
   return (
     <SafeAreaView
       style={[shared.screen, { backgroundColor: "rgb(111, 120, 199, .8)" }]}
     >
-      <Text style={shared.text}>It's a match!</Text>
-      <Text style={shared.text}>
+      <TouchableOpacity
+        style={styled.closeButton}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Text style={shared.buttonText}>Close</Text>
+      </TouchableOpacity>
+      <Text style={[shared.text, { marginTop: 100, color: "black" }]}>
+        It's a match!
+      </Text>
+      <Text
+        style={[
+          shared.text,
+          { color: "black", marginLeft: 30, marginRight: 30 },
+        ]}
+      >
         You and {userSwiped.name} liked each other
       </Text>
+
       {loggedInUser && userSwiped && (
         <View style={styled.matchPhotos}>
           <Image
@@ -31,14 +49,16 @@ const MatchScreen = () => {
             height={130}
             style={styled.photo}
           />
+
           <Image
-            source={{ uri: userSwiped.url }}
+            source={{ uri: userSwiped.url[0] }}
             width={130}
             height={130}
             style={styled.photo}
           />
         </View>
       )}
+
       <TouchableOpacity
         style={shared.button}
         onPress={() => {
@@ -46,7 +66,7 @@ const MatchScreen = () => {
           navigation.navigate("Chat" as never);
         }}
       >
-        <Text style={shared.buttonText}>Send Message</Text>
+        <Text style={shared.buttonText}>Send a Message</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -54,7 +74,6 @@ const MatchScreen = () => {
 
 const styled: StyleProp<any> = {
   matchScreen: {
-    backgroundColor: "red",
     height: "100%",
     opacity: 0.4,
   },
@@ -67,9 +86,25 @@ const styled: StyleProp<any> = {
     margin: 30,
     borderRadius: 80,
   },
+  andText: {
+    fontSize: 40,
+    color: "black",
+    marginHorizontal: 20,
+    textAlign: "center",
+  },
   message: {
     backgroundColor: "white",
     borderRadius: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 30,
+    right: 20,
+    backgroundColor: "#6F78C7",
+    borderRadius: 15,
+    padding: 20,
+    paddingTop: 0,
+    zIndex: 1,
   },
 };
 

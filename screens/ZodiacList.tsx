@@ -48,15 +48,15 @@ const ZodiacList = ({ route }) => {
     const satisfactionLevel = compatibilities[sign] && compatibilities[sign][1];
 
     switch (satisfactionLevel) {
-      case 1:
+      case 5:
         return "Perfect! 😍";
-      case 2:
+      case 4:
         return "Good 😊";
       case 3:
         return "Fine 😐";
-      case 4:
+      case 2:
         return "Not great😕";
-      case 5:
+      case 1:
         return "Pretty bad... 😞";
       default:
         return "???";
@@ -64,9 +64,9 @@ const ZodiacList = ({ route }) => {
   };
 
   const getBackgroundColor = (satisfaction: number) => {
-    if (satisfaction == 1) {
+    if (satisfaction == 5) {
       return "#ff80c8";
-    } else if (satisfaction == 2) {
+    } else if (satisfaction == 4) {
       return "#ffc2cb";
     } else {
       return "white";
@@ -85,6 +85,7 @@ const ZodiacList = ({ route }) => {
         }}
       >
         <TouchableOpacity
+          style={{ marginTop: 30 }}
           onPress={() => {
             navigation.goBack();
           }}

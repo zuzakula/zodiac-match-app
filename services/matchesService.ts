@@ -2,7 +2,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebaseConfig";
 import generateId from "../lib/generateId";
 
-export const like = (userSwiped, loggedInUser, navigation) => {
+export const like = (
+  userSwiped: { id: string },
+  loggedInUser: any,
+  navigation: { navigate: (arg0: never, arg1: never) => void }
+) => {
   getDoc(
     doc(db, "Users", userSwiped.id, "likes", auth.currentUser?.uid as string)
   ).then((snapshot) => {

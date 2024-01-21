@@ -1,37 +1,53 @@
 import { TouchableOpacity, View, Image, StyleProp } from "react-native";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { auth, storage } from "../../firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 
 const Header = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState<string>("");
+  const [images, setImages] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    getDownloadURL(ref(storage, `ProfilePictures/${auth.currentUser?.uid}`))
-      .then((url) => setImage(url))
-      .then(() => setLoading(false));
+    const fetchImages = async () => {
+      setLoading(true);
+
+      try {
+        const imagesRef = ref(
+          storage,
+          `ProfilePictures/${auth.currentUser?.uid}/`
+        );
+        const imageList = await listAll(imagesRef);
+
+        const urls = await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+
+        setImages(urls as unknown as SetStateAction<string>);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+
+      setLoading(false);
+    };
+
+    fetchImages();
   }, []);
 
   return (
     <>
       <View style={styled.header}>
         <TouchableOpacity
-          onPress={() =>
-            // signOut(auth)
-            //   .then(() => {})
-            //   .catch((err) => alert(err))
-            navigation.navigate("Settings")
-          }
+          onPress={() => navigation.navigate("Settings" as never)}
         >
           {!loading && (
             <Image
               style={styled.profilePic}
-              source={{ uri: image }}
+              source={{ uri: images[0] }}
               width={50}
               height={50}
             />

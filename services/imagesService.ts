@@ -5,7 +5,10 @@ import { updateUser, User } from "./usersService";
 export const uploadImage = async (uri: string) => {
   const response = await fetch(uri);
   const blob = await response.blob();
-  const storageRef = ref(storage, `ProfilePictures/` + auth.currentUser?.uid);
+  const userId = auth.currentUser?.uid;
+  const imageId = Date.now().toString();
+
+  const storageRef = ref(storage, `ProfilePictures/${userId}/${imageId}.jpg`);
   const uploadTask = uploadBytesResumable(storageRef, blob);
 
   uploadTask.on(

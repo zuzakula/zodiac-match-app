@@ -79,6 +79,12 @@ const CreateAccountScreen = () => {
             name: name,
             initialSetupDone: false,
             emailVerified: false,
+            userPreferences: {
+              maxAge: 99,
+              minAge: 16,
+              maxDistance: 5000,
+              minDistance: 0,
+            },
           }).then((res) => res);
 
           alert("Verify your account with the link sent to your email.");
@@ -120,7 +126,9 @@ const CreateAccountScreen = () => {
           alignItems: "center",
         }}
       >
-        <Text style={shared.text}>Sign up to Zodiac Match!</Text>
+        <Text style={[shared.text, { marginTop: 100 }]}>
+          Sign up to Zodiac Match!
+        </Text>
         <View style={[shared.container, { marginTop: 60 }]}>
           <TextInput
             style={shared.input}

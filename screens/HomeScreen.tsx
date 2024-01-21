@@ -1,57 +1,119 @@
 import {
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
   Image,
-  StyleProp,
   ImageBackground,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { auth, db, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
 import { useEffect, useRef, useState } from "react";
-import { findUsers, findPicture, findUser } from "../services/usersService";
+import { findUser, findUsers, updateUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { getCompatibility } from "../services/zodiacInfo";
+import { getDistanceFromLatLonInKm } from "../services/location";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState<string>("");
+  // const [image, setImage] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [users, setUsers] = useState([]);
   const swipeRef = useRef(null);
   const [zodiac, setZodiac] = useState<string>("");
   const [compatibilities, setCompatibilities] = useState<any>("");
+  const [images, setImages] = useState<string>("");
+  const [loggedUserLat, setLoggedUserLat] = useState("");
+  const [loggedUserLon, setLoggedUserLon] = useState("");
+  const [userLat, setUserLat] = useState("");
+  const [userLon, setUserLon] = useState("");
+  const [loggedUser, setLoggedUser] = useState(null);
+  const [distance, setDistance] = useState<number>(0);
+  const [preferences, setPreferences] = useState(null);
+  const [minAge, setMinAge] = useState(0);
+  const [maxAge, setMaxAge] = useState(0);
+  const [minDistance, setMinDistance] = useState(0);
+  const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
-    findPicture(auth.currentUser?.uid as string).then((res) =>
-      setImage(res?.url)
-    );
-    findUser(auth.currentUser?.uid as string).then((res) => {
+    const fetchImages = async (id: any) => {
+      try {
+        const imagesRef = ref(storage, `ProfilePictures/${id}/`);
+        const imageList = await listAll(imagesRef);
+
+        return await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    findUser(auth.currentUser?.uid as string).then(async (res) => {
+      await fetchImages(res?.id);
       setName(res?.name);
       setZodiac(res?.zodiacSign);
+      setLoggedUserLat(res?.location.latitude);
+      setLoggedUserLon(res?.location.longitude);
+      setMinAge(res?.userPreferences?.minAge);
+      setMaxAge(res?.userPreferences?.maxAge);
+      setMinDistance(res?.userPreferences.minDistance);
+      setMaxDistance(res?.userPreferences.maxDistance);
     });
+
     const fetchData = async () => {
       try {
         const usersData = await findUsers();
 
         if (usersData.length !== 0) {
-          setUsers(usersData as any);
+          const filteredUsers = usersData.filter((user: any) => {
+            const userAge = user.age;
+            const distance = getDistanceFromLatLonInKm(
+              loggedUserLat,
+              loggedUserLon,
+              user?.location.latitude,
+              user?.location.longitude
+            );
+
+            console.log(distance);
+
+            return (
+              userAge >= minAge &&
+              userAge <= maxAge &&
+              distance >= minDistance &&
+              distance <= maxDistance
+            );
+          });
+
+          const sortedUsers = filteredUsers.sort((a, b) => {
+            const compatibilityA = compatibilities[a.zodiacSign.toLowerCase()]
+              ? compatibilities[a.zodiacSign.toLowerCase()][1]
+              : 0;
+            const compatibilityB = compatibilities[b.zodiacSign.toLowerCase()]
+              ? compatibilities[b.zodiacSign.toLowerCase()][1]
+              : 0;
+
+            return compatibilityB - compatibilityA;
+          });
+
+          setUsers(sortedUsers as any);
+
+          console.log(sortedUsers);
 
           await Promise.all(
-            usersData.map(async (user) => {
+            sortedUsers.map(async (user) => {
               try {
-                const url = await getDownloadURL(
-                  ref(storage, `ProfilePictures/${user.id}`)
-                );
-                user.url = url;
+                await fetchImages(user.id).then((r) => (user.url = r));
+                await updateUser(user.id, { id: user.id, url: user.url[0] });
               } catch (error) {
                 console.error(`Error fetching URL for user ${user.id}:`, error);
               }
@@ -61,21 +123,21 @@ const HomeScreen = () => {
       } catch (error) {
         console.error("Error fetching users:", error);
       }
-
-      getCompatibility(zodiac).then((res) => setCompatibilities(res));
     };
 
-    fetchData().then((r) => r);
+    if (loggedUserLat && loggedUserLon) {
+      fetchData().then((r) => r);
+    }
+  }, [preferences, loggedUserLat, loggedUserLon]);
 
-    getDownloadURL(
-      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
-    ).then((url) => setImage(url));
-  }, []);
+  useEffect(() => {
+    getCompatibility(zodiac).then((res) => setCompatibilities(res));
+  }, [zodiac]);
 
   const getBackgroundColor = (satisfaction: number) => {
-    if (satisfaction == 1) {
+    if (satisfaction == 5) {
       return "#ff80c8";
-    } else if (satisfaction == 2) {
+    } else if (satisfaction == 4) {
       return "#ffc2cb";
     } else {
       return "white";
@@ -143,22 +205,24 @@ const HomeScreen = () => {
 
   const getMatchSatisfaction = (sign: string) => {
     const satisfactionLevel =
-      compatibilities[sign.toLowerCase()] &&
-      compatibilities[sign.toLowerCase()][1];
+      sign && compatibilities
+        ? compatibilities[sign.toLowerCase()] &&
+          compatibilities[sign.toLowerCase()][1]
+        : null;
 
     switch (satisfactionLevel) {
-      case 1:
+      case 5:
         return "Perfect! 😍";
-      case 2:
+      case 4:
         return "Good 😊";
       case 3:
         return "Fine 😐";
-      case 4:
+      case 2:
         return "Not great 😕";
-      case 5:
+      case 1:
         return "Pretty bad... 😞";
       default:
-        return "???";
+        return "Error";
     }
   };
 
@@ -175,7 +239,7 @@ const HomeScreen = () => {
       >
         <Header />
         <View style={{ flex: 1, left: "-45%" }}>
-          {users && (
+          {users.length > 0 ? (
             <Swiper
               ref={swipeRef}
               cards={users}
@@ -212,10 +276,23 @@ const HomeScreen = () => {
               }}
               renderCard={(card: any) => {
                 if (card) {
-                  const zodiac = card.zodiacSign.toLowerCase();
+                  const zodiac = card.zodiacSign
+                    ? card.zodiacSign.toLowerCase()
+                    : null;
                   const satisfaction = compatibilities[zodiac]
                     ? compatibilities[zodiac][1]
                     : 0;
+
+                  setDistance(
+                    Math.trunc(
+                      getDistanceFromLatLonInKm(
+                        loggedUserLat,
+                        loggedUserLon,
+                        card.location.latitude,
+                        card.location.longitude
+                      )
+                    )
+                  );
 
                   return (
                     <View
@@ -231,10 +308,12 @@ const HomeScreen = () => {
                           })
                         }
                       >
-                        <Image
-                          source={{ uri: card.url }}
-                          style={styled.image}
-                        />
+                        {card.url && (
+                          <Image
+                            source={{ uri: card.url }}
+                            style={styled.image}
+                          />
+                        )}
                       </TouchableOpacity>
                       <Text style={styled.name}>
                         {card.name}, {card.age}
@@ -259,6 +338,25 @@ const HomeScreen = () => {
                 }
               }}
             />
+          ) : (
+            <View>
+              <Text
+                style={[
+                  shared.text,
+                  {
+                    marginLeft: 180,
+                    width: "100%",
+                    marginTop: 100,
+                    padding: 0,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: 1,
+                  },
+                ]}
+              >
+                No more profiles left
+              </Text>
+            </View>
           )}
         </View>
 
