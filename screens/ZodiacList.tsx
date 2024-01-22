@@ -85,6 +85,7 @@ const ZodiacList = ({ route }) => {
         }}
       >
         <TouchableOpacity
+          style={{ marginTop: 30 }}
           onPress={() => {
             navigation.goBack();
           }}

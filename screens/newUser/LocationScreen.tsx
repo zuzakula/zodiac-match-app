@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import Geolocation from "@react-native-community/geolocation";
 import { useEffect, useState } from "react";
-import Permissions from "react-native-permissions";
+// import Permissions from "react-native-permissions";
 import shared from "../../styles/shared.styles";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
+import { updateUser } from "../../services/usersService";
+import { auth } from "../../firebaseConfig";
 
 const PermissionModal = ({ isVisible, onRequestClose }: any) => {
   return (
@@ -24,6 +26,17 @@ const PermissionModal = ({ isVisible, onRequestClose }: any) => {
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>App needs location permission to proceed</Text>
+        <TouchableOpacity
+          onPress={() => {
+            updateUser(auth.currentUser?.uid as string, {
+              id: auth.currentUser?.uid as string,
+              initialSetupDone: true,
+            });
+          }}
+        >
+          <Text>setup</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
             onRequestClose();
@@ -43,14 +56,16 @@ const LocationScreen = () => {
     checkLocationPermission().then((r) => r);
   }, []);
   const checkLocationPermission = async () => {
-    const status = await Permissions.check("location" as any);
+    // const status = await Permissions.check("location" as any);
+    const status = "denied";
+
     if (status === "denied") {
       // Display a message explaining why location is needed
       // and provide a button to request permission.
       return (
         <View>
           <Text>App needs location permission to proceed</Text>
-          <TouchableOpacity onPress={requestLocationPermission}>
+          <TouchableOpacity>
             <Text>Grant Permission</Text>
           </TouchableOpacity>
         </View>
@@ -65,9 +80,9 @@ const LocationScreen = () => {
     }
   };
 
-  const requestLocationPermission = async () => {
-    const status = await Permissions.request("location" as any);
-  };
+  // const requestLocationPermission = async () => {
+  //   const status = await Permissions.request("location" as any);
+  // };
 
   return (
     <SafeAreaView style={shared.screen}>
@@ -81,10 +96,7 @@ const LocationScreen = () => {
         }}
       >
         {locationPermissionStatus !== "granted" && (
-          <TouchableOpacity
-            onPress={requestLocationPermission}
-            style={{ marginTop: 100 }}
-          >
+          <TouchableOpacity onPress={() => {}} style={{ marginTop: 100 }}>
             <Text>Grant Permission</Text>
           </TouchableOpacity>
         )}

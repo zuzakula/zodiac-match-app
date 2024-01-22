@@ -146,9 +146,9 @@ const HomeScreen = () => {
   };
 
   const getMatchSatisfaction = (sign: string) => {
-    const satisfactionLevel =
-      compatibilities[sign.toLowerCase()] &&
-      compatibilities[sign.toLowerCase()][1];
+    const satisfactionLevel = 5;
+    // compatibilities[sign.toLowerCase()] &&
+    // compatibilities[sign.toLowerCase()][1];
 
     switch (satisfactionLevel) {
       case 5:
@@ -216,7 +216,7 @@ const HomeScreen = () => {
               }}
               renderCard={(card: any) => {
                 if (card) {
-                  const zodiac = card.zodiacSign.toLowerCase();
+                  const zodiac = "aries"; //card.zodiacSign.toLowerCase();
                   const satisfaction = compatibilities[zodiac]
                     ? compatibilities[zodiac][1]
                     : 0;
