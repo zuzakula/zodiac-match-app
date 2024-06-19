@@ -18,17 +18,28 @@ const ZodiacInfoScreen = () => {
   const [zodiac, setZodiac] = useState<string>("");
   const [aboutZodiac, setAboutZodiac] = useState<string>("");
   const [compatibility, setCompatibility] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    findUser(auth.currentUser?.uid as string).then((res) =>
-      setZodiac(res.zodiacSign)
-    );
-    getZodiacInfo(zodiac.toLowerCase()).then((res) => {
-      setAboutZodiac(res.about);
-      setCompatibility(res.compatibility);
-    });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const user = await findUser(auth.currentUser?.uid as string);
+        setZodiac(user?.zodiacSign);
 
+        const zodiacInfo = await getZodiacInfo(user?.zodiacSign.toLowerCase());
+        setAboutZodiac(zodiacInfo.about);
+        setCompatibility(zodiacInfo.compatibility);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    return () => {};
+  }, []);
   return (
     <SafeAreaView style={shared.screen}>
       <ImageBackground
@@ -75,7 +86,10 @@ const ZodiacInfoScreen = () => {
             <ActivityIndicator />
           )}
           <View style={{ alignItems: "center", marginBottom: 20 }}>
-            <ContinueButton navigateTo={"Location"} updateBody={null} />
+            <ContinueButton
+              navigateTo={"Location"}
+              updateBody={{ initialSetupDone: true }}
+            />
             <GoBackButton goBackTo={"Birthday"} />
           </View>
         </ScrollView>

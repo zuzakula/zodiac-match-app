@@ -11,30 +11,53 @@ import { auth, db, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { findUsers, findPicture, findUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { getCompatibility } from "../services/zodiacInfo";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [image, setImage] = useState<string>("");
+  // const [image, setImage] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [users, setUsers] = useState([]);
   const swipeRef = useRef(null);
   const [zodiac, setZodiac] = useState<string>("");
   const [compatibilities, setCompatibilities] = useState<any>("");
+  const [images, setImages] = useState<string>("");
 
   useEffect(() => {
-    findPicture(auth.currentUser?.uid as string).then((res) =>
-      setImage(res?.url)
-    );
-    findUser(auth.currentUser?.uid as string).then((res) => {
+    // findPicture(auth.currentUser?.uid as string).then((res) =>
+    //   setImage(res?.url)
+    // );
+
+    const fetchImages = async (id: any) => {
+      try {
+        const imagesRef = ref(storage, `ProfilePictures/${id}/`);
+        const imageList = await listAll(imagesRef);
+
+        const urls = await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+
+        console.log(urls);
+
+        setImages(urls as unknown as SetStateAction<string>);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    findUser(auth.currentUser?.uid as string).then(async (res) => {
+      await fetchImages(res?.id);
       setName(res?.name);
       setZodiac(res?.zodiacSign);
     });
@@ -65,9 +88,9 @@ const HomeScreen = () => {
 
     fetchData().then((r) => r);
 
-    getDownloadURL(
-      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
-    ).then((url) => setImage(url));
+    // getDownloadURL(
+    //   ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
+    // ).then((url) => setImage(url));
   }, []);
 
   useEffect(() => {
@@ -146,9 +169,11 @@ const HomeScreen = () => {
   };
 
   const getMatchSatisfaction = (sign: string) => {
-    const satisfactionLevel = 5;
-    // compatibilities[sign.toLowerCase()] &&
-    // compatibilities[sign.toLowerCase()][1];
+    const satisfactionLevel =
+      sign && compatibilities
+        ? compatibilities[sign.toLowerCase()] &&
+          compatibilities[sign.toLowerCase()][1]
+        : null;
 
     switch (satisfactionLevel) {
       case 5:
@@ -162,7 +187,7 @@ const HomeScreen = () => {
       case 1:
         return "Pretty bad... 😞";
       default:
-        return "???";
+        return "Error";
     }
   };
 
@@ -216,10 +241,14 @@ const HomeScreen = () => {
               }}
               renderCard={(card: any) => {
                 if (card) {
-                  const zodiac = "aries"; //card.zodiacSign.toLowerCase();
-                  const satisfaction = compatibilities[zodiac]
-                    ? compatibilities[zodiac][1]
+                  const zodiac = card.zodiacSign
+                    ? card.zodiacSign.toLowerCase()
+                    : null;
+                  const satisfaction = compatibilities["taurus"]
+                    ? compatibilities["taurus"][1]
                     : 0;
+
+                  // console.log(card);
 
                   return (
                     <View

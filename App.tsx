@@ -39,6 +39,7 @@ export default function App() {
       setUser(user);
       findUser(auth.currentUser?.uid as any).then((user) => {
         setInitialSetup(user?.initialSetup);
+        console.log(user);
       });
     });
   }, []);

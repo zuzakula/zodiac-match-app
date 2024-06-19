@@ -1,4 +1,10 @@
-import { ImageBackground, StyleProp, TextInput, View } from "react-native";
+import {
+  Alert,
+  ImageBackground,
+  StyleProp,
+  TextInput,
+  View,
+} from "react-native";
 import { useState } from "react";
 import { Text } from "react-native";
 import ContinueButton from "../components/ContinueButton";
@@ -37,7 +43,12 @@ const AboutYouScreen = () => {
           numberOfLines={5}
           value={bio}
         ></TextInput>
-        <Text style={styled.characterCount}>
+        <Text
+          style={[
+            styled.characterCount,
+            { color: bio.length > maxCharacters ? "red" : "black" },
+          ]}
+        >
           {bio.length}/{maxCharacters}
         </Text>
 

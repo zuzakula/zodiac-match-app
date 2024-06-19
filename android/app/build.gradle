@@ -116,12 +116,6 @@ android {
         }
     }
 
-    tasks.named('checkDebugAarMetadata') {
-      doLast {
-                dependsOn ':@react-native-community_geolocation:writeDebugAarMetadata'
-                inputs.files(project(':@react-native-community_geolocation:writeDebugAarMetadata'))
-            }
-    }
 
 
 }

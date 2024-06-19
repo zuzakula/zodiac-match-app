@@ -1,114 +1,82 @@
 import {
-  ActivityIndicator,
   ImageBackground,
-  Modal,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  PermissionsAndroid,
+  TouchableOpacity,
 } from "react-native";
-import Geolocation from "@react-native-community/geolocation";
-import { useEffect, useState } from "react";
-// import Permissions from "react-native-permissions";
-import shared from "../../styles/shared.styles";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
-import { updateUser } from "../../services/usersService";
-import { auth } from "../../firebaseConfig";
-
-const PermissionModal = ({ isVisible, onRequestClose }: any) => {
-  return (
-    <Modal
-      isVisible={isVisible}
-      onBackdropPress={onRequestClose}
-      onBackButtonPress={onRequestClose}
-    >
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>App needs location permission to proceed</Text>
-        <TouchableOpacity
-          onPress={() => {
-            updateUser(auth.currentUser?.uid as string, {
-              id: auth.currentUser?.uid as string,
-              initialSetupDone: true,
-            });
-          }}
-        >
-          <Text>setup</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            onRequestClose();
-          }}
-        >
-          <Text>Close</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-  );
-};
+import React, { SetStateAction, useEffect, useState } from "react";
+import { auth, db } from "../../firebaseConfig";
+import shared from "../../styles/shared.styles";
 
 const LocationScreen = () => {
-  const [locationPermissionStatus, setLocationPermissionStatus] = useState("");
+  const user = auth.currentUser;
+  const [location, setLocation] = useState(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
 
-  useEffect(() => {
-    checkLocationPermission().then((r) => r);
-  }, []);
-  const checkLocationPermission = async () => {
-    // const status = await Permissions.check("location" as any);
-    const status = "denied";
-
-    if (status === "denied") {
-      // Display a message explaining why location is needed
-      // and provide a button to request permission.
-      return (
-        <View>
-          <Text>App needs location permission to proceed</Text>
-          <TouchableOpacity>
-            <Text>Grant Permission</Text>
-          </TouchableOpacity>
-        </View>
+  const requestLocationPermission = async () => {
+    try {
+      console.log("clicked");
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Location Permission",
+          message: "App needs access to your location.",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
       );
-    } else {
-      // Location permission is already granted or pending.
-      return (
-        <View>
-          <Text>Location access is granted or pending</Text>
-        </View>
-      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setHasLocationPermission(true);
+        console.log("Location permission granted");
+        getLocation();
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
     }
   };
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      (position: { coords: SetStateAction<null> }) => {
+        setLocation(position.coords);
+      },
+      (error: { code: any; message: any }) => {
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
 
-  // const requestLocationPermission = async () => {
-  //   const status = await Permissions.request("location" as any);
-  // };
+  useEffect(() => {
+    requestLocationPermission().then((r) => r);
+  }, []);
 
   return (
-    <SafeAreaView style={shared.screen}>
+    <View>
       <ImageBackground
-        source={require("../../assets/background-1.png")}
+        source={require("../../assets/background-2.png")}
         resizeMethod="auto"
         style={{
-          alignItems: "center",
           width: "100%",
           height: "100%",
+          alignItems: "center",
         }}
       >
-        {locationPermissionStatus !== "granted" && (
-          <TouchableOpacity onPress={() => {}} style={{ marginTop: 100 }}>
-            <Text>Grant Permission</Text>
+        <View>
+          <Text style={shared.text}>No matches yet :(</Text>
+          <TouchableOpacity onPress={requestLocationPermission}>
+            <Text style={shared.text}>Permission</Text>
           </TouchableOpacity>
-        )}
-        <View style={{ alignItems: "center", marginBottom: 20 }}>
-          <ContinueButton
-            updateBody={{ initialSetup: true }}
-            navigateTo={"Home"}
-          />
-          <GoBackButton goBackTo={"ZodiacInfo"} />
         </View>
+        <ContinueButton navigateTo={"Home"} updateBody={{}} isDisabled={true} />
+        <GoBackButton goBackTo={"AddPictures"} />
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 };
 

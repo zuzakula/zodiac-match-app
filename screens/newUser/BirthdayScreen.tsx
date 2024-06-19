@@ -21,6 +21,20 @@ const BirthdayScreen = () => {
   const [sign, setSign] = useState<string>("");
   const [age, setAge] = useState<number>(null);
 
+  const isUnderSixteen = (selectedDate: Date): boolean => {
+    const today = new Date();
+    const birthDate = new Date(selectedDate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age < 16;
+  };
+
   return (
     <SafeAreaView style={shared.screen}>
       <ImageBackground
@@ -76,7 +90,7 @@ const BirthdayScreen = () => {
             zodiacSign: sign,
             age: age,
           }}
-          isDisabled={!dateString}
+          isDisabled={!dateString || isUnderSixteen(date)}
         />
         <GoBackButton goBackTo={"AboutYou"} />
       </ImageBackground>

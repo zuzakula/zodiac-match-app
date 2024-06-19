@@ -55,7 +55,7 @@ const Header = () => {
             // signOut(auth)
             //   .then(() => {})
             //   .catch((err) => alert(err))
-            navigation.navigate("Settings")
+            navigation.navigate("Settings" as never)
           }
         >
           {!loading && (
@@ -71,7 +71,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Home" as never);
+              navigation.navigate("HomeScreen" as never);
             }
           }}
         >
