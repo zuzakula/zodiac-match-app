@@ -9,8 +9,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import shared from "../styles/shared.styles";
-import { useEffect, useState } from "react";
-import { getDownloadURL, ref } from "firebase/storage";
+import { SetStateAction, useEffect, useState } from "react";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { auth, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { findUser } from "../services/usersService";
@@ -29,11 +29,35 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
   const [loadingCompatibility, setLoadingCompatibility] =
     useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState<string>("");
 
   useEffect(() => {
-    getDownloadURL(
-      ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
-    ).then((url) => setImage(url));
+    const fetchImages = async () => {
+      setLoading(true);
+
+      try {
+        const imagesRef = ref(
+          storage,
+          `ProfilePictures/${auth.currentUser?.uid}/`
+        );
+        const imageList = await listAll(imagesRef);
+
+        const urls = await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+
+        setImages(urls as unknown as SetStateAction<string>);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+
+      setLoading(false);
+    };
+
+    fetchImages();
 
     findUser(auth.currentUser?.uid as string).then((res) => {
       setName(res?.name);
@@ -115,7 +139,7 @@ const SettingsScreen = () => {
           </View>
           <View style={{ alignItems: "center" }}>
             <Image
-              source={{ uri: image }}
+              source={{ uri: images[0] }}
               width={200}
               height={200}
               style={{

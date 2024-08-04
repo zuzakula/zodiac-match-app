@@ -44,7 +44,6 @@ const ChatScreen = () => {
   const [location, setLocation] = useState(null);
   const requestLocationPermission = async () => {
     try {
-      console.log("clicked");
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {

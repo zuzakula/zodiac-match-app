@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -46,54 +47,66 @@ const UserDetails = ({ route }) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          style={{ marginTop: 30 }}
-        >
-          <AntDesign name="back" size={40} color="white" />
-        </TouchableOpacity>
-        <Image
-          source={{ uri: user.url }}
-          width={300}
-          height={300}
-          style={{ marginTop: 40, borderRadius: 10 }}
-        />
-        <Text style={[shared.text, { margin: 15 }]}>
-          {user.name}, {user.age}
-        </Text>
-        <Text style={{ color: "white", fontSize: 20, marginBottom: 10 }}>
-          {user.zodiacSign}
-        </Text>
-        <Text
+        <ScrollView
           style={{
-            color: "black",
-            backgroundColor: "white",
-            padding: 20,
+            margin: 20,
             borderRadius: 20,
           }}
         >
-          {user.bio}
-        </Text>
-        <Text style={[shared.text, { fontSize: 24, margin: 20 }]}>
-          How well do you match?
-        </Text>
-        {description ? (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{ marginTop: 30 }}
+          >
+            <AntDesign name="back" size={40} color="white" />
+          </TouchableOpacity>
+          <Image
+            source={{ uri: user.url }}
+            width={300}
+            height={300}
+            style={{ marginTop: 40, borderRadius: 10 }}
+          />
+          <Text style={[shared.text, { margin: 15 }]}>
+            {user.name}, {user.age}
+          </Text>
           <Text
             style={{
-              color: "black",
-              backgroundColor: "white",
-              padding: 20,
-              borderRadius: 20,
-              margin: 20,
+              color: "white",
+              fontSize: 20,
+              marginBottom: 10,
+              textAlign: "center",
             }}
           >
-            {description}
+            {user.zodiacSign}
           </Text>
-        ) : (
-          <ActivityIndicator />
-        )}
+          <Text
+            style={{
+              color: "white",
+              padding: 20,
+              borderRadius: 20,
+              textAlign: "center",
+            }}
+          >
+            {user.bio}
+          </Text>
+          <Text style={[shared.text, { fontSize: 24, margin: 20 }]}>
+            How well do you match?
+          </Text>
+          {description ? (
+            <Text
+              style={{
+                color: "white",
+                padding: 20,
+                fontSize: 16,
+              }}
+            >
+              {description}
+            </Text>
+          ) : (
+            <ActivityIndicator />
+          )}
+        </ScrollView>
       </ImageBackground>
     </SafeAreaView>
   );

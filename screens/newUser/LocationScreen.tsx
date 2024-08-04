@@ -7,9 +7,13 @@ import {
 } from "react-native";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { auth, db } from "../../firebaseConfig";
+import React, { useEffect, useState } from "react";
+import { auth } from "../../firebaseConfig";
 import shared from "../../styles/shared.styles";
+import {
+  requestForegroundPermissionsAsync,
+  getCurrentPositionAsync,
+} from "expo-location";
 
 const LocationScreen = () => {
   const user = auth.currentUser;
@@ -18,7 +22,6 @@ const LocationScreen = () => {
 
   const requestLocationPermission = async () => {
     try {
-      console.log("clicked");
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
@@ -32,7 +35,7 @@ const LocationScreen = () => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setHasLocationPermission(true);
         console.log("Location permission granted");
-        getLocation();
+        await getLocation();
       } else {
         console.log("Location permission denied");
       }
@@ -40,41 +43,49 @@ const LocationScreen = () => {
       console.warn(err);
     }
   };
-  const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position: { coords: SetStateAction<null> }) => {
-        setLocation(position.coords);
-      },
-      (error: { code: any; message: any }) => {
-        console.log(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
+  const getLocation = async () => {
+    try {
+      const location = await getCurrentPositionAsync({});
+      setLocation(location.coords);
+    } catch (error) {
+      console.log("Error getting location:", error);
+    }
   };
 
   useEffect(() => {
-    requestLocationPermission().then((r) => r);
+    requestLocationPermission().then((r) => r); // Initial request for location permission
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <ImageBackground
         source={require("../../assets/background-2.png")}
         resizeMethod="auto"
         style={{
           width: "100%",
           height: "100%",
+          justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <View>
-          <Text style={shared.text}>No matches yet :(</Text>
+        <View style={{ margin: 20, alignItems: "center" }}>
+          <Text style={shared.text}>Location</Text>
           <TouchableOpacity onPress={requestLocationPermission}>
-            <Text style={shared.text}>Permission</Text>
+            <Text style={[shared.text, { color: "#5e00ff", marginTop: 10 }]}>
+              Click here to grant Permission
+            </Text>
           </TouchableOpacity>
         </View>
-        <ContinueButton navigateTo={"Home"} updateBody={{}} isDisabled={true} />
-        <GoBackButton goBackTo={"AddPictures"} />
+        <View style={{ marginBottom: 20 }}>
+          <ContinueButton
+            navigateTo={"Home"}
+            updateBody={{ location: location, initialSetupDone: true }}
+            isDisabled={!location}
+          />
+        </View>
+        <View style={{ marginBottom: 20 }}>
+          <GoBackButton goBackTo={"AddPictures"} />
+        </View>
       </ImageBackground>
     </View>
   );

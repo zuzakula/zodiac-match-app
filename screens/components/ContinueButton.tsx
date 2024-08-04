@@ -1,9 +1,10 @@
 import { Pressable, Text } from "react-native";
 import shared from "../../styles/shared.styles";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { updateUser } from "../../services/usersService";
+import { findUser, updateUser } from "../../services/usersService";
 import { auth } from "../../firebaseConfig";
 import { Alert } from "react-native";
+import { useState } from "react";
 
 const ContinueButton = ({
   navigateTo,
@@ -19,17 +20,20 @@ const ContinueButton = ({
   return (
     <Pressable
       style={shared.button}
-      onPress={() => {
-        console.log("xx");
+      onPress={async () => {
         if (!isDisabled) {
-          if (navigation) {
-            navigation.navigate(navigateTo as never);
-            console.log(navigation);
-          }
-          if (updateBody) {
-            updateUser(auth.currentUser?.uid as string, updateBody).then(
-              (r) => r
-            );
+          try {
+            if (updateBody) {
+              const result = await updateUser(
+                auth.currentUser?.uid as string,
+                updateBody
+              );
+            }
+            if (navigation) {
+              navigation.navigate(navigateTo as never);
+            }
+          } catch (error) {
+            console.error("Error updating user data:", error);
           }
         } else {
           if (route.name === "AboutYou") {

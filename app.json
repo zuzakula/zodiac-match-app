@@ -19,7 +19,7 @@
       "bundleIdentifier": "com.zuzakula.zodiacmatchapp"
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "LOCATION"],
       "adaptiveIcon": {
         "foregroundImage": "",
         "backgroundColor": "#ffffff"

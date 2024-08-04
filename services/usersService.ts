@@ -112,6 +112,12 @@ export const createUser = async (body: User) => {
 };
 
 export const updateUser = async (currUser: string, body: User) => {
-  const docRef = doc(db, "Users", currUser);
-  await updateDoc(docRef as any, body);
+  try {
+    const docRef = doc(db, "Users", currUser);
+    await updateDoc(docRef, body);
+    console.log("Document successfully updated!");
+  } catch (error) {
+    console.error("Error updating document: ", error);
+    throw new Error("Failed to update document");
+  }
 };

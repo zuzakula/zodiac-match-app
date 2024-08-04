@@ -10,13 +10,6 @@ const Header = () => {
   const [images, setImages] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   getDownloadURL(ref(storage, `ProfilePictures/${auth.currentUser?.uid}`))
-  //     .then((url) => setImage(url))
-  //     .then(() => setLoading(false));
-  // }, []);
-
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
@@ -33,8 +26,6 @@ const Header = () => {
             return getDownloadURL(item);
           })
         );
-
-        console.log(urls);
 
         setImages(urls as unknown as SetStateAction<string>);
       } catch (error) {

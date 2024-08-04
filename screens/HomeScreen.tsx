@@ -48,8 +48,6 @@ const HomeScreen = () => {
           })
         );
 
-        console.log(urls);
-
         setImages(urls as unknown as SetStateAction<string>);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -98,8 +96,6 @@ const HomeScreen = () => {
   }, [zodiac]);
 
   const getBackgroundColor = (satisfaction: number) => {
-    console.log(satisfaction);
-
     if (satisfaction == 5) {
       return "#ff80c8";
     } else if (satisfaction == 4) {
@@ -244,11 +240,9 @@ const HomeScreen = () => {
                   const zodiac = card.zodiacSign
                     ? card.zodiacSign.toLowerCase()
                     : null;
-                  const satisfaction = compatibilities["taurus"]
-                    ? compatibilities["taurus"][1]
+                  const satisfaction = compatibilities[zodiac]
+                    ? compatibilities[zodiac][1]
                     : 0;
-
-                  // console.log(card);
 
                   return (
                     <View

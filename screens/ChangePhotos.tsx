@@ -1,20 +1,54 @@
+import shared from "../styles/shared.styles";
 import {
   Image,
   ImageBackground,
+  SafeAreaView,
   StyleProp,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { Text } from "react-native";
+import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import ContinueButton from "../components/ContinueButton";
-import shared from "../../styles/shared.styles";
-import GoBackButton from "../components/GoBackButton";
-import { uploadImage } from "../../services/imagesService";
+import { uploadImage } from "../services/imagesService";
+import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
+import firebase from "firebase/compat";
+import { auth, storage } from "../firebaseConfig";
 
-const AddPicturesScreen = () => {
+const ChangePhotos = () => {
+  const navigation = useNavigation();
   const [images, setImages] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+
+      try {
+        const imagesRef = ref(
+          storage,
+          `ProfilePictures/${auth.currentUser?.uid}/`
+        );
+        const imageList = await listAll(imagesRef);
+
+        const urls = await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+
+        setImages(urls);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+
+      setLoading(false);
+    };
+
+    fetchImages();
+  }, []);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,9 +66,9 @@ const AddPicturesScreen = () => {
   };
 
   return (
-    <View style={shared.screen}>
+    <SafeAreaView style={shared.screen}>
       <ImageBackground
-        source={require("../../assets/background-1.png")}
+        source={require("../assets/background-1.png")}
         resizeMethod="auto"
         style={{
           width: "100%",
@@ -42,10 +76,17 @@ const AddPicturesScreen = () => {
           alignItems: "center",
         }}
       >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{ marginTop: 30 }}
+        >
+          <AntDesign name="back" size={40} color="white" />
+        </TouchableOpacity>
         <Text style={[shared.text, { margin: 50 }]}>
-          Add pictures to your profile
+          Change pictures for your profile
         </Text>
-
         <View style={styled.row}>
           <View style={styled.block}>
             <TouchableOpacity onPress={pickImage}>
@@ -93,16 +134,8 @@ const AddPicturesScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styled.continue}>
-          <ContinueButton
-            navigateTo={"AboutYou"}
-            updateBody={null}
-            isDisabled={!images.length}
-          />
-        </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -131,4 +164,4 @@ const styled: StyleProp<any> = {
   },
 };
 
-export default AddPicturesScreen;
+export default ChangePhotos;

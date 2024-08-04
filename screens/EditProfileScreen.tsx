@@ -14,18 +14,47 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
-import React, { useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { updateUser } from "../services/usersService";
-import { auth } from "../firebaseConfig";
-import Slider from "@react-native-community/slider";
+import { auth, storage } from "../firebaseConfig";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
 
-const EditProfileScreen = ({ route }) => {
+const EditProfileScreen = ({ route }: any) => {
   const navigation = useNavigation();
-  const { image, name, age, bio } = route.params;
+  const { image, name: initialName, age, bio } = route.params;
   const [changedBio, setChangedBio] = useState<string>(bio);
   const maxCharacters = 250;
+  const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState<string>("");
+  const [changedName, setChangedName] = useState(initialName);
 
-  console.log(bio);
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+
+      try {
+        const imagesRef = ref(
+          storage,
+          `ProfilePictures/${auth.currentUser?.uid}/`
+        );
+        const imageList = await listAll(imagesRef);
+
+        const urls = await Promise.all(
+          imageList.items.map(async (item) => {
+            return getDownloadURL(item);
+          })
+        );
+
+        setImages(urls as unknown as SetStateAction<string>);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+
+      setLoading(false);
+    };
+
+    fetchImages();
+  }, []);
 
   return (
     <SafeAreaView>
@@ -61,14 +90,49 @@ const EditProfileScreen = ({ route }) => {
                 />
               )}
             </View>
-            <Pressable style={shared.button}>
+            <View style={{ alignItems: "center" }}>
+              <Image
+                source={{ uri: images[0] }}
+                width={200}
+                height={200}
+                style={{
+                  borderRadius: 100,
+                }}
+              />
+            </View>
+            <Pressable
+              style={shared.button}
+              onPress={() => {
+                if (navigation) {
+                  navigation.navigate("ChangePhotos" as never);
+                }
+              }}
+            >
               <Text style={[shared.text, { fontSize: 18, paddingTop: 8 }]}>
-                Change main photo
+                Change photos
               </Text>
             </Pressable>
-            <Text style={[shared.text, { marginBottom: 0 }]}>
-              {name}, {age}
-            </Text>
+
+            <TextInput
+              style={[styled.input, { height: "1.5em" }]}
+              autoCapitalize="none"
+              onChangeText={(text) => setChangedName(text)}
+              value={changedName}
+            />
+
+            <TouchableOpacity
+              style={shared.button}
+              onPress={() =>
+                updateUser(auth.currentUser?.uid as string, {
+                  id: auth.currentUser?.uid as string,
+                  name: changedName,
+                }).then((r) => r)
+              }
+            >
+              <Text style={[shared.text, { fontSize: 18, paddingTop: 8 }]}>
+                Edit Name
+              </Text>
+            </TouchableOpacity>
 
             <TextInput
               style={styled.input}
@@ -87,7 +151,6 @@ const EditProfileScreen = ({ route }) => {
             <TouchableOpacity
               style={shared.button}
               onPress={() => {
-                console.log("xd");
                 updateUser(auth.currentUser?.uid as string, {
                   id: auth.currentUser?.uid as string,
                   bio: changedBio,
@@ -98,18 +161,6 @@ const EditProfileScreen = ({ route }) => {
                 Edit bio
               </Text>
             </TouchableOpacity>
-            {/*<View>*/}
-            {/*  <Text>Preferred distance</Text>*/}
-
-            {/*  <Text>Preferred age gapm</Text>*/}
-            {/*  <Slider*/}
-            {/*    style={{ width: 200, height: 40 }}*/}
-            {/*    minimumValue={0}*/}
-            {/*    maximumValue={1}*/}
-            {/*    minimumTrackTintColor="#FFFFFF"*/}
-            {/*    maximumTrackTintColor="#000000"*/}
-            {/*  />*/}
-            {/*</View>*/}
           </View>
         </TouchableWithoutFeedback>
       </ImageBackground>

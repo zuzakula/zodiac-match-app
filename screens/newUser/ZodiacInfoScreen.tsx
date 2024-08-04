@@ -27,6 +27,7 @@ const ZodiacInfoScreen = () => {
         setZodiac(user?.zodiacSign);
 
         const zodiacInfo = await getZodiacInfo(user?.zodiacSign.toLowerCase());
+        // console.log(user?.zodiacSign);
         setAboutZodiac(zodiacInfo.about);
         setCompatibility(zodiacInfo.compatibility);
         setLoading(false);
