@@ -115,9 +115,14 @@ export const updateUser = async (currUser: string, body: User) => {
   try {
     const docRef = doc(db, "Users", currUser);
     await updateDoc(docRef, body);
-    console.log("Document successfully updated!");
   } catch (error) {
     console.error("Error updating document: ", error);
     throw new Error("Failed to update document");
   }
+};
+
+export const updateUserPreferences = async (id: string, preferences: any) => {
+  const preferencesRef = doc(db, "Users", id, "UserPreferences", "Preferences");
+
+  await setDoc(preferencesRef, preferences, { merge: true });
 };

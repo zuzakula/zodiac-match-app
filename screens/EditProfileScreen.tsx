@@ -4,6 +4,7 @@ import {
   Keyboard,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleProp,
   Text,
   TextInput,
@@ -15,7 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 import React, { SetStateAction, useEffect, useState } from "react";
-import { updateUser } from "../services/usersService";
+import { updateUser, updateUserPreferences } from "../services/usersService";
 import { auth, storage } from "../firebaseConfig";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 
@@ -27,6 +28,10 @@ const EditProfileScreen = ({ route }: any) => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<string>("");
   const [changedName, setChangedName] = useState(initialName);
+  const [minAge, setMinAge] = useState<string>("16");
+  const [maxAge, setMaxAge] = useState<string>("99");
+  const [minDistance, setMinDistance] = useState<string>("0");
+  const [maxDistance, setMaxDistance] = useState<string>("300");
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -56,6 +61,22 @@ const EditProfileScreen = ({ route }: any) => {
     fetchImages();
   }, []);
 
+  const handleSavePreferences = () => {
+    const preferences = {
+      minAge: parseInt(minAge),
+      maxAge: parseInt(maxAge),
+      minDistance: parseInt(minDistance),
+      maxDistance: parseInt(maxDistance),
+    };
+
+    updateUserPreferences(auth.currentUser?.uid as string, preferences).then(
+      (r) => {
+        console.log(r);
+        console.log("Preferences updated");
+      }
+    );
+  };
+
   return (
     <SafeAreaView>
       <ImageBackground
@@ -68,7 +89,12 @@ const EditProfileScreen = ({ route }: any) => {
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
+          <ScrollView
+            style={{
+              margin: 10,
+              borderRadius: 20,
+            }}
+          >
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
@@ -161,7 +187,62 @@ const EditProfileScreen = ({ route }: any) => {
                 Edit bio
               </Text>
             </TouchableOpacity>
-          </View>
+            <View>
+              <Text style={[shared.text, { marginTop: 20 }]}>
+                Account preferences
+              </Text>
+              <View style={styled.preferenceContainer}>
+                <Text style={styled.preferenceLabel}>Min Age:</Text>
+                <TextInput
+                  style={styled.preferenceInput}
+                  keyboardType="numeric"
+                  onChangeText={(text) => setMinAge(text)}
+                  value={minAge}
+                  maxLength={2}
+                />
+              </View>
+              <View style={styled.preferenceContainer}>
+                <Text style={styled.preferenceLabel}>Max Age:</Text>
+                <TextInput
+                  style={styled.preferenceInput}
+                  keyboardType="numeric"
+                  onChangeText={(text) => setMaxAge(text)}
+                  value={maxAge}
+                  maxLength={2}
+                />
+              </View>
+
+              <View style={styled.preferenceContainer}>
+                <Text style={styled.preferenceLabel}>Min Distance (km):</Text>
+                <TextInput
+                  style={styled.preferenceInput}
+                  keyboardType="numeric"
+                  onChangeText={(text) => setMinDistance(text)}
+                  value={minDistance}
+                  maxLength={3}
+                />
+              </View>
+              <View style={styled.preferenceContainer}>
+                <Text style={styled.preferenceLabel}>Max Distance (km):</Text>
+                <TextInput
+                  style={styled.preferenceInput}
+                  keyboardType="numeric"
+                  onChangeText={(text) => setMaxDistance(text)}
+                  value={maxDistance}
+                  maxLength={3}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={shared.button}
+                onPress={handleSavePreferences}
+              >
+                <Text style={[shared.text, { fontSize: 18, paddingTop: 8 }]}>
+                  Save Preferences
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </ImageBackground>
     </SafeAreaView>
@@ -181,6 +262,25 @@ const styled: StyleProp<any> = {
   characterCount: {
     textAlign: "right",
     color: "black",
+  },
+  preferenceContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    width: 270,
+  },
+  preferenceLabel: {
+    color: "white",
+    fontSize: 16,
+  },
+  preferenceInput: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    height: 40,
+    width: 60,
+    paddingHorizontal: 10,
+    textAlign: "center",
   },
 };
 

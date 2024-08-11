@@ -13,7 +13,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { auth, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
-import { findUser } from "../services/usersService";
+import { findUser, updateUserPreferences } from "../services/usersService";
 import { getZodiacInfo } from "../services/zodiacInfo";
 import { AntDesign } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";

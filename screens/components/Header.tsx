@@ -42,12 +42,7 @@ const Header = () => {
     <>
       <View style={styled.header}>
         <TouchableOpacity
-          onPress={() =>
-            // signOut(auth)
-            //   .then(() => {})
-            //   .catch((err) => alert(err))
-            navigation.navigate("Settings" as never)
-          }
+          onPress={() => navigation.navigate("Settings" as never)}
         >
           {!loading && (
             <Image
@@ -62,7 +57,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("HomeScreen" as never);
+              navigation.navigate("Home" as never);
             }
           }}
         >

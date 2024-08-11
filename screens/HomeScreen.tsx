@@ -1,26 +1,25 @@
 import {
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
   Image,
-  StyleProp,
   ImageBackground,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { auth, db, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
-import { SetStateAction, useEffect, useRef, useState } from "react";
-import { findUsers, findPicture, findUser } from "../services/usersService";
+import { useEffect, useRef, useState } from "react";
+import { findUser, findUsers, updateUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { getCompatibility } from "../services/zodiacInfo";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { getDistanceFromLatLonInKm } from "../services/location";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -31,24 +30,25 @@ const HomeScreen = () => {
   const [zodiac, setZodiac] = useState<string>("");
   const [compatibilities, setCompatibilities] = useState<any>("");
   const [images, setImages] = useState<string>("");
+  const [loggedUserLat, setLoggedUserLat] = useState("");
+  const [loggedUserLon, setLoggedUserLon] = useState("");
+  const [userLat, setUserLat] = useState("");
+  const [userLon, setUserLon] = useState("");
+  const [loggedUser, setLoggedUser] = useState(null);
+  const [distance, setDistance] = useState<number>(0);
+  const [preferences, setPreferences] = useState(null);
 
   useEffect(() => {
-    // findPicture(auth.currentUser?.uid as string).then((res) =>
-    //   setImage(res?.url)
-    // );
-
     const fetchImages = async (id: any) => {
       try {
         const imagesRef = ref(storage, `ProfilePictures/${id}/`);
         const imageList = await listAll(imagesRef);
 
-        const urls = await Promise.all(
+        return await Promise.all(
           imageList.items.map(async (item) => {
             return getDownloadURL(item);
           })
         );
-
-        setImages(urls as unknown as SetStateAction<string>);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -58,21 +58,72 @@ const HomeScreen = () => {
       await fetchImages(res?.id);
       setName(res?.name);
       setZodiac(res?.zodiacSign);
+      setLoggedUserLat(res?.location.latitude);
+      setLoggedUserLon(res?.location.longitude);
     });
+
+    const fetchUserPreferences = async () => {
+      try {
+        const docRef = doc(
+          db,
+          "Users",
+          auth.currentUser?.uid as string,
+          "UserPreferences",
+          "Preferences"
+        );
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setPreferences(docSnap.data());
+          // console.log(docSnap.data());
+        }
+      } catch (error) {
+        console.error("Error fetching user preferences:", error);
+      }
+    };
+
+    fetchUserPreferences().then((r) => r);
+
     const fetchData = async () => {
       try {
         const usersData = await findUsers();
 
         if (usersData.length !== 0) {
-          setUsers(usersData as any);
+          const filteredUsers = usersData.filter((user) => {
+            const userAge = user.age;
+            const distance = getDistanceFromLatLonInKm(
+              loggedUserLat,
+              loggedUserLon,
+              user.location.latitude,
+              user.location.longitude
+            );
+
+            return (
+              userAge >= preferences?.minAge &&
+              userAge <= preferences?.maxAge &&
+              distance >= preferences?.minDistance &&
+              distance <= preferences?.maxDistance
+            );
+          });
+
+          const sortedUsers = filteredUsers.sort((a, b) => {
+            const compatibilityA = compatibilities[a.zodiacSign.toLowerCase()]
+              ? compatibilities[a.zodiacSign.toLowerCase()][1]
+              : 0;
+            const compatibilityB = compatibilities[b.zodiacSign.toLowerCase()]
+              ? compatibilities[b.zodiacSign.toLowerCase()][1]
+              : 0;
+
+            return compatibilityB - compatibilityA;
+          });
+
+          setUsers(sortedUsers as any);
 
           await Promise.all(
-            usersData.map(async (user) => {
+            sortedUsers.map(async (user) => {
               try {
-                const url = await getDownloadURL(
-                  ref(storage, `ProfilePictures/${user.id}`)
-                );
-                user.url = url;
+                await fetchImages(user.id).then((r) => (user.url = r));
+                await updateUser(user.id, { id: user.id, url: user.url[0] });
               } catch (error) {
                 console.error(`Error fetching URL for user ${user.id}:`, error);
               }
@@ -85,11 +136,7 @@ const HomeScreen = () => {
     };
 
     fetchData().then((r) => r);
-
-    // getDownloadURL(
-    //   ref(storage, `ProfilePictures/${auth.currentUser?.uid}`)
-    // ).then((url) => setImage(url));
-  }, []);
+  }, [preferences, loggedUserLat, loggedUserLon]);
 
   useEffect(() => {
     getCompatibility(zodiac).then((res) => setCompatibilities(res));
@@ -243,6 +290,17 @@ const HomeScreen = () => {
                   const satisfaction = compatibilities[zodiac]
                     ? compatibilities[zodiac][1]
                     : 0;
+
+                  setDistance(
+                    Math.trunc(
+                      getDistanceFromLatLonInKm(
+                        loggedUserLat,
+                        loggedUserLon,
+                        card.location.latitude,
+                        card.location.longitude
+                      )
+                    )
+                  );
 
                   return (
                     <View

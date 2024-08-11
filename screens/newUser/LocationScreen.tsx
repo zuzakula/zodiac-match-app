@@ -1,23 +1,19 @@
+import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
   View,
   Text,
-  PermissionsAndroid,
   TouchableOpacity,
+  PermissionsAndroid,
 } from "react-native";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
-import React, { useEffect, useState } from "react";
-import { auth } from "../../firebaseConfig";
 import shared from "../../styles/shared.styles";
-import {
-  requestForegroundPermissionsAsync,
-  getCurrentPositionAsync,
-} from "expo-location";
+import { getCurrentPositionAsync } from "expo-location";
+import { auth } from "../../firebaseConfig";
 
 const LocationScreen = () => {
-  const user = auth.currentUser;
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<any>(null);
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
 
   const requestLocationPermission = async () => {
@@ -34,7 +30,6 @@ const LocationScreen = () => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setHasLocationPermission(true);
-        console.log("Location permission granted");
         await getLocation();
       } else {
         console.log("Location permission denied");
@@ -43,6 +38,7 @@ const LocationScreen = () => {
       console.warn(err);
     }
   };
+
   const getLocation = async () => {
     try {
       const location = await getCurrentPositionAsync({});
@@ -78,13 +74,13 @@ const LocationScreen = () => {
         </View>
         <View style={{ marginBottom: 20 }}>
           <ContinueButton
-            navigateTo={"Home"}
+            navigateTo="Home"
             updateBody={{ location: location, initialSetupDone: true }}
             isDisabled={!location}
           />
         </View>
         <View style={{ marginBottom: 20 }}>
-          <GoBackButton goBackTo={"AddPictures"} />
+          <GoBackButton goBackTo="AddPictures" />
         </View>
       </ImageBackground>
     </View>

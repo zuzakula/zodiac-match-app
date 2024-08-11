@@ -32,12 +32,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 const Stack = createNativeStackNavigator();
 
-const forceReducer = (x: any) => x + 1;
-
 export default function App() {
   const [user, setUser] = useState<any>(null);
   const [initialSetup, setInitialSetup] = useState(false);
-  const [, forceRender] = useReducer(forceReducer, 0);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
@@ -45,49 +42,18 @@ export default function App() {
       if (user) {
         const userData = await findUser(user.uid);
         setInitialSetup(userData?.initialSetupDone || false);
-        console.log(initialSetup); // dont know if it actually works
-        forceRender();
       } else {
         setInitialSetup(false);
       }
     });
+    console.log(user);
     return () => unsubscribe();
-
-    const fetchImages = async () => {
-      setLoading(true);
-
-      try {
-        const imagesRef = ref(
-          storage,
-          `ProfilePictures/${auth.currentUser?.uid}/`
-        );
-        const imageList = await listAll(imagesRef);
-
-        const urls = await Promise.all(
-          imageList.items.map(async (item) => {
-            return getDownloadURL(item);
-          })
-        );
-
-        setImages(urls as unknown as SetStateAction<string>);
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-
-      setLoading(false);
-    };
-
-    fetchImages();
   }, [user]);
-
-  useEffect(() => {
-    console.log("Initial setup status:", initialSetup);
-  }, [initialSetup]);
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        {user && user.emailVerified ? (
+        {user && auth?.currentUser.emailVerified ? (
           <>
             {initialSetup ? (
               <Stack.Group>

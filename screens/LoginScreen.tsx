@@ -6,7 +6,6 @@ import {
   Pressable,
   ImageBackground,
   StyleProp,
-  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import { auth } from "../firebaseConfig";
@@ -27,8 +26,7 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const navigation = useNavigation();
   const firebaseAuth = auth;
 
-  // @ts-ignore
-  const signIn = async ({ isEmailVerified }) => {
+  const signIn = async () => {
     setLoading(true);
     try {
       const res = await signInWithEmailAndPassword(
@@ -37,19 +35,19 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
         password
       );
 
-      if (!auth.currentUser?.emailVerified) {
-        alert("Sign in failed");
+      const intervalId = setInterval(async () => {
+        await auth.currentUser?.reload(); // Reload the current user state
+        if (auth.currentUser?.emailVerified) {
+          clearInterval(intervalId);
+          setUser((await findUser(auth.currentUser?.uid)) as any);
 
-        setEmail("");
-        setPassword("");
-      } else {
-        setUser((await findUser(auth.currentUser?.uid)) as any);
-        if (user?.initialSetupDone) {
-          navigation.navigate("HomeScreen");
-        } else {
-          navigation.navigate("AddPictures");
+          if (user?.initialSetupDone) {
+            navigation.navigate("HomeScreen" as never);
+          } else {
+            navigation.navigate("AddPictures" as never);
+          }
         }
-      }
+      }, 1000); // Check every second until verified
     } catch (err: any) {
       alert("Sign in failed: " + err.message);
     } finally {

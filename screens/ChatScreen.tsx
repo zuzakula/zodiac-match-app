@@ -42,42 +42,6 @@ const ChatScreen = () => {
   const [matches, setMatches] = useState([]);
   const user = auth.currentUser;
   const [location, setLocation] = useState(null);
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: "Location Permission",
-          message: "App needs access to your location.",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK",
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Location permission granted");
-      } else {
-        console.log("Location permission denied");
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-  const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position: { coords: SetStateAction<null> }) => {
-        setLocation(position.coords);
-      },
-      (error: { code: any; message: any }) => {
-        console.log(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  };
-
-  useEffect(() => {
-    requestLocationPermission().then((r) => r);
-  }, []);
 
   useEffect(() => {
     onSnapshot(
@@ -115,9 +79,6 @@ const ChatScreen = () => {
           ) : (
             <View>
               <Text style={shared.text}>No matches yet :(</Text>
-              <TouchableOpacity onPress={requestLocationPermission}>
-                <Text style={shared.text}>Permission</Text>
-              </TouchableOpacity>
             </View>
           )}
         </View>
