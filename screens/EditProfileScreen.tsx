@@ -61,22 +61,6 @@ const EditProfileScreen = ({ route }: any) => {
     fetchImages();
   }, []);
 
-  const handleSavePreferences = () => {
-    const preferences = {
-      minAge: parseInt(minAge),
-      maxAge: parseInt(maxAge),
-      minDistance: parseInt(minDistance),
-      maxDistance: parseInt(maxDistance),
-    };
-
-    updateUserPreferences(auth.currentUser?.uid as string, preferences).then(
-      (r) => {
-        console.log(r);
-        console.log("Preferences updated");
-      }
-    );
-  };
-
   return (
     <SafeAreaView>
       <ImageBackground
@@ -219,7 +203,7 @@ const EditProfileScreen = ({ route }: any) => {
                   keyboardType="numeric"
                   onChangeText={(text) => setMinDistance(text)}
                   value={minDistance}
-                  maxLength={3}
+                  maxLength={4}
                 />
               </View>
               <View style={styled.preferenceContainer}>
@@ -229,13 +213,23 @@ const EditProfileScreen = ({ route }: any) => {
                   keyboardType="numeric"
                   onChangeText={(text) => setMaxDistance(text)}
                   value={maxDistance}
-                  maxLength={3}
+                  maxLength={4}
                 />
               </View>
 
               <TouchableOpacity
                 style={shared.button}
-                onPress={handleSavePreferences}
+                onPress={() =>
+                  updateUser(auth.currentUser?.uid as string, {
+                    id: auth.currentUser?.uid as string,
+                    userPreferences: {
+                      minAge: minAge,
+                      maxAge: maxAge,
+                      minDistance: minDistance,
+                      maxDistance: maxDistance,
+                    },
+                  })
+                }
               >
                 <Text style={[shared.text, { fontSize: 18, paddingTop: 8 }]}>
                   Save Preferences

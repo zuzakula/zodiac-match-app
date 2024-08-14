@@ -27,6 +27,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { AntDesign } from "@expo/vector-icons";
 
 const MessageScreen = (props: any) => {
   const navigation = useNavigation();
@@ -40,6 +41,7 @@ const MessageScreen = (props: any) => {
 
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
+    // console.log(matchUserInfo);
   }, []);
 
   const sendMessage = () => {
@@ -89,17 +91,9 @@ const MessageScreen = (props: any) => {
             onPress={() => {
               navigation.goBack();
             }}
+            style={{ marginTop: 30, marginLeft: 30 }}
           >
-            <Text
-              style={{
-                alignItems: "flex-start",
-                marginTop: 30,
-                color: "white",
-                marginLeft: 10,
-              }}
-            >
-              &larr; Go back
-            </Text>
+            <AntDesign name="back" size={40} color="white" />
           </TouchableOpacity>
           {matchUserInfo && (
             <View
@@ -113,13 +107,13 @@ const MessageScreen = (props: any) => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("UserDetails", {
-                    matchDetails: matchUserInfo,
+                    user: matchUserInfo,
                   } as any);
                 }}
               >
                 <Image
                   style={styled.matchPic}
-                  source={{ uri: matchUserInfo.url }}
+                  source={{ uri: matchUserInfo.url[0] }}
                   width={50}
                   height={50}
                 />

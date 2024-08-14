@@ -79,6 +79,12 @@ const CreateAccountScreen = () => {
             name: name,
             initialSetupDone: false,
             emailVerified: false,
+            userPreferences: {
+              maxAge: 99,
+              minAge: 16,
+              maxDistance: 5000,
+              minDistance: 0,
+            },
           }).then((res) => res);
 
           alert("Verify your account with the link sent to your email.");

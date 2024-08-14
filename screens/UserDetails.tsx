@@ -17,7 +17,7 @@ import { auth } from "../firebaseConfig";
 import { AntDesign } from "@expo/vector-icons";
 import { getDistanceFromLatLonInKm } from "../services/location";
 
-const UserDetails = ({ route }) => {
+const UserDetails = ({ route }: any) => {
   const navigation = useNavigation();
   const [loggedUser, setLoggedUser] = useState(null);
   const [overallMatch, setOverallMatch] = useState(0);
@@ -33,6 +33,8 @@ const UserDetails = ({ route }) => {
     findUser(auth.currentUser?.uid as string).then((res) =>
       setLoggedUser(res as any)
     );
+
+    console.log(user);
 
     if (loggedUser) {
       matchInfo(loggedUser, user).then((r) => setOverallMatch(r[0].overall));

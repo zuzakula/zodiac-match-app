@@ -25,6 +25,7 @@ import ZodiacCompatibilityScreen from "./screens/ZodiacCompatibilityScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import ChangePhotos from "./screens/ChangePhotos";
+import LoadingScreen from "./screens/LoadingScreen";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -53,90 +54,91 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        {user && auth?.currentUser.emailVerified ? (
+        {user ? (
           <>
-            {initialSetup ? (
-              <Stack.Group>
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="UserDetails"
-                  component={UserDetails}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Chat"
-                  component={ChatScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Match"
-                  component={MatchScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Message"
-                  component={MessageScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Settings"
-                  component={SettingsScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="ZodiacList"
-                  component={ZodiacList}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="ZodiacCompatibility"
-                  component={ZodiacCompatibilityScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="EditProfile"
-                  component={EditProfileScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="ChangePhotos"
-                  component={ChangePhotos}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-              </Stack.Group>
-            ) : (
-              <Stack.Group>
-                <Stack.Screen
-                  name="AddPictures"
-                  component={AddPicturesScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="AboutYou"
-                  component={AboutYouScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Birthday"
-                  component={BirthdayScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="ZodiacInfo"
-                  component={ZodiacInfoScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-                <Stack.Screen
-                  name="Location"
-                  component={LocationScreen}
-                  options={{ headerShown: false }}
-                ></Stack.Screen>
-              </Stack.Group>
-            )}
+            {/*<Stack.Screen*/}
+            {/*  name="Loading"*/}
+            {/*  component={LoadingScreen}*/}
+            {/*  options={{ headerShown: false }}*/}
+            {/*></Stack.Screen>*/}
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="UserDetails"
+              component={UserDetails}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Match"
+              component={MatchScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Message"
+              component={MessageScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="ZodiacList"
+              component={ZodiacList}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="ZodiacCompatibility"
+              component={ZodiacCompatibilityScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfileScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="ChangePhotos"
+              component={ChangePhotos}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="AddPictures"
+              component={AddPicturesScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="AboutYou"
+              component={AboutYouScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Birthday"
+              component={BirthdayScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="ZodiacInfo"
+              component={ZodiacInfoScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Location"
+              component={LocationScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Login" options={{ headerShown: false }}>
+              {() => <LoginScreen isEmailVerified={user?.emailVerified} />}
+            </Stack.Screen>
           </>
         ) : (
           <>

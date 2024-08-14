@@ -37,6 +37,10 @@ const HomeScreen = () => {
   const [loggedUser, setLoggedUser] = useState(null);
   const [distance, setDistance] = useState<number>(0);
   const [preferences, setPreferences] = useState(null);
+  const [minAge, setMinAge] = useState(0);
+  const [maxAge, setMaxAge] = useState(0);
+  const [minDistance, setMinDistance] = useState(0);
+  const [maxDistance, setMaxDistance] = useState(0);
 
   useEffect(() => {
     const fetchImages = async (id: any) => {
@@ -60,49 +64,33 @@ const HomeScreen = () => {
       setZodiac(res?.zodiacSign);
       setLoggedUserLat(res?.location.latitude);
       setLoggedUserLon(res?.location.longitude);
+      setMinAge(res?.userPreferences?.minAge);
+      setMaxAge(res?.userPreferences?.maxAge);
+      setMinDistance(res?.userPreferences.minDistance);
+      setMaxDistance(res?.userPreferences.maxDistance);
     });
-
-    const fetchUserPreferences = async () => {
-      try {
-        const docRef = doc(
-          db,
-          "Users",
-          auth.currentUser?.uid as string,
-          "UserPreferences",
-          "Preferences"
-        );
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setPreferences(docSnap.data());
-          // console.log(docSnap.data());
-        }
-      } catch (error) {
-        console.error("Error fetching user preferences:", error);
-      }
-    };
-
-    fetchUserPreferences().then((r) => r);
 
     const fetchData = async () => {
       try {
         const usersData = await findUsers();
 
         if (usersData.length !== 0) {
-          const filteredUsers = usersData.filter((user) => {
+          const filteredUsers = usersData.filter((user: any) => {
             const userAge = user.age;
             const distance = getDistanceFromLatLonInKm(
               loggedUserLat,
               loggedUserLon,
-              user.location.latitude,
-              user.location.longitude
+              user?.location.latitude,
+              user?.location.longitude
             );
 
+            console.log(distance);
+
             return (
-              userAge >= preferences?.minAge &&
-              userAge <= preferences?.maxAge &&
-              distance >= preferences?.minDistance &&
-              distance <= preferences?.maxDistance
+              userAge >= minAge &&
+              userAge <= maxAge &&
+              distance >= minDistance &&
+              distance <= maxDistance
             );
           });
 
@@ -118,6 +106,8 @@ const HomeScreen = () => {
           });
 
           setUsers(sortedUsers as any);
+
+          console.log(sortedUsers);
 
           await Promise.all(
             sortedUsers.map(async (user) => {
@@ -135,7 +125,9 @@ const HomeScreen = () => {
       }
     };
 
-    fetchData().then((r) => r);
+    if (loggedUserLat && loggedUserLon) {
+      fetchData().then((r) => r);
+    }
   }, [preferences, loggedUserLat, loggedUserLon]);
 
   useEffect(() => {
@@ -247,7 +239,7 @@ const HomeScreen = () => {
       >
         <Header />
         <View style={{ flex: 1, left: "-45%" }}>
-          {users && (
+          {users.length > 0 ? (
             <Swiper
               ref={swipeRef}
               cards={users}
@@ -316,10 +308,12 @@ const HomeScreen = () => {
                           })
                         }
                       >
-                        <Image
-                          source={{ uri: card.url }}
-                          style={styled.image}
-                        />
+                        {card.url && (
+                          <Image
+                            source={{ uri: card.url }}
+                            style={styled.image}
+                          />
+                        )}
                       </TouchableOpacity>
                       <Text style={styled.name}>
                         {card.name}, {card.age}
@@ -344,6 +338,25 @@ const HomeScreen = () => {
                 }
               }}
             />
+          ) : (
+            <View>
+              <Text
+                style={[
+                  shared.text,
+                  {
+                    marginLeft: 180,
+                    width: "100%",
+                    marginTop: 100,
+                    padding: 0,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: 1,
+                  },
+                ]}
+              >
+                No more profiles left
+              </Text>
+            </View>
           )}
         </View>
 

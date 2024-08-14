@@ -23,6 +23,7 @@ export type User = {
   zodiacSign?: string;
   initialSetupDone?: boolean;
   emailVerified?: boolean;
+  userPreferences?: {};
 };
 
 export const findAllPictures = async () => {

@@ -16,10 +16,11 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
     if (matchUserInfo) {
-      getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}`)).then(
+      getDownloadURL(ref(storage, `ProfilePictures/${matchUserInfo.id}/`)).then(
         (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
       );
       setZodiac(matchUserInfo.zodiacSign);
+      console.log(matchUserInfo);
     }
   }, []);
 
@@ -60,14 +61,25 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
         }
       >
         <View style={styled.match}>
-          <Image
-            style={styled.matchPic}
-            source={{
-              uri: matchUserInfo.url,
-            }}
-            width={60}
-            height={60}
-          />
+          {typeof matchUserInfo.url === "string" ? (
+            <Image
+              style={styled.matchPic}
+              source={{
+                uri: matchUserInfo.url,
+              }}
+              width={60}
+              height={60}
+            />
+          ) : (
+            <Image
+              style={styled.matchPic}
+              source={{
+                uri: matchUserInfo.url[0],
+              }}
+              width={60}
+              height={60}
+            />
+          )}
           <View style={{ alignItems: "center" }}>
             <Text style={styled.name}> {matchUserInfo.name}</Text>
             <View style={{ flexDirection: "row" }}>
