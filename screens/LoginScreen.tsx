@@ -24,9 +24,9 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState(null);
-  const [alertVisible, setAlertVisible] = useState(false); // State for managing alert visibility
-  const [alertMessage, setAlertMessage] = useState(""); // State for storing alert message
-  const [alertTitle, setAlertTitle] = useState(""); // State for storing alert title
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertTitle, setAlertTitle] = useState("");
   const navigation = useNavigation();
   const firebaseAuth = auth;
 

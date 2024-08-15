@@ -12,11 +12,12 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { useState } from "react";
+import React, { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 import { createUser, updateUser } from "../services/usersService";
+import CustomAlert from "./components/Alert";
 
 const CreateAccountScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +32,9 @@ const CreateAccountScreen = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>("");
   const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertTitle, setAlertTitle] = useState("");
 
   const incompleteForm = false; // to do form validation !name || !confirmPassword
 
@@ -87,7 +91,10 @@ const CreateAccountScreen = () => {
             },
           }).then((res) => res);
 
-          alert("Verify your account with the link sent to your email.");
+          setAlertTitle("Email Verification Required");
+          setAlertMessage("Check your e-mail and verify your account.");
+          setAlertVisible(true);
+          // alert("Verify your account with the link sent to your email.");
 
           navigation.navigate("Login" as never);
         });
@@ -194,6 +201,13 @@ const CreateAccountScreen = () => {
             </Text>
           </Pressable>
         </View>
+
+        <CustomAlert
+          visible={alertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={() => setAlertVisible(false)}
+        />
       </ImageBackground>
     </View>
   );

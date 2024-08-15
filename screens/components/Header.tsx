@@ -57,7 +57,7 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => {
             if (navigation) {
-              navigation.navigate("Home" as never);
+              navigation.navigate("Location" as never);
             }
           }}
         >
