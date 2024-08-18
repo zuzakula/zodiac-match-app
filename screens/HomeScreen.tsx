@@ -291,6 +291,7 @@ const HomeScreen = () => {
         <View style={{ flex: 1, left: "-45%" }}>
           {users.length > 0 ? (
             <Swiper
+              key={users.length}
               ref={swipeRef}
               cards={users}
               stackSize={50}
