@@ -47,7 +47,6 @@ export default function App() {
         setInitialSetup(false);
       }
     });
-    console.log(user);
     return () => unsubscribe();
   }, [user]);
 
@@ -56,11 +55,11 @@ export default function App() {
       <Stack.Navigator initialRouteName="Welcome">
         {user ? (
           <>
-            {/*<Stack.Screen*/}
-            {/*  name="Loading"*/}
-            {/*  component={LoadingScreen}*/}
-            {/*  options={{ headerShown: false }}*/}
-            {/*></Stack.Screen>*/}
+            <Stack.Screen
+              name="Loading"
+              component={LoadingScreen}
+              options={{ headerShown: false }}
+            ></Stack.Screen>
             <Stack.Screen
               name="Home"
               component={HomeScreen}

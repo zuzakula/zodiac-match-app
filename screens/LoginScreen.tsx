@@ -12,7 +12,7 @@ import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
-import { findUser } from "../services/usersService";
+import { findUser, updateUser } from "../services/usersService";
 import CustomAlert from "./components/Alert";
 
 interface LoginScreenProps {
@@ -29,8 +29,16 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [alertTitle, setAlertTitle] = useState("");
   const navigation = useNavigation();
   const firebaseAuth = auth;
+  const [emailVerified, setEmailVerified] = useState(false);
 
   const signIn = async () => {
+    if (auth.currentUser?.emailVerified) {
+      updateUser(auth?.currentUser.uid, {
+        id: auth?.currentUser.uid,
+        emailVerified: true,
+      }).then();
+    }
+
     setLoading(true);
     try {
       const res = await signInWithEmailAndPassword(
@@ -53,6 +61,7 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
           setPassword("");
         }
       } else if (!userRes?.emailVerified) {
+        console.log(auth.currentUser);
         setAlertTitle("Email Verification Required");
         setAlertMessage("Your email hasn't been verified yet.");
         setAlertVisible(true);

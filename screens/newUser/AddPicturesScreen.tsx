@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ImageBackground,
   StyleProp,
@@ -31,6 +32,42 @@ const AddPicturesScreen = () => {
     }
   };
 
+  const takePhotoWithCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [3, 4],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const newImages = [...images, result.assets[0].uri];
+      setImages(newImages);
+      await uploadImage(result.assets[0].uri);
+    }
+  };
+
+  const showImagePickerOptions = () => {
+    Alert.alert(
+      "Select Image",
+      "Choose an option",
+      [
+        {
+          text: "Pick from Gallery",
+          onPress: pickImage,
+        },
+        {
+          text: "Use Camera",
+          onPress: takePhotoWithCamera,
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View style={shared.screen}>
       <ImageBackground
@@ -48,7 +85,7 @@ const AddPicturesScreen = () => {
 
         <View style={styled.row}>
           <View style={styled.block}>
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={showImagePickerOptions}>
               <Image
                 source={{ uri: images[0] }}
                 width={183}
@@ -59,7 +96,7 @@ const AddPicturesScreen = () => {
           </View>
 
           <View style={styled.block}>
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={showImagePickerOptions}>
               <Image
                 source={{ uri: images[1] }}
                 width={183}
@@ -72,7 +109,7 @@ const AddPicturesScreen = () => {
 
         <View style={styled.row}>
           <View style={styled.block}>
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={showImagePickerOptions}>
               <Image
                 source={{ uri: images[2] }}
                 width={183}
@@ -83,7 +120,7 @@ const AddPicturesScreen = () => {
           </View>
 
           <View style={styled.block}>
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={showImagePickerOptions}>
               <Image
                 source={{ uri: images[3] }}
                 width={183}

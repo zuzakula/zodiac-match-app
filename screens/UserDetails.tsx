@@ -34,12 +34,11 @@ const UserDetails = ({ route }: any) => {
       setLoggedUser(res as any)
     );
 
-    console.log(user);
-
     if (loggedUser) {
       matchInfo(loggedUser, user).then((r) => setOverallMatch(r[0].overall));
       matchInfoDetails(loggedUser.zodiacSign, user.zodiacSign).then((r) => {
-        setDescription(r[3].text);
+        console.log(r[0].text);
+        setDescription(r[0].text);
       });
 
       if (loggedUser?.location) {
@@ -47,15 +46,6 @@ const UserDetails = ({ route }: any) => {
         setLoggedUserLon(loggedUser?.location?.longitude);
         setUserLat(user?.location.latitude);
         setUserLon(user?.location.longitude);
-
-        console.log(
-          getDistanceFromLatLonInKm(
-            loggedUserLat,
-            loggedUserLon,
-            userLat,
-            userLon
-          )
-        );
 
         setDistance(
           Math.trunc(
@@ -69,7 +59,7 @@ const UserDetails = ({ route }: any) => {
         );
       }
     }
-  }, [distance]);
+  }, [distance, user, description]);
 
   return (
     <SafeAreaView style={shared.screen}>

@@ -89,14 +89,16 @@ const CreateAccountScreen = () => {
               maxDistance: 5000,
               minDistance: 0,
             },
-          }).then((res) => res);
+          }).then((res) => setAlertVisible(true));
 
           setAlertTitle("Email Verification Required");
           setAlertMessage("Check your e-mail and verify your account.");
           setAlertVisible(true);
           // alert("Verify your account with the link sent to your email.");
 
-          navigation.navigate("Login" as never);
+          setTimeout(() => {
+            navigation.navigate("Login" as never);
+          }, 3000);
         });
       }
     } catch (err: any) {
@@ -206,7 +208,10 @@ const CreateAccountScreen = () => {
           visible={alertVisible}
           title={alertTitle}
           message={alertMessage}
-          onClose={() => setAlertVisible(false)}
+          onClose={() => {
+            setAlertVisible(false);
+            // navigation.navigate("Login" as never);
+          }}
         />
       </ImageBackground>
     </View>

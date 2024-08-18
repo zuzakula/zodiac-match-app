@@ -42,7 +42,6 @@ const LocationScreen = () => {
           console.log("Background location permission granted");
           const currentLocation = await Location.getCurrentPositionAsync({});
           setLocation(currentLocation);
-          console.log(currentLocation);
         } else {
           console.log("Background location permission denied");
         }
@@ -96,7 +95,10 @@ const LocationScreen = () => {
         <View style={{ marginBottom: 20 }}>
           <ContinueButton
             navigateTo="Home"
-            updateBody={{ location: location, initialSetupDone: true }}
+            updateBody={{
+              location: { longitude: 19.457216, latitude: 51.759445 },
+              initialSetupDone: true,
+            }}
             isDisabled={false}
           />
         </View>

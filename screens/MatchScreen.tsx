@@ -15,8 +15,6 @@ const MatchScreen = () => {
   const { params }: any = useRoute();
   const { loggedInUser, userSwiped } = params;
 
-  console.log(loggedInUser);
-
   return (
     <SafeAreaView
       style={[shared.screen, { backgroundColor: "rgb(111, 120, 199, .8)" }]}

@@ -10,7 +10,7 @@ import { auth, db, storage } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import shared from "../styles/shared.styles";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { findUser, findUsers, updateUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
@@ -20,10 +20,11 @@ import generateId from "../lib/generateId";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { getCompatibility } from "../services/zodiacInfo";
 import { getDistanceFromLatLonInKm } from "../services/location";
+import { debounce } from "lodash";
+import { throttle } from "lodash-es";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  // const [image, setImage] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [users, setUsers] = useState([]);
   const swipeRef = useRef(null);
@@ -42,24 +43,23 @@ const HomeScreen = () => {
   const [minDistance, setMinDistance] = useState(0);
   const [maxDistance, setMaxDistance] = useState(0);
 
+  const debouncedSetUsers = useCallback(
+    debounce((newUsers) => {
+      setUsers(newUsers);
+    }, 3000),
+    []
+  );
+
+  const throttledSetUsers = useCallback(
+    throttle((newUsers) => {
+      setUsers(newUsers);
+    }, 1000), // Update at most once every 1000ms (1 second)
+    []
+  );
+
   useEffect(() => {
-    const fetchImages = async (id: any) => {
-      try {
-        const imagesRef = ref(storage, `ProfilePictures/${id}/`);
-        const imageList = await listAll(imagesRef);
-
-        return await Promise.all(
-          imageList.items.map(async (item) => {
-            return getDownloadURL(item);
-          })
-        );
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-    };
-
-    findUser(auth.currentUser?.uid as string).then(async (res) => {
-      await fetchImages(res?.id);
+    const fetchLoggedUser = async () => {
+      const res = await findUser(auth.currentUser?.uid as string);
       setName(res?.name);
       setZodiac(res?.zodiacSign);
       setLoggedUserLat(res?.location.latitude);
@@ -68,8 +68,27 @@ const HomeScreen = () => {
       setMaxAge(res?.userPreferences?.maxAge);
       setMinDistance(res?.userPreferences.minDistance);
       setMaxDistance(res?.userPreferences.maxDistance);
-    });
+    };
 
+    fetchLoggedUser().then((r) => r);
+  }, []);
+
+  const fetchImages = async (id: any) => {
+    try {
+      const imagesRef = ref(storage, `ProfilePictures/${id}/`);
+      const imageList = await listAll(imagesRef);
+
+      return await Promise.all(
+        imageList.items.map(async (item) => {
+          return getDownloadURL(item);
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const usersData = await findUsers();
@@ -77,14 +96,24 @@ const HomeScreen = () => {
         if (usersData.length !== 0) {
           const filteredUsers = usersData.filter((user: any) => {
             const userAge = user.age;
-            const distance = getDistanceFromLatLonInKm(
+
+            if (
+              !user?.location ||
+              user.location.latitude === undefined ||
+              user.location.longitude === undefined
+            ) {
+              // console.warn(`User ${user.id} has missing location data.`);
+              return false;
+            }
+
+            let distance = getDistanceFromLatLonInKm(
               loggedUserLat,
               loggedUserLon,
               user?.location.latitude,
               user?.location.longitude
             );
 
-            console.log(distance);
+            distance++;
 
             return (
               userAge >= minAge &&
@@ -107,32 +136,36 @@ const HomeScreen = () => {
 
           setUsers(sortedUsers as any);
 
-          console.log(sortedUsers);
-
           await Promise.all(
             sortedUsers.map(async (user) => {
               try {
                 await fetchImages(user.id).then((r) => (user.url = r));
-                await updateUser(user.id, { id: user.id, url: user.url[0] });
+                await updateUser(user.id, {
+                  id: user.id,
+                  url: `${user.url[0]}`,
+                });
               } catch (error) {
                 console.error(`Error fetching URL for user ${user.id}:`, error);
               }
             })
           );
         }
+
+        console.log(users);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
-
-    if (loggedUserLat && loggedUserLon) {
-      fetchData().then((r) => r);
-    }
-  }, [preferences, loggedUserLat, loggedUserLon]);
+    fetchData().then((r) => r);
+  }, [preferences, loggedUserLat, loggedUserLon, users]);
 
   useEffect(() => {
     getCompatibility(zodiac).then((res) => setCompatibilities(res));
   }, [zodiac]);
+
+  // useEffect(() => {
+  //
+  // }, []);
 
   const getBackgroundColor = (satisfaction: number) => {
     if (satisfaction == 5) {
@@ -145,20 +178,37 @@ const HomeScreen = () => {
   };
 
   const swipeLeft = async (cardIndex: string | number) => {
-    if (!users[cardIndex as number]) return;
+    if (
+      typeof cardIndex === "number" &&
+      cardIndex >= 0 &&
+      cardIndex < users.length
+    ) {
+      const userSwiped = users[cardIndex];
 
-    const userSwiped: any = users[cardIndex as number];
+      if (userSwiped) {
+        try {
+          console.log("Swiping left on user:", userSwiped);
 
-    await setDoc(
-      doc(
-        db,
-        "Users",
-        auth.currentUser?.uid as string,
-        "passes",
-        userSwiped.id
-      ),
-      userSwiped
-    );
+          await setDoc(
+            doc(
+              db,
+              "Users",
+              auth.currentUser?.uid as string,
+              "passes",
+              userSwiped.id
+            ),
+            userSwiped
+          );
+          console.log("User swiped left successfully");
+        } catch (error) {
+          console.error("Error swiping left:", error);
+        }
+      } else {
+        console.warn("No user found at the given cardIndex");
+      }
+    } else {
+      console.warn("Invalid cardIndex:", cardIndex);
+    }
   };
 
   const swipeRight = async (cardIndex: string | number) => {
@@ -249,6 +299,7 @@ const HomeScreen = () => {
               animateCardOpacity
               containerStyle={styled.containerCard}
               onSwipedLeft={(cardIndex: string | number) => {
+                console.log("left");
                 swipeLeft(cardIndex).then((r) => r);
               }}
               onSwipedRight={(cardIndex: string | number) => {
@@ -282,6 +333,8 @@ const HomeScreen = () => {
                   const satisfaction = compatibilities[zodiac]
                     ? compatibilities[zodiac][1]
                     : 0;
+
+                  // console.log(card.url);
 
                   setDistance(
                     Math.trunc(

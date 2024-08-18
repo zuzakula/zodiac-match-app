@@ -20,7 +20,6 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
         (url) => setMatchUserInfo({ ...matchUserInfo, url: url })
       );
       setZodiac(matchUserInfo.zodiacSign);
-      console.log(matchUserInfo);
     }
   }, []);
 
