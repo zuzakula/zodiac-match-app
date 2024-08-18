@@ -41,7 +41,6 @@ const MessageScreen = (props: any) => {
 
   useEffect(() => {
     setMatchUserInfo(getMatchedUserInfo(matchDetails.users, user?.uid) as any);
-    // console.log(matchUserInfo);
   }, []);
 
   const sendMessage = () => {

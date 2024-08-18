@@ -61,7 +61,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
           setPassword("");
         }
       } else if (!userRes?.emailVerified) {
-        console.log(auth.currentUser);
         setAlertTitle("Email Verification Required");
         setAlertMessage("Your email hasn't been verified yet.");
         setAlertVisible(true);

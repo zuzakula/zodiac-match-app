@@ -150,8 +150,6 @@ const HomeScreen = () => {
             })
           );
         }
-
-        console.log(users);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -187,8 +185,6 @@ const HomeScreen = () => {
 
       if (userSwiped) {
         try {
-          console.log("Swiping left on user:", userSwiped);
-
           await setDoc(
             doc(
               db,
@@ -199,7 +195,6 @@ const HomeScreen = () => {
             ),
             userSwiped
           );
-          console.log("User swiped left successfully");
         } catch (error) {
           console.error("Error swiping left:", error);
         }
@@ -300,7 +295,6 @@ const HomeScreen = () => {
               animateCardOpacity
               containerStyle={styled.containerCard}
               onSwipedLeft={(cardIndex: string | number) => {
-                console.log("left");
                 swipeLeft(cardIndex).then((r) => r);
               }}
               onSwipedRight={(cardIndex: string | number) => {
@@ -334,8 +328,6 @@ const HomeScreen = () => {
                   const satisfaction = compatibilities[zodiac]
                     ? compatibilities[zodiac][1]
                     : 0;
-
-                  // console.log(card.url);
 
                   setDistance(
                     Math.trunc(

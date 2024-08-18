@@ -33,13 +33,16 @@ const UserDetails = ({ route }: any) => {
     findUser(auth.currentUser?.uid as string).then((res) =>
       setLoggedUser(res as any)
     );
+  }, []);
 
+  useEffect(() => {
     if (loggedUser) {
       matchInfo(loggedUser, user).then((r) => setOverallMatch(r[0].overall));
       matchInfoDetails(loggedUser.zodiacSign, user.zodiacSign).then((r) => {
-        console.log(r[0].text);
         setDescription(r[0].text);
       });
+
+      console.log(user.url);
 
       if (loggedUser?.location) {
         setLoggedUserLat(loggedUser?.location?.latitude);
@@ -59,7 +62,7 @@ const UserDetails = ({ route }: any) => {
         );
       }
     }
-  }, [distance, user, description]);
+  }, [loggedUser, user]);
 
   return (
     <SafeAreaView style={shared.screen}>
@@ -87,37 +90,24 @@ const UserDetails = ({ route }: any) => {
             <AntDesign name="back" size={40} color="white" />
           </TouchableOpacity>
           <View style={{ alignItems: "center" }}>
-            {user.url[0] && (
-              <Image
-                source={{ uri: user.url[0] }}
-                width={300}
-                height={300}
-                style={{ marginTop: 40, borderRadius: 10 }}
-              />
-            )}
-            {user.url[1] && (
-              <Image
-                source={{ uri: user.url[1] }}
-                width={300}
-                height={300}
-                style={{ marginTop: 40, borderRadius: 10 }}
-              />
-            )}
-            {user.url[2] && (
-              <Image
-                source={{ uri: user.url[2] }}
-                width={300}
-                height={300}
-                style={{ marginTop: 40, borderRadius: 10 }}
-              />
-            )}
-            {user.url[3] && (
-              <Image
-                source={{ uri: user.url[3] }}
-                width={300}
-                height={300}
-                style={{ marginTop: 40, borderRadius: 10 }}
-              />
+            {Array.isArray(user.url) && user.url.length > 0 ? (
+              user.url.map((url: string, index: number) => (
+                <Image
+                  key={index}
+                  source={{ uri: url }}
+                  style={{
+                    width: 300,
+                    height: 300,
+                    marginTop: 40,
+                    borderRadius: 10,
+                    resizeMode: "cover",
+                  }}
+                />
+              ))
+            ) : (
+              <>
+                <ActivityIndicator size={"small"} />
+              </>
             )}
           </View>
           <Text style={[shared.text, { margin: 15 }]}>
@@ -152,6 +142,7 @@ const UserDetails = ({ route }: any) => {
                 color: "white",
                 padding: 20,
                 fontSize: 16,
+                textAlign: "justify",
               }}
             >
               {description}
