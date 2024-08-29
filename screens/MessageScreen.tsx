@@ -58,6 +58,7 @@ const MessageScreen = (props: any) => {
   };
 
   useEffect(() => {
+    // console.log(matchDetails.url);
     onSnapshot(
       query(
         collection(db, "Matches", matchDetails.id, "Messages"),
@@ -70,6 +71,13 @@ const MessageScreen = (props: any) => {
             ...doc.data(),
           }))
         );
+        const collectionRef = collection(
+          db,
+          "Matches",
+          matchDetails.id,
+          "Messages"
+        );
+        console.log("Collection Path: ", collectionRef.path);
       }
     );
   }, [matchDetails, db]);
@@ -110,12 +118,21 @@ const MessageScreen = (props: any) => {
                   } as any);
                 }}
               >
-                <Image
-                  style={styled.matchPic}
-                  source={{ uri: matchUserInfo.url[0] }}
-                  width={50}
-                  height={50}
-                />
+                {matchUserInfo.url ? (
+                  <Image
+                    style={styled.matchPic}
+                    source={{ uri: matchUserInfo.url[0] }}
+                    width={50}
+                    height={50}
+                  />
+                ) : (
+                  <Image
+                    style={styled.matchPic}
+                    source={{ uri: matchUserInfo.url[0] }}
+                    width={50}
+                    height={50}
+                  />
+                )}
               </TouchableOpacity>
               <Text style={[shared.text, { marginTop: 0 }]}>
                 {matchUserInfo.name}

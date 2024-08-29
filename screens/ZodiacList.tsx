@@ -15,6 +15,7 @@ import firebase from "firebase/compat";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getCompatibility } from "../services/zodiacInfo";
+import shared from "../styles/shared.styles";
 
 export const zodiacData = [
   { id: 1, name: "aries", icon: require("../assets/icons/aries.png") },
@@ -84,14 +85,24 @@ const ZodiacList = ({ route }) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity
-          style={{ marginTop: 30 }}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <AntDesign name="back" size={40} color="white" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ marginTop: 30 }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <AntDesign name="back" size={40} color="white" />
+            <Text
+              style={[
+                shared.text,
+                { backgroundColor: "#6F78C7", borderRadius: 20 },
+              ]}
+            >
+              Compatibilities with your zodiac sign
+            </Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={zodiacData}
           renderItem={({ item }) => {

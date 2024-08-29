@@ -8,12 +8,16 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
-import React from "react";
+import React, { useEffect } from "react";
 
 const MatchScreen = () => {
   const navigation = useNavigation();
   const { params }: any = useRoute();
   const { loggedInUser, userSwiped } = params;
+
+  // useEffect(() => {
+  //   console.log(userSwiped);
+  // }, []);
 
   return (
     <SafeAreaView

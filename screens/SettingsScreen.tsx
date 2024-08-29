@@ -72,7 +72,6 @@ const SettingsScreen = () => {
         setCompatibility(res.compatibility);
       })
       .finally(() => {
-        // Set loading state to false when the request is completed
         setLoadingCompatibility(false);
       });
   }, [zodiac]);
@@ -98,14 +97,20 @@ const SettingsScreen = () => {
               marginTop: "7%",
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <AntDesign name="back" size={40} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
               }}
             >
-              <AntDesign name="back" size={40} color="white" />
-            </TouchableOpacity>
-            <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("ZodiacList", { zodiac: zodiac })
@@ -151,14 +156,14 @@ const SettingsScreen = () => {
             {name}, {age}
           </Text>
 
-          <Text style={[shared.text, { color: "#7E00FC" }]}>
+          <Text style={[shared.text, { color: "#412365" }]}>
             Your Zodiac Sign is:
           </Text>
           <Text style={[shared.text]}>{zodiac}</Text>
           <Text
             style={[
               shared.text,
-              { marginTop: 0, fontSize: 23, color: "#7E00FC" },
+              { marginTop: 0, fontSize: 23, color: "#412365" },
             ]}
           >
             You are most compatible with:{" "}
@@ -180,6 +185,9 @@ const SettingsScreen = () => {
                 margin: 20,
                 textAlign: "justify",
                 fontSize: 20,
+                backgroundColor: "#6F78C7",
+                borderRadius: 20,
+                padding: 10,
               }}
             >
               {aboutZodiac}

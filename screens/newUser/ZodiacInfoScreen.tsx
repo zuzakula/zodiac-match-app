@@ -53,14 +53,14 @@ const ZodiacInfoScreen = () => {
         }}
       >
         <ScrollView>
-          <Text style={[shared.text, { color: "#7E00FC", marginTop: 50 }]}>
+          <Text style={[shared.text, { color: "#412365", marginTop: 50 }]}>
             Your Zodiac Sign is:
           </Text>
           <Text style={[shared.text, { marginTop: 0 }]}>{zodiac}</Text>
           <Text
             style={[
               shared.text,
-              { marginTop: 30, fontSize: 23, color: "#7E00FC" },
+              { marginTop: 30, fontSize: 23, color: "#412365" },
             ]}
           >
             You are most compatible with:{" "}
@@ -79,6 +79,9 @@ const ZodiacInfoScreen = () => {
                 margin: 20,
                 textAlign: "justify",
                 fontSize: 20,
+                backgroundColor: "#6F78C7",
+                borderRadius: 20,
+                padding: 10,
               }}
             >
               {aboutZodiac}

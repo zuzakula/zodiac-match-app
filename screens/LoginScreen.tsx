@@ -61,9 +61,20 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
           setPassword("");
         }
       } else if (!userRes?.emailVerified) {
-        setAlertTitle("Email Verification Required");
-        setAlertMessage("Your email hasn't been verified yet.");
-        setAlertVisible(true);
+        if (auth.currentUser?.emailVerified) {
+          updateUser(auth?.currentUser.uid, {
+            id: auth?.currentUser.uid,
+            emailVerified: true,
+          }).then();
+
+          navigation.navigate("AddPictures" as never);
+          setEmail("");
+          setPassword("");
+        } else {
+          setAlertTitle("Email Verification Required");
+          setAlertMessage("Your email hasn't been verified yet.");
+          setAlertVisible(true);
+        }
       }
     } catch (err: any) {
       setAlertTitle("Sign In Failed");
@@ -112,7 +123,18 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             <View style={shared.container}>
-              <Pressable style={shared.button} onPress={signIn}>
+              <Pressable
+                style={shared.button}
+                onPress={() => {
+                  if (auth.currentUser?.emailVerified) {
+                    updateUser(auth?.currentUser.uid, {
+                      id: auth?.currentUser.uid,
+                      emailVerified: true,
+                    }).then();
+                  }
+                  signIn().then((r) => r);
+                }}
+              >
                 <Text style={shared.buttonText}>Login</Text>
               </Pressable>
               <Pressable

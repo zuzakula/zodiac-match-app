@@ -65,7 +65,17 @@ const ZodiacCompatibilityScreen = ({ route }) => {
           <Text style={[shared.text, { fontSize: 40 }]}>&</Text>
           <Image source={icon as any} style={{ width: 80, height: 80 }} />
         </View>
-        <Text style={[shared.text, { fontSize: 20, margin: 15 }]}>
+        <Text
+          style={[
+            shared.text,
+            {
+              fontSize: 20,
+              margin: 15,
+              backgroundColor: "#6F78C7",
+              borderRadius: 20,
+            },
+          ]}
+        >
           {compatibility[0]}
         </Text>
       </ImageBackground>
