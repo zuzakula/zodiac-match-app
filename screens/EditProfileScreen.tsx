@@ -16,7 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 import React, { SetStateAction, useEffect, useState } from "react";
-import { updateUser, updateUserPreferences } from "../services/usersService";
+import { updateUser } from "../services/usersService";
 import { auth, storage } from "../firebaseConfig";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 

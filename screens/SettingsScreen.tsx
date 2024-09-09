@@ -17,6 +17,7 @@ import { findUser, updateUserPreferences } from "../services/usersService";
 import { getZodiacInfo } from "../services/zodiacInfo";
 import { AntDesign } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
+import { normalize } from "../styles/styles";
 
 const SettingsScreen = () => {
   const [image, setImage] = useState<string>("");
@@ -143,14 +144,18 @@ const SettingsScreen = () => {
             </View>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Image
-              source={{ uri: images[0] }}
-              width={200}
-              height={200}
-              style={{
-                borderRadius: 100,
-              }}
-            />
+            {images[0] ? (
+              <Image
+                source={{ uri: images[0] }}
+                width={200}
+                height={200}
+                style={{
+                  borderRadius: 100,
+                }}
+              />
+            ) : (
+              <ActivityIndicator size={"large"} />
+            )}
           </View>
           <Text style={[shared.text]}>
             {name}, {age}
@@ -172,7 +177,17 @@ const SettingsScreen = () => {
             <ActivityIndicator size="large" color="#7E00FC" />
           ) : (
             compatibility && (
-              <Text style={[shared.text, { marginTop: 0, fontSize: 18 }]}>
+              <Text
+                style={[
+                  shared.text,
+                  {
+                    marginTop: 0,
+                    fontSize: 18,
+                    marginRight: normalize(30),
+                    marginLeft: normalize(30),
+                  },
+                ]}
+              >
                 {compatibility}
               </Text>
             )

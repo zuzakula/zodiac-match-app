@@ -42,8 +42,6 @@ const UserDetails = ({ route }: any) => {
         setDescription(r[0].text);
       });
 
-      console.log(user.url);
-
       if (loggedUser?.location) {
         setLoggedUserLat(loggedUser?.location?.latitude);
         setLoggedUserLon(loggedUser?.location?.longitude);

@@ -36,8 +36,6 @@ const CreateAccountScreen = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertTitle, setAlertTitle] = useState("");
 
-  const incompleteForm = false; // to do form validation !name || !confirmPassword
-
   const signUp = async () => {
     setLoading(true);
     try {

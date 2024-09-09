@@ -10,7 +10,6 @@ import {
   Keyboard,
   FlatList,
   TouchableOpacity,
-  ScrollView,
   ImageBackground,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -58,7 +57,6 @@ const MessageScreen = (props: any) => {
   };
 
   useEffect(() => {
-    // console.log(matchDetails.url);
     onSnapshot(
       query(
         collection(db, "Matches", matchDetails.id, "Messages"),
@@ -77,7 +75,6 @@ const MessageScreen = (props: any) => {
           matchDetails.id,
           "Messages"
         );
-        console.log("Collection Path: ", collectionRef.path);
       }
     );
   }, [matchDetails, db]);

@@ -93,6 +93,7 @@ const ZodiacInfoScreen = () => {
             <ContinueButton
               navigateTo={"Location"}
               updateBody={{ initialSetupDone: true }}
+              isDisabled={false}
             />
             <GoBackButton goBackTo={"Birthday"} />
           </View>

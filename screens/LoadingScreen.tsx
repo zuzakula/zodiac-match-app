@@ -1,5 +1,5 @@
 import shared from "../styles/shared.styles";
-import { ActivityIndicator, ImageBackground, Text, View } from "react-native";
+import { ActivityIndicator, ImageBackground, View } from "react-native";
 
 const LoadingScreen = () => {
   return (

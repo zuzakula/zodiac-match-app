@@ -29,7 +29,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [alertTitle, setAlertTitle] = useState("");
   const navigation = useNavigation();
   const firebaseAuth = auth;
-  const [emailVerified, setEmailVerified] = useState(false);
 
   const signIn = async () => {
     if (auth.currentUser?.emailVerified) {

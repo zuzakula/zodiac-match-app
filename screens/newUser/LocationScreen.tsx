@@ -86,11 +86,6 @@ const LocationScreen = () => {
       >
         <View style={{ margin: 20, alignItems: "center" }}>
           <Text style={shared.text}>Location</Text>
-          {/*<TouchableOpacity onPress={requestLocationPermission}>*/}
-          {/*  <Text style={[shared.text, { color: "#5e00ff", marginTop: 10 }]}>*/}
-          {/*    Click here to grant Permission*/}
-          {/*  </Text>*/}
-          {/*</TouchableOpacity>*/}
         </View>
         <View style={{ marginBottom: 20 }}>
           <ContinueButton

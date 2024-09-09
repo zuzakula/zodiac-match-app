@@ -11,9 +11,6 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import firebase from "firebase/compat";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
 import { getCompatibility } from "../services/zodiacInfo";
 import shared from "../styles/shared.styles";
 

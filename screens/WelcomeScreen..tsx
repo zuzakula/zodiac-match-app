@@ -9,6 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import shared from "../styles/shared.styles";
 import React from "react";
+import { normalize } from "../styles/styles";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
@@ -25,7 +26,7 @@ const WelcomeScreen = () => {
         }}
       >
         <View>
-          <Text style={[shared.text, { marginTop: 70 }]}>
+          <Text style={[shared.text, { margin: normalize(70) }]}>
             Welcome to Zodiac Match!
           </Text>
         </View>

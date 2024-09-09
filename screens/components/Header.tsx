@@ -1,9 +1,16 @@
-import { TouchableOpacity, View, Image, StyleProp } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  StyleProp,
+  ActivityIndicator,
+} from "react-native";
 import { SetStateAction, useEffect, useState } from "react";
 import { auth, storage } from "../../firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { normalize } from "../../styles/styles";
 
 const Header = () => {
   const navigation = useNavigation();
@@ -44,13 +51,15 @@ const Header = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate("Settings" as never)}
         >
-          {!loading && (
+          {!loading ? (
             <Image
               style={styled.profilePic}
               source={{ uri: images[0] }}
               width={50}
               height={50}
             />
+          ) : (
+            <ActivityIndicator size={"large"} />
           )}
         </TouchableOpacity>
 
@@ -98,8 +107,8 @@ const styled: StyleProp<any> = {
     borderRadius: 20,
     height: 60,
     width: 60,
-    marginRight: 110,
-    marginLeft: 110,
+    marginRight: 80,
+    marginLeft: 80,
   },
   chatIcon: {
     color: "white",

@@ -14,7 +14,6 @@ import { uploadImage } from "../services/imagesService";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
-import firebase from "firebase/compat";
 import { auth, storage } from "../firebaseConfig";
 
 const ChangePhotos = () => {

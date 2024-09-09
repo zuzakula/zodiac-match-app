@@ -9,7 +9,7 @@ import {
 import shared from "../../styles/shared.styles";
 import ContinueButton from "../components/ContinueButton";
 import GoBackButton from "../components/GoBackButton";
-import { SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import DatePicker from "react-native-date-picker";
 import { getZodiacSign } from "../../lib/getZodiacSign";
 import { calculateAge } from "../../lib/calculateAge";
@@ -19,7 +19,7 @@ const BirthdayScreen = () => {
   const [dateString, setDateString] = useState<string>("");
   const [openDate, setOpenDate] = useState<boolean>(false);
   const [sign, setSign] = useState<string>("");
-  const [age, setAge] = useState<number>(null);
+  const [age, setAge] = useState<number>(0);
 
   const isUnderSixteen = (selectedDate: Date): boolean => {
     const today = new Date();

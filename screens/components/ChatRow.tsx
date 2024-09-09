@@ -83,13 +83,6 @@ const ChatRow = ({ matchDetails }: { matchDetails: any }) => {
             <Text style={styled.name}> {matchUserInfo.name}</Text>
             <View style={{ flexDirection: "row" }}>
               <Text>{matchUserInfo.zodiacSign}</Text>
-              {/*{compatibilities[zodiac.toLowerCase()] && (*/}
-              {/*  <>*/}
-              {/*    <Text style={styled.compatibility}>*/}
-              {/*      {getMatchSatisfaction(matchUserInfo.zodiacSign)}*/}
-              {/*    </Text>*/}
-              {/*  </>*/}
-              {/*)}*/}
             </View>
           </View>
         </View>

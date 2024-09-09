@@ -36,7 +36,6 @@ const ContinueButton = ({
     }
 
     try {
-      // Update user data if required
       if (updateBody) {
         await updateUser(auth.currentUser?.uid as string, updateBody);
       }
@@ -58,12 +57,9 @@ const ContinueButton = ({
 
   return (
     <Pressable
-      style={[
-        shared.button,
-        isDisabled && { opacity: 0.5 }, // Change button style when disabled
-      ]}
+      style={[shared.button, isDisabled && { opacity: 0.5 }]}
       onPress={handlePress}
-      disabled={isDisabled} // Disable press interaction when isDisabled is true
+      disabled={isDisabled}
     >
       <Text style={shared.buttonText}>Continue</Text>
     </Pressable>

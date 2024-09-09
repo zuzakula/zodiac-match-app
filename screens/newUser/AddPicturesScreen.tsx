@@ -85,49 +85,79 @@ const AddPicturesScreen = () => {
 
         <View style={styled.row}>
           <View style={styled.block}>
-            <TouchableOpacity onPress={showImagePickerOptions}>
+            {images[0] ? (
               <Image
                 source={{ uri: images[0] }}
                 width={183}
                 height={250}
                 style={styled.pic}
               />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={showImagePickerOptions}>
+                <View style={styled.plusContainer}>
+                  <Text style={styled.plusText}>+</Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
 
           <View style={styled.block}>
-            <TouchableOpacity onPress={showImagePickerOptions}>
+            {images[1] ? (
               <Image
                 source={{ uri: images[1] }}
                 width={183}
                 height={250}
                 style={styled.pic}
               />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={showImagePickerOptions}>
+                {images[0] && (
+                  <View style={styled.plusContainer}>
+                    <Text style={styled.plusText}>+</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
         <View style={styled.row}>
           <View style={styled.block}>
-            <TouchableOpacity onPress={showImagePickerOptions}>
+            {images[2] ? (
               <Image
                 source={{ uri: images[2] }}
                 width={183}
                 height={250}
                 style={styled.pic}
               />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={showImagePickerOptions}>
+                {images[1] && (
+                  <View style={styled.plusContainer}>
+                    <Text style={styled.plusText}>+</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
 
           <View style={styled.block}>
-            <TouchableOpacity onPress={showImagePickerOptions}>
+            {images[3] ? (
               <Image
                 source={{ uri: images[3] }}
                 width={183}
                 height={250}
                 style={styled.pic}
               />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={showImagePickerOptions}>
+                {images[2] && (
+                  <View style={styled.plusContainer}>
+                    <Text style={styled.plusText}>+</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -165,6 +195,16 @@ const styled: StyleProp<any> = {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+  },
+  plusContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    width: "100%",
+  },
+  plusText: {
+    fontSize: 50,
+    color: "#7E00FC",
   },
 };
 

@@ -1,7 +1,7 @@
-import { SetStateAction, useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import LoginScreen from "./screens/LoginScreen";
 import * as WebBrowser from "expo-web-browser";
-import { auth, storage } from "./firebaseConfig";
+import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -23,7 +23,6 @@ import ZodiacList from "./screens/ZodiacList";
 import { findUser } from "./services/usersService";
 import ZodiacCompatibilityScreen from "./screens/ZodiacCompatibilityScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
 import ChangePhotos from "./screens/ChangePhotos";
 import LoadingScreen from "./screens/LoadingScreen";
 LogBox.ignoreLogs(["Warning: ..."]);
@@ -35,17 +34,11 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
-  const [initialSetup, setInitialSetup] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       setUser(user);
-      if (user) {
-        const userData = await findUser(user.uid);
-        setInitialSetup(userData?.initialSetupDone || false);
-      } else {
-        setInitialSetup(false);
-      }
+      const userData = await findUser(user.uid);
     });
     return () => unsubscribe();
   }, [user]);

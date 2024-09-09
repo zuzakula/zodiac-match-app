@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   ImageBackground,
   StyleProp,
@@ -15,13 +16,14 @@ import { findUser, findUsers, updateUser } from "../services/usersService";
 import Header from "./components/Header";
 import Swiper from "react-native-deck-swiper";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import generateId from "../lib/generateId";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { getCompatibility } from "../services/zodiacInfo";
 import { getDistanceFromLatLonInKm } from "../services/location";
 import { debounce } from "lodash";
 import { throttle } from "lodash-es";
+import { normalize } from "../styles/styles";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -30,12 +32,8 @@ const HomeScreen = () => {
   const swipeRef = useRef(null);
   const [zodiac, setZodiac] = useState<string>("");
   const [compatibilities, setCompatibilities] = useState<any>("");
-  const [images, setImages] = useState<string>("");
   const [loggedUserLat, setLoggedUserLat] = useState("");
   const [loggedUserLon, setLoggedUserLon] = useState("");
-  const [userLat, setUserLat] = useState("");
-  const [userLon, setUserLon] = useState("");
-  const [loggedUser, setLoggedUser] = useState(null);
   const [distance, setDistance] = useState<number>(0);
   const [preferences, setPreferences] = useState(null);
   const [minAge, setMinAge] = useState(0);
@@ -400,7 +398,7 @@ const HomeScreen = () => {
                   },
                 ]}
               >
-                No more profiles left
+                <ActivityIndicator size={"large"} />
               </Text>
             </View>
           )}
@@ -413,6 +411,7 @@ const HomeScreen = () => {
             justifyContent: "center",
             position: "relative",
             top: 270,
+            marginBottom: normalize(30),
           }}
         >
           <TouchableOpacity
@@ -489,7 +488,7 @@ const styled: StyleProp<any> = {
     borderRadius: 20,
   },
   name: {
-    fontSize: 30,
+    fontSize: normalize(20),
     textAlign: "center",
     fontWeight: "bold",
   },
@@ -506,9 +505,10 @@ const styled: StyleProp<any> = {
   compatibility: {
     textAlign: "center",
     marginTop: 10,
+    fontSize: normalize(10),
   },
   zodiac: {
-    fontSize: 20,
+    fontSize: normalize(12),
     textAlign: "center",
   },
 };
